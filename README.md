@@ -6,11 +6,11 @@
 
 - ## [Учебные проекты](https://github.com/MathematicLove/spbstu-iccs-mcs-magistracy/tree/main/):
 - ### [**1-ый семестр**](https://github.com/MathematicLove/spbstu-iccs-mcs-magistracy/tree/main/1-sem):
-  - Машинное обучение;
-  - Цифровые ресурсы в научном исследовании;
-  - Управление научным проектом;
-  - Статистический анализ данных;
-  - Элементы теории вероятности и линейной алгебры;
-  - Параллельное программирование на суперкомпьютерных системах;
-  - Управление знаниями и технологии баз данных;
-  - Иностранный язык в профессиональной коммуникации, Английский.
+  - [Машинное обучение](https://github.com/MathematicLove/spbstu-iccs-mcs-magistracy/tree/main/1-sem/machine-learning);
+  - [Цифровые ресурсы в научном исследовании](https://github.com/MathematicLove/spbstu-iccs-mcs-magistracy/tree/main/1-sem/digital-resources-in-research);
+  - [Управление научным проектом](https://github.com/MathematicLove/spbstu-iccs-mcs-magistracy/tree/main/1-sem/scientific-research-management);
+  - [Статистический анализ данных](https://github.com/MathematicLove/spbstu-iccs-mcs-magistracy/tree/main/1-sem/statistical-data-analysis);
+  - [Элементы теории вероятности и линейной алгебры](https://github.com/MathematicLove/spbstu-iccs-mcs-magistracy/tree/main/1-sem/theory-of-probability-and-linear-algebra);
+  - [Параллельное программирование на суперкомпьютерных системах](https://github.com/MathematicLove/spbstu-iccs-mcs-magistracy/tree/main/1-sem/parallel-programming-on-supercomputer/old-reports);
+  - [Управление знаниями и технологии баз данных](https://github.com/MathematicLove/spbstu-iccs-mcs-magistracy/tree/main/1-sem/database-management);
+  - [Иностранный язык в профессиональной коммуникации, Английский](https://github.com/MathematicLove/spbstu-iccs-mcs-magistracy/tree/main/1-sem/english).
