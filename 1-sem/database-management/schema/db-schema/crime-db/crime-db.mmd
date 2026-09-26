@@ -1,0 +1,69 @@
+%% crime_db — преступления в Чикаго
+%% 1-1: districts ↔ district_stats, incidents ↔ incident_geo
+%% 1-N: districts → beats, beats → incidents, crime_types → incidents,
+%%      location_types → incidents, incidents → incident_tags, tags → incident_tags
+%% N-N: incidents ↔ tags  (реализовано через incident_tags)
+erDiagram
+    DISTRICTS      ||--|| DISTRICT_STATS : "1-1"
+    DISTRICTS      ||--o{ BEATS : "1-N"
+    BEATS          ||--o{ INCIDENTS : "1-N"
+    CRIME_TYPES    ||--o{ INCIDENTS : "1-N"
+    LOCATION_TYPES ||--o{ INCIDENTS : "1-N"
+    INCIDENTS      ||--|| INCIDENT_GEO : "1-1"
+    INCIDENTS      ||--o{ INCIDENT_TAGS : "1-N"
+    TAGS           ||--o{ INCIDENT_TAGS : "1-N"
+
+    DISTRICTS {
+        smallserial district_id PK
+        varchar district_code UK
+    }
+    DISTRICT_STATS {
+        smallint district_id PK "FK -> districts.district_id"
+        integer incidents_count
+        numeric arrest_rate
+        numeric domestic_rate
+    }
+    BEATS {
+        serial beat_id PK
+        varchar beat_code UK
+        smallint district_id FK
+    }
+    CRIME_TYPES {
+        serial crime_type_id PK
+        varchar iucr UK
+        varchar primary_type "THEFT, BATTERY ..."
+        varchar description
+        varchar fbi_code
+    }
+    LOCATION_TYPES {
+        serial location_type_id PK
+        varchar location_name UK "STREET, RESIDENCE ..."
+    }
+    INCIDENTS {
+        bigserial incident_id PK
+        bigint source_id
+        varchar case_number
+        timestamp occurred_at
+        varchar block
+        integer crime_type_id FK
+        integer beat_id FK
+        integer location_type_id FK
+        boolean arrest
+        boolean domestic
+        integer ward
+        integer community_area
+        integer year
+    }
+    INCIDENT_GEO {
+        bigint incident_id PK "FK -> incidents.incident_id"
+        numeric latitude
+        numeric longitude
+    }
+    TAGS {
+        smallserial tag_id PK
+        varchar tag_name UK "ARREST, DOMESTIC, NIGHT, WEEKEND"
+    }
+    INCIDENT_TAGS {
+        bigint incident_id PK "FK -> incidents.incident_id"
+        smallint tag_id PK "FK -> tags.tag_id"
+    }

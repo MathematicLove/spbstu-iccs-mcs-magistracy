@@ -1,0 +1,56 @@
+name: sport_and_cheerleaders-stack
+
+services:
+  sport-db:
+    image: ${SPORT_DB_IMAGE:-postgres:16-alpine}
+    container_name: sport_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${SPORT_DB_NAME:?см. credentials.env; запускайте через ./db_launch.sh up}
+      POSTGRES_USER: ${SPORT_DB_USER:?см. credentials.env; запускайте через ./db_launch.sh up}
+      POSTGRES_PASSWORD: ${SPORT_DB_PASSWORD:?см. credentials.env; запускайте через ./db_launch.sh up}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "${SPORT_DB_PORT:?см. credentials.env; запускайте через ./db_launch.sh up}:5432"
+    volumes:
+      - sport_pgdata:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - sport_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  sport-api:
+    build: ../../api
+    container_name: sport_api
+    restart: unless-stopped
+    depends_on:
+      sport-db:
+        condition: service_healthy
+    environment:
+      SOURCE_ID: sport_and_cheerleaders
+      DB_HOST: sport_db
+      DB_PORT: "5432"
+      DB_NAME: ${SPORT_DB_NAME:?см. credentials.env; запускайте через ./db_launch.sh up}
+      DB_USER: ${SPORT_DB_USER:?см. credentials.env; запускайте через ./db_launch.sh up}
+      DB_PASSWORD: ${SPORT_DB_PASSWORD:?см. credentials.env; запускайте через ./db_launch.sh up}
+    ports:
+      - "${SPORT_API_PORT:?см. credentials.env; запускайте через ./db_launch.sh up}:8000"
+    networks:
+      - sport_net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  sport_pgdata:
+    name: sport_pgdata
+
+networks:
+  sport_net:
+    name: sport_net

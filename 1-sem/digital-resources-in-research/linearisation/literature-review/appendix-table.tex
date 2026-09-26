@@ -1,0 +1,113 @@
+% Таблица сведений о публикациях (приложение А).
+% Файл подключается и в report.tex, и в appendix.tex, чтобы таблица была в одном месте.
+% Требует пакеты array и hyperref и колонку R, они объявлены в преамбулах обоих документов.
+
+% Шапка таблицы. Определяется тут, чтобы файл работал и в отчете, и в отдельном appendix.tex.
+\providecommand{\tablehead}{}
+\renewcommand{\tablehead}{%
+\hline
+\textbf{№} & \textbf{Название журнала} & \textbf{Индекс цит.} & \textbf{ИФ} & \textbf{Авторы} & \textbf{Хирш} & \textbf{Название статьи} & \textbf{Год} & \textbf{DOI} & \textbf{SJR} & \textbf{Цит.} & \textbf{Тип} \\
+\hline
+}
+
+\vspace*{\fill}
+
+% makebox нужен чтобы заголовок справа прижимался к краю независимо от настроек абзаца.
+\noindent\makebox[\textwidth][s]{%
+{\fontsize{14}{17}\selectfont\bfseries Приложение А}\hfill
+{\fontsize{14}{17}\selectfont\bfseries Сведения о публикациях (ч.~1)}}
+\par
+
+\vspace{1em}
+\vspace*{\fill}
+
+\vspace{1em}
+
+\begin{center}
+\normalsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{|c|R{4.0cm}|R{1.7cm}|R{1.3cm}|R{5.2cm}|R{1.3cm}|R{7.0cm}|R{1.1cm}|R{3.8cm}|R{1.4cm}|R{2.8cm}|R{3.0cm}|}
+\tablehead
+1 & Advances in Neural Information Processing Systems (35th Conference on NeurIPS) & - & - & Enze Xie, Wenhai Wang, Zhiding Yu, Anima Anandkumar, Jose M. Alvarez, Ping Luo & 61 & SegFormer: Simple and Efficient Design for Semantic Segmentation with Transformers & 2021 & \url{https://dl.acm.org/doi/10.5555/3540261.3541185} & 2.149 & Scopus & Conference paper $A^{\star}$ по CORE \\
+\hline
+2 & Neurocomputing & 10.8 & 6.7 & Pengpeng Sheng, Yanli Shi, Xin Liu, Huan Jin & 3 & LSNet: Real-time attention semantic segmentation network with linear complexity & 2022 & \url{https://doi.org/10.1016/j.neucom.2022.08.049} & 1.465 & Scopus, Web of Science & Research article \\
+\hline
+3 & Neurocomputing & 10.8 & 6.7 & Yuhang Gu, Chong Fu, Wei Song, Xingwei Wang, Junxin Chen & 1 & RTLinearFormer: Semantic segmentation with lightweight linear attentions & 2025 & \url{https://doi.org/10.1016/j.neucom.2025.129489} & 1.465 & Scopus, Web of Science & Research article \\
+\hline
+4 & Pattern Recognition & 17.3 & 9.1 & Senqi Guan, Wenxin Liang, Yunlong Gao, Linlin Zong, Xinyue Liu, Xianchao Zhang & 1 & Hybrid linear attention: A vision transformer integrating selective sampling softmax and multi-feature fusion enhancement & 2026 & \url{https://doi.org/10.1016/j.patcog.2026.114037} & 2.147 & Scopus, Web of Science & Research article \\
+\hline
+5 & Knowledge-Based Systems & 13.7 & 8.0 & Yiwei Fang, Chunhua Li, Xin Li, Xin Lyu, Zhennan Xu & 4 & A global linear attention network for semantic segmentation of remote sensing images & 2026 & \url{https://doi.org/10.1016/j.knosys.2026.115625} & 1.753 & Scopus, Web of Science & Research article \\
+\hline
+6 & Advances in Space Research & 5.6 & 3.2 & Zhongwei Zhang, Haijie Qin, Shudong Liu & 3 & Shallow feature reconstruction and dimensional collaborative linear-attention network for segmentation of remote sensing images & 2026 & \url{https://doi.org/10.1016/j.asr.2026.03.025} & 0.675 & Scopus, Web of Science & Research article \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace*{\fill}
+\clearpage
+
+\vspace*{\fill}
+
+\begin{flushright}
+{\fontsize{14}{17}\selectfont\bfseries Сведения о публикациях (ч.~2)}
+\end{flushright}
+
+\vspace{1em}
+
+\begin{center}
+\normalsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{|c|R{4.0cm}|R{1.7cm}|R{1.3cm}|R{5.2cm}|R{1.3cm}|R{7.0cm}|R{1.1cm}|R{3.8cm}|R{1.4cm}|R{2.8cm}|R{3.0cm}|}
+\tablehead
+7 & Measurement & 10.2 & 6.1 & Tao Ye, Haoran Chen, Hongbin Ren, Zhikang Zheng, Zongyang Zhao & 20 & LPT-Net: A Line-Pad Transformer Network for efficiency coal gangue segmentation with linear multi-head self-attention mechanism & 2024 & \url{https://doi.org/10.1016/j.measurement.2023.114043} & 0.448 & Scopus, Web of Science & Research article \\
+\hline
+8 & Image and Vision Computing & 7.7 & 5.0 & Zhishuai Zheng, Bing Yang, Zhutie Li, Jixing Wang, Jiajia Zou & - & CA-UNet: Real-time segmentation model for superalloy eutectics integrating direction-awared multi-scale convolution and multi-scale adaptive sparse attention & 2026 & \url{https://doi.org/10.1016/j.imavis.2026.106198} & 0.881 & Scopus, Web of Science & Research article \\
+\hline
+9 & Computers and Electronics in Agriculture & 17.3 & 10.3 & Zaichun Yang, Lixiang Sun, Jinsheng Deng, Ailing Cai, Zhihuan Liu, Genhua Liu, Jiang Zhang, Guoxiong Zhou, Yahui Hu, Liujun Li & 6 & A multi-scale linear cross-modal fusion architecture for tomato leaf disease segmentation & 2026 & \url{https://doi.org/10.1016/j.compag.2025.111155} & 2.165 & Scopus, Web of Science & Research article \\
+\hline
+10 & Advanced Engineering Informatics & 15.8 & 11.5 & Hangbin Wu, Shaojun Zhou, Zhengwen Xu, Haili Sun, Lianbi Yao & 25 & FESS-SAM: Full-element semantic segmentation of tunnel linear array images based on the segment anything model & 2025 & \url{https://doi.org/10.1016/j.aei.2025.103609} & 2.021 & Scopus, Web of Science & Research article \\
+\hline
+11 & Biomedical Signal Processing and Control & 13.0 & 5.7 & Xueping Liu, Zelong Yu, Youru Li, Shi Bai, Na Li, Yu Bai, Silu Ding & 4 & MLFormer: Mamba-like linear attention with hierarchical context fusion for efficient medical image segmentation & 2026 & \url{https://doi.org/10.1016/j.bspc.2026.109745} & 1.336 & Scopus, Web of Science & Research article \\
+\hline
+12 & Expert Systems with Applications & 17.0 & 9.4 & Lili Wang, Siqi Gao, Chen Chen, Hailu Yang & 9 & MASA-VMUNet: A vision mamba network with multi-scale aggregation and synergistic attention for medical image segmentation & 2026 & \url{https://doi.org/10.1016/j.eswa.2026.133276} & 1.939 & Scopus, Web of Science & Research article \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace*{\fill}
+\clearpage
+
+\vspace*{\fill}
+
+\begin{flushright}
+{\fontsize{14}{17}\selectfont\bfseries Сведения о публикациях (ч.~3)}
+\end{flushright}
+
+\vspace{1em}
+
+\begin{center}
+\normalsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{|c|R{4.0cm}|R{1.7cm}|R{1.3cm}|R{5.2cm}|R{1.3cm}|R{7.0cm}|R{1.1cm}|R{3.8cm}|R{1.4cm}|R{2.8cm}|R{3.0cm}|}
+\tablehead
+13 & Biomedical Signal Processing and Control & 13.0 & 5.7 & Haitao Ge, Dongqi Han, Yuan Lin, Weikang Li, Shengqiang Zhou, Hui Wang, Yuling Wang, Yifeng Pan, Peng Xu, Jie Zhao & 13 & WTP-MILA-UNet: Mamba-Inspired linear attention with wavelet and pointwise convolution for liver MRI segmentation in Budd-Chiari Syndrome & 2026 & \url{https://doi.org/10.1016/j.bspc.2025.109297} & 1.336 & Scopus, Web of Science & Research article \\
+\hline
+14 & Computers in Biology and Medicine & 13.1 & 6.3 & Dolly Uppal, Surya Prakash & 4 & CLT-MambaSeg: An integrated model of Convolution, Linear Transformer and Multiscale Mamba for medical image segmentation & 2025 & \url{https://doi.org/10.1016/j.compbiomed.2025.110736} & 1.375 & Scopus, Web of Science & Research article \\
+\hline
+15 & Expert Systems with Applications & 17.0 & 9.4 & Chunlin Yu, Aziguli Wulamu, Taohong Zhang & 2 & Topology-aware linear attention with deformable receptance for coronary artery segmentation & 2027 & \url{https://doi.org/10.1016/j.eswa.2026.134062} & 1.939 & Scopus, Web of Science & Research article \\
+\hline
+16 & Biomedical Signal Processing and Control & 13.0 & 5.7 & Quanyi Chen, Haibin Wan, Xiuyu Yue, Xuejun Zhang & 1 & UUEKAN: An edge-enhanced Kolmogorov-Arnold Network with uncertainty-guided attention for medical image segmentation & 2026 & \url{https://doi.org/10.1016/j.bspc.2026.110649} & 1.336 & Scopus, Web of Science & Research article \\
+\hline
+17 & Expert Systems with Applications & 17.0 & 9.4 & Dong Bai, Zhonghao Chang, Zhuozhao Zheng, Xia Wu, Yicheng Li, Runze Li, Yulong Liu, Tongjun Wang & 4 & Linear-complexity global context modeling and cross-scale feature alignment for automated pseudomyxoma peritonei segmentation & 2026 & \url{https://doi.org/10.1016/j.eswa.2026.131967} & 1.939 & Scopus, Web of Science & Research article \\
+\hline
+18 & Неделя Науки ИКНК & - & - & Салимли Айзек, Востров Алексей &  0 & Построение зоны интереса на основе сегментации & 2026 & \url{https://doi.org/10.18720/SPBPU/2/i26-137} & - & РИНЦ & Confirence paper (нет в CORE) \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{1em}
+
+\vspace*{\fill}

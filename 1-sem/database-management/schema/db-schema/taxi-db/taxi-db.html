@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>taxi_db — ER-схема</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #0d1117; color: #e6edf3; margin: 0; padding: 24px; }
+  h1 { font-size: 18px; font-weight: 600; margin: 0 0 16px; }
+  .legend { font-size: 13px; color: #9da7b3; margin-bottom: 20px; line-height: 1.6; }
+  .legend code { background: #161b22; padding: 1px 6px; border-radius: 4px; }
+  #diagram { background: #161b22; border-radius: 10px; padding: 16px; overflow: auto; }
+</style>
+</head>
+<body>
+  <h1>taxi_db — ER-схема (связи 1-N, N-1, 1-1, N-N)</h1>
+  <div class="legend">
+    <code>||--||</code> связь 1-1 &nbsp;·&nbsp;
+    <code>||--o{</code> связь 1-N / N-1 &nbsp;·&nbsp;
+    N-N показана как две связи 1-N через таблицу-справочник (junction table)
+  </div>
+  <pre class="mermaid" id="diagram">
+%% taxi_db — поездки такси в Чикаго
+%% 1-1: companies ↔ company_stats, trips ↔ trip_payments
+%% 1-N: companies → trips, payment_types → trips,
+%%      community_areas → trips (дважды: pickup и dropoff),
+%%      companies → company_payment_types, payment_types → company_payment_types
+%% N-N: companies ↔ payment_types  (реализовано через company_payment_types)
+erDiagram
+    COMPANIES       ||--|| COMPANY_STATS : "1-1"
+    COMPANIES       ||--o{ TRIPS : "1-N"
+    PAYMENT_TYPES   ||--o{ TRIPS : "1-N"
+    COMMUNITY_AREAS ||--o{ TRIPS : "1-N (pickup)"
+    COMMUNITY_AREAS ||--o{ TRIPS : "1-N (dropoff)"
+    TRIPS           ||--|| TRIP_PAYMENTS : "1-1"
+    COMPANIES       ||--o{ COMPANY_PAYMENT_TYPES : "1-N"
+    PAYMENT_TYPES   ||--o{ COMPANY_PAYMENT_TYPES : "1-N"
+
+    COMPANIES {
+        serial company_id PK
+        varchar company_name UK
+    }
+    COMPANY_STATS {
+        integer company_id PK "FK -> companies.company_id"
+        integer trips_count
+        numeric avg_total
+        numeric avg_miles
+    }
+    PAYMENT_TYPES {
+        smallserial payment_type_id PK
+        varchar payment_name UK "Cash, Credit Card ..."
+    }
+    COMMUNITY_AREAS {
+        smallserial area_id PK
+        smallint area_code UK "1..77"
+    }
+    TRIPS {
+        bigserial trip_pk PK
+        varchar trip_id
+        timestamp trip_start
+        timestamp trip_end
+        integer trip_seconds
+        numeric trip_miles
+        integer company_id FK
+        smallint payment_type_id FK
+        smallint pickup_area_id FK
+        smallint dropoff_area_id FK
+    }
+    TRIP_PAYMENTS {
+        bigint trip_pk PK "FK -> trips.trip_pk"
+        numeric fare
+        numeric tips
+        numeric tolls
+        numeric extras
+        numeric trip_total
+    }
+    COMPANY_PAYMENT_TYPES {
+        integer company_id PK "FK -> companies.company_id"
+        smallint payment_type_id PK "FK -> payment_types.payment_type_id"
+        integer trips_count
+    }
+  </pre>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+  </script>
+</body>
+</html>

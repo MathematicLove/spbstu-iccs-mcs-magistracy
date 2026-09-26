@@ -1,0 +1,8 @@
+.venv/
+.interface.pid
+.interface.log
+
+__pycache__/
+*.pyc
+
+data/raw/

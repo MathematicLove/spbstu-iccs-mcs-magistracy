@@ -1,0 +1,55 @@
+name: templates-stack
+
+services:
+  templates-db:
+    image: ${TEMPLATES_DB_IMAGE:-postgres:16-alpine}
+    container_name: templates_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${TEMPLATES_DB_NAME:?см. credentials.env; запускайте через ./db_launch.sh up}
+      POSTGRES_USER: ${TEMPLATES_DB_USER:?см. credentials.env; запускайте через ./db_launch.sh up}
+      POSTGRES_PASSWORD: ${TEMPLATES_DB_PASSWORD:?см. credentials.env; запускайте через ./db_launch.sh up}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "${TEMPLATES_DB_PORT:?см. credentials.env; запускайте через ./db_launch.sh up}:5432"
+    volumes:
+      - templates_pgdata:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - templates_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  templates-api:
+    build: ./api
+    container_name: templates_api
+    restart: unless-stopped
+    depends_on:
+      templates-db:
+        condition: service_healthy
+    environment:
+      DB_HOST: templates_db
+      DB_PORT: "5432"
+      DB_NAME: ${TEMPLATES_DB_NAME:?см. credentials.env; запускайте через ./db_launch.sh up}
+      DB_USER: ${TEMPLATES_DB_USER:?см. credentials.env; запускайте через ./db_launch.sh up}
+      DB_PASSWORD: ${TEMPLATES_DB_PASSWORD:?см. credentials.env; запускайте через ./db_launch.sh up}
+    ports:
+      - "${TEMPLATES_API_PORT:?см. credentials.env; запускайте через ./db_launch.sh up}:8000"
+    networks:
+      - templates_net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  templates_pgdata:
+    name: templates_pgdata
+
+networks:
+  templates_net:
+    name: templates_net

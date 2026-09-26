@@ -1,0 +1,56 @@
+name: sales-stack
+
+services:
+  sales-db:
+    image: ${SALES_DB_IMAGE:-postgres:16-alpine}
+    container_name: sales_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${SALES_DB_NAME:?см. credentials.env; запускайте через ./db_launch.sh up}
+      POSTGRES_USER: ${SALES_DB_USER:?см. credentials.env; запускайте через ./db_launch.sh up}
+      POSTGRES_PASSWORD: ${SALES_DB_PASSWORD:?см. credentials.env; запускайте через ./db_launch.sh up}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "${SALES_DB_PORT:?см. credentials.env; запускайте через ./db_launch.sh up}:5432"
+    volumes:
+      - sales_pgdata:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - sales_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  sales-api:
+    build: ../api
+    container_name: sales_api
+    restart: unless-stopped
+    depends_on:
+      sales-db:
+        condition: service_healthy
+    environment:
+      SOURCE_ID: sales
+      DB_HOST: sales_db
+      DB_PORT: "5432"
+      DB_NAME: ${SALES_DB_NAME:?см. credentials.env; запускайте через ./db_launch.sh up}
+      DB_USER: ${SALES_DB_USER:?см. credentials.env; запускайте через ./db_launch.sh up}
+      DB_PASSWORD: ${SALES_DB_PASSWORD:?см. credentials.env; запускайте через ./db_launch.sh up}
+    ports:
+      - "${SALES_API_PORT:?см. credentials.env; запускайте через ./db_launch.sh up}:8000"
+    networks:
+      - sales_net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  sales_pgdata:
+    name: sales_pgdata
+
+networks:
+  sales_net:
+    name: sales_net

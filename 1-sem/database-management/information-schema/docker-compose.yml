@@ -1,0 +1,91 @@
+name: meta-stack
+
+services:
+  meta-db:
+    image: ${META_DB_IMAGE:-postgres:16-alpine}
+    container_name: meta_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${META_DB_NAME:?см. credentials.env; запускайте через ./db_launch.sh up}
+      POSTGRES_USER: ${META_DB_USER:?см. credentials.env; запускайте через ./db_launch.sh up}
+      POSTGRES_PASSWORD: ${META_DB_PASSWORD:?см. credentials.env; запускайте через ./db_launch.sh up}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "${META_DB_PORT:?см. credentials.env; запускайте через ./db_launch.sh up}:5432"
+    volumes:
+      - meta_pgdata:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - meta_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  meta-api:
+    build: ./api
+    container_name: meta_api
+    restart: unless-stopped
+    depends_on:
+      meta-db:
+        condition: service_healthy
+    environment:
+      DB_HOST: meta_db
+      DB_PORT: "5432"
+      DB_NAME: ${META_DB_NAME:?см. credentials.env; запускайте через ./db_launch.sh up}
+      DB_USER: ${META_DB_USER:?см. credentials.env; запускайте через ./db_launch.sh up}
+      DB_PASSWORD: ${META_DB_PASSWORD:?см. credentials.env; запускайте через ./db_launch.sh up}
+      SALES_URL: http://sales_api:8000
+      CRIME_URL: http://crime_api:8000
+      TAXI_URL:  http://taxi_api:8000
+      EXTRA_URL:    http://extra_api:8000
+      MOUNTAIN_URL: http://mountain_api:8000
+      SPORT_URL:    http://sport_api:8000
+      SALES_API_URL: ${SALES_API_URL:?см. credentials.env; запускайте через ./db_launch.sh up}
+      CRIME_API_URL: ${CRIME_API_URL:?см. credentials.env; запускайте через ./db_launch.sh up}
+      TAXI_API_URL:  ${TAXI_API_URL:?см. credentials.env; запускайте через ./db_launch.sh up}
+      EXTRA_API_URL: ${EXTRA_API_URL:?см. credentials.env; запускайте через ./db_launch.sh up}
+      MOUNTAIN_API_URL: ${MOUNTAIN_API_URL:?см. credentials.env; запускайте через ./db_launch.sh up}
+      SPORT_API_URL: ${SPORT_API_URL:?см. credentials.env; запускайте через ./db_launch.sh up}
+    ports:
+      - "${META_API_PORT:?см. credentials.env; запускайте через ./db_launch.sh up}:8000"
+    networks:
+      - meta_net
+      - sales_net
+      - crime_net
+      - taxi_net
+      - extra_net
+      - mountain_net
+      - sport_net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  meta_pgdata:
+    name: meta_pgdata
+
+networks:
+  meta_net:
+    name: meta_net
+  sales_net:
+    name: sales_net
+    external: true
+  crime_net:
+    name: crime_net
+    external: true
+  taxi_net:
+    name: taxi_net
+    external: true
+  extra_net:
+    name: extra_net
+    external: true
+  mountain_net:
+    name: mountain_net
+    external: true
+  sport_net:
+    name: sport_net
+    external: true

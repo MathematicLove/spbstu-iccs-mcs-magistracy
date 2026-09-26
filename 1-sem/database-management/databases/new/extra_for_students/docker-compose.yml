@@ -1,0 +1,56 @@
+name: extra_for_students-stack
+
+services:
+  extra-db:
+    image: ${EXTRA_DB_IMAGE:-postgres:16-alpine}
+    container_name: extra_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${EXTRA_DB_NAME:?см. credentials.env; запускайте через ./db_launch.sh up}
+      POSTGRES_USER: ${EXTRA_DB_USER:?см. credentials.env; запускайте через ./db_launch.sh up}
+      POSTGRES_PASSWORD: ${EXTRA_DB_PASSWORD:?см. credentials.env; запускайте через ./db_launch.sh up}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "${EXTRA_DB_PORT:?см. credentials.env; запускайте через ./db_launch.sh up}:5432"
+    volumes:
+      - extra_pgdata:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - extra_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  extra-api:
+    build: ../../api
+    container_name: extra_api
+    restart: unless-stopped
+    depends_on:
+      extra-db:
+        condition: service_healthy
+    environment:
+      SOURCE_ID: extra_for_students
+      DB_HOST: extra_db
+      DB_PORT: "5432"
+      DB_NAME: ${EXTRA_DB_NAME:?см. credentials.env; запускайте через ./db_launch.sh up}
+      DB_USER: ${EXTRA_DB_USER:?см. credentials.env; запускайте через ./db_launch.sh up}
+      DB_PASSWORD: ${EXTRA_DB_PASSWORD:?см. credentials.env; запускайте через ./db_launch.sh up}
+    ports:
+      - "${EXTRA_API_PORT:?см. credentials.env; запускайте через ./db_launch.sh up}:8000"
+    networks:
+      - extra_net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  extra_pgdata:
+    name: extra_pgdata
+
+networks:
+  extra_net:
+    name: extra_net

@@ -1,0 +1,56 @@
+name: mountain_sport-stack
+
+services:
+  mountain-db:
+    image: ${MOUNTAIN_DB_IMAGE:-postgres:16-alpine}
+    container_name: mountain_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${MOUNTAIN_DB_NAME:?см. credentials.env; запускайте через ./db_launch.sh up}
+      POSTGRES_USER: ${MOUNTAIN_DB_USER:?см. credentials.env; запускайте через ./db_launch.sh up}
+      POSTGRES_PASSWORD: ${MOUNTAIN_DB_PASSWORD:?см. credentials.env; запускайте через ./db_launch.sh up}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "${MOUNTAIN_DB_PORT:?см. credentials.env; запускайте через ./db_launch.sh up}:5432"
+    volumes:
+      - mountain_pgdata:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - mountain_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  mountain-api:
+    build: ../../api
+    container_name: mountain_api
+    restart: unless-stopped
+    depends_on:
+      mountain-db:
+        condition: service_healthy
+    environment:
+      SOURCE_ID: mountain_sport
+      DB_HOST: mountain_db
+      DB_PORT: "5432"
+      DB_NAME: ${MOUNTAIN_DB_NAME:?см. credentials.env; запускайте через ./db_launch.sh up}
+      DB_USER: ${MOUNTAIN_DB_USER:?см. credentials.env; запускайте через ./db_launch.sh up}
+      DB_PASSWORD: ${MOUNTAIN_DB_PASSWORD:?см. credentials.env; запускайте через ./db_launch.sh up}
+    ports:
+      - "${MOUNTAIN_API_PORT:?см. credentials.env; запускайте через ./db_launch.sh up}:8000"
+    networks:
+      - mountain_net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  mountain_pgdata:
+    name: mountain_pgdata
+
+networks:
+  mountain_net:
+    name: mountain_net

@@ -1,0 +1,687 @@
+% Intended LaTeX compiler: xelatex
+\documentclass[12pt]{spbstu-task}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\institute{Институт компьютерных наук и кибербезопасности}
+\school{Высшая школа технологии искусственного интелекта}
+\program{Направление 02.03.01 Математика и компьютерные науки}
+\subject{Математическая Статистика}
+\reviewertitle{}\reviewer{Малов Сергей Васильевич}
+\usepackage{array}
+\usepackage{float}
+\usepackage{romannum}
+\setmainfont{Times New Roman}
+\allowdisplaybreaks
+\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase,Mapping=tex-text}
+\newcommand*{\myref}[2]{\hyperref[{#1}]{{#2}~\ref*{#1}}}
+\newcommand{\hlabel}{\phantomsection\label}
+\newcommand*{\fullref}[1]{\hyperref[{#1}]{\autoref*{#1} \nameref*{#1}}}
+\setlength{\abovecaptionskip}{5pt}
+\setlength{\belowcaptionskip}{0pt}
+\hypersetup{hidelinks}
+\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{intersections,patterns,positioning}
+\author{Фамилия Имя}                      % <-- заменить
+\date{2025}
+\title{Индивидуальное домашнее задание №1\\\medskip
+\large Вариант 16 (30126)}
+\hypersetup{
+ pdfauthor={Фамилия Имя},
+ pdftitle={Индивидуальное домашнее задание №1},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.4 (Org mode 9.7.20)},
+ pdflang={Russian}}
+\begin{document}
+
+\sloppy
+\pagenumbering{arabic}
+
+Фамилия Имя, группа \hfill ИДЗ №1 \hfill Вариант 16 (30126)   % <-- заменить
+\subsection*{\textbf{Задание}:}
+Плотность двумерного нормального распределения имеет вид:
+\begin{displaymath}
+  p_{\xi,\eta}(x,y) = C \cdot \exp\left(-\frac{1}{2}\left(3x^2 + 3xy + 7y^2 - 12x + 19y + 37\right)\right);
+\end{displaymath}
+
+\begin{enumerate}[leftmargin=*]
+\item Вычислить вектор мат. ожиданий и ковариационные характеристики
+данного случайного вектора.
+\item Найти аффинное преобразование, переводящее исходный случайный
+вектор в стандартный нормальный.
+\item Найти ортогональное преобразование, переводящее соответствующий
+центрированный случайный вектор в вектор с независимыми
+компонентами.
+\item Вычислить характеристики совместного распределения случайного
+вектора \((4\xi - 2\eta,\;2\xi + 2\eta)\) и записать его плотность.
+\item Найти условное распределение \(\xi\) при условии \(\eta\).
+\item Даны квадратичные формы
+  \(Q_1(\xi,\eta) = 64\xi^2 - 64\xi\eta + 16\eta^2\) и
+  \(Q_2(\xi,\eta) = -80\xi^2 + 40\xi\eta - 320\eta^2\).
+  \begin{enumerate}
+  \item[\textbf{а.}] Вычислить распределения (х.ф-ии) распределений \(Q_1\) и \(Q_2\), классифицировать их.
+  \item[\textbf{б.}] Определить, являются ли \(Q_1\) и \(Q_2\) независимыми.
+  \end{enumerate}
+\end{enumerate}
+\subsection*{Решение пункта 1:}
+\begin{align*}
+  q(x,y)
+  &= 3x^2 + 3xy + 7y^2 - 12x + 19y + 37 =\\
+  &= 3\left(x^2 + xy - 4x\right) + 7y^2 + 19y + 37 =\\
+  &= 3\left(x^2 + 2x\frac{1}{2}\left(y - 4\right)\right) + 7y^2 + 19y + 37 =\\
+  &= 3\left(x^2 + 2x\frac{1}{2}\left(y - 4\right) + \frac{1}{4}\left(y - 4\right)^2\right) + 7y^2 + 19y + 37 - \frac{3}{4}\left(y - 4\right)^2 =\\
+  &= 3\left(x + \frac{1}{2}\left(y - 4\right)\right)^2 + 7y^2 + 19y + 37 - \frac{3}{4}\left(y^2 - 8y + 16\right) =\\
+  &= 3\left(x + \frac{1}{2}y - 2\right)^2 + \frac{25}{4}y^2 + 25y + 25 =\\
+  &= 3\left((x - 3) + \frac{1}{2}(y + 2)\right)^2 + \frac{25}{4}(y + 2)^2 =\\
+  &= 3(x - 3)^2 + 3(x - 3)(y + 2) + \frac{3}{4}(y + 2)^2 + \frac{25}{4}(y + 2)^2 =\\
+  &= 3\left(x - 3\right)^2 + 3\left(x - 3\right)\left(y - (-2)\right) + 7\left(y - (-2)\right)^2
+\end{align*}
+
+Привели к виду: \(C_1(x - a)^2 + C_2(x - a)(y - b) + C_3(y - b)^2 + C_4\), причём \(C_4 = 0\).
+
+\begin{displaymath}
+  \mathbb{E}\begin{pmatrix}
+    \xi \\
+    \eta \\
+  \end{pmatrix} = \begin{pmatrix}
+    a \\
+    b \\
+  \end{pmatrix} = \begin{pmatrix}
+    3 \\
+    -2 \\
+  \end{pmatrix},\quad
+  \begin{pmatrix}
+    x - 3 \\
+    y + 2 \\
+  \end{pmatrix}^\mathsf{T}
+  \underbrace{\begin{pmatrix}
+    3 & \frac{3}{2} \\
+    \frac{3}{2} & 7 \\
+  \end{pmatrix}}_{\mathbf{R}^{-1}}\begin{pmatrix}
+    x - 3 \\
+    y + 2 \\
+  \end{pmatrix}
+\end{displaymath}
+\begin{gather*}
+  \left|\mathbf{R}^{-1}\right| = 3\cdot 7 - \frac{9}{4} = \frac{75}{4}, \\
+  \operatorname{\mathbb{V}\mathbf{ar}}\boldsymbol{\xi} = \mathbf{R} = \frac{4}{75}\begin{pmatrix}
+    7 & -\frac{3}{2} \\
+    -\frac{3}{2} & 3 \\
+  \end{pmatrix} = \frac{1}{75}\begin{pmatrix}
+    28 & -6 \\
+    -6 & 12 \\
+  \end{pmatrix} = \begin{pmatrix}
+    \sigma_1^2 & \rho\sigma_1\sigma_2 \\
+    \rho\sigma_1\sigma_2 & \sigma_2^2 \\
+  \end{pmatrix}\quad\Rightarrow \\
+  \Rightarrow\quad\sigma_1^2 = \frac{28}{75},\quad\sigma_2^2 = \frac{12}{75} = \frac{4}{25}, \\
+  \rho = \frac{-\frac{6}{75}}{\sqrt{\frac{28}{75}}\sqrt{\frac{12}{75}}} = -\frac{6}{\sqrt{336}} = -\frac{\sqrt{21}}{14},
+  \\ 1 - \rho^2 = \frac{25}{28}
+\end{gather*}
+\begin{displaymath}
+  \sigma_1\sigma_2\sqrt{1 - \rho^2} = \sqrt{\frac{28}{75}\cdot\frac{12}{75}\cdot\frac{25}{28}} = \sqrt{\frac{4}{75}} = \frac{2}{5\sqrt{3}},
+  \qquad
+  C = \frac{1}{2\pi\sqrt{1 - \rho^2}\,\sigma_1\sigma_2} = \frac{5\sqrt{3}}{4\pi}
+\end{displaymath}
+\begin{displaymath}
+  p_{\xi,\eta}(x,y) = \frac{5\sqrt{3}}{4\pi}\cdot\exp\left(-\frac{1}{2}\left(3(x - 3)^2 + 3(x - 3)(y + 2) + 7(y + 2)^2\right)\right)
+\end{displaymath}
+Проверка. Раскрывая общий вид
+\(\left(\mathbf{z} - \mathbf{m}\right)^\mathsf{T}\mathbf{R}^{-1}\left(\mathbf{z} - \mathbf{m}\right)
+= \mathbf{z}^\mathsf{T}\mathbf{R}^{-1}\mathbf{z} - 2\mathbf{m}^\mathsf{T}\mathbf{R}^{-1}\mathbf{z} + \mathbf{m}^\mathsf{T}\mathbf{R}^{-1}\mathbf{m}\),
+сверяем линейную часть и свободный член исходного многочлена:
+\begin{gather*}
+  \mathbf{R}^{-1}\mathbf{m} = \begin{pmatrix}
+    3 & \frac{3}{2} \\
+    \frac{3}{2} & 7 \\
+  \end{pmatrix}\begin{pmatrix}
+    3 \\ -2 \\
+  \end{pmatrix} = \begin{pmatrix}
+    6 \\ -\frac{19}{2} \\
+  \end{pmatrix}
+  \quad\Rightarrow\quad
+  -2\mathbf{R}^{-1}\mathbf{m} = \begin{pmatrix}
+    -12 \\ 19 \\
+  \end{pmatrix}\;\checkmark \\
+  \mathbf{m}^\mathsf{T}\mathbf{R}^{-1}\mathbf{m} = \begin{pmatrix}3 & -2\end{pmatrix}\begin{pmatrix}
+    6 \\ -\frac{19}{2} \\
+  \end{pmatrix} = 18 + 19 = 37\;\checkmark
+\end{gather*}
+Свободный член совпал с данным в условии, т.е.\ остаток \(C_4 = 0\) --- это и
+позволяет пользоваться формулой \(C = \left(2\pi\sigma_1\sigma_2\sqrt{1 - \rho^2}\right)^{-1}\)
+без дополнительного множителя \(e^{C_4/2}\). Дополнительно:
+\(\mathbf{R}^{-1}\) положительно определена (\(3 > 0\), \(\left|\mathbf{R}^{-1}\right| = \frac{75}{4} > 0\)) и \(|\rho| < 1\).
+\subsection*{Решение пункта 2:}
+\begin{displaymath}
+  \boldsymbol{\xi} = \begin{pmatrix}
+    \xi \\
+    \eta \\
+  \end{pmatrix} \sim
+  \mathcal{N}\left(\begin{pmatrix}
+    3 \\
+    -2 \\
+  \end{pmatrix},\;\frac{1}{75}\begin{pmatrix}
+    28 & -6 \\
+    -6 & 12 \\
+  \end{pmatrix}\right)
+\end{displaymath}
+\begin{displaymath}
+  \boldsymbol{\zeta} = \begin{pmatrix}
+    \zeta_1 \\
+    \zeta_2 \\
+  \end{pmatrix} = \mathbf{C}\boldsymbol{\xi}\underbrace{-\,\mathbf{C}\mathbb{E}\boldsymbol{\xi}}_{\mathbf{D}} = \mathbf{C}\begin{pmatrix}
+    \xi - \mathbb{E}\xi \\
+    \eta - \mathbb{E}\eta \\
+  \end{pmatrix} = \mathbf{C}\boldsymbol{\xi}^* \sim \mathcal{N}\left(\mathbf{0},\;\mathbf{I}\right)
+\end{displaymath}
+\begin{displaymath}
+  \operatorname{\mathbb{V}ar}(\mathbf{C}\boldsymbol{\xi}^*) =
+  \mathbf{C}\operatorname{\mathbb{V}ar}\boldsymbol{\xi}^*\,\mathbf{C}^\mathsf{T} =
+  \mathbf{C}\mathbf{R}\mathbf{C}^\mathsf{T} = \mathbf{I}
+\end{displaymath}
+\begin{displaymath}
+  \underbrace{3\left(\underbrace{(x - 3)}_{x^*} + \frac{1}{2}\underbrace{(y + 2)}_{y^*}\right)^2}_{t_1^2} + \underbrace{\frac{25}{4}\underbrace{(y + 2)^2}_{{y^*}^2}}_{t_2^2}\quad\Rightarrow
+\end{displaymath}
+\begin{displaymath}
+  \Rightarrow\quad t_1 = \sqrt{3}(x - 3) + \frac{\sqrt{3}}{2}(y + 2),\quad t_2 = \frac{5}{2}(y + 2)
+\end{displaymath}
+\begin{displaymath}
+  \mathbf{t} = \begin{pmatrix} t_1 \\ t_2 \end{pmatrix} =
+  \mathbf{C}\begin{pmatrix} x^* \\ y^* \end{pmatrix} \Rightarrow \mathbf{C} = \begin{pmatrix}
+    \sqrt{3} & \frac{\sqrt{3}}{2} \\
+    0 & \frac{5}{2} \\
+  \end{pmatrix}
+\end{displaymath}
+\begin{displaymath}
+  \mathbf{D} = -\mathbf{C}\mathbb{E}\boldsymbol{\xi} = -\begin{pmatrix}
+    \sqrt{3} & \frac{\sqrt{3}}{2} \\
+    0 & \frac{5}{2} \\
+  \end{pmatrix}\begin{pmatrix}3 \\ -2\end{pmatrix} = \begin{pmatrix}
+    -2\sqrt{3} \\ 5
+  \end{pmatrix}
+\end{displaymath}
+\begin{displaymath}
+  \begin{cases}
+    \zeta_1 = \sqrt{3}\,\xi + \frac{\sqrt{3}}{2}\eta - 2\sqrt{3} \\
+    \zeta_2 = \frac{5}{2}\eta + 5 \\
+  \end{cases}
+\end{displaymath}
+Проверка:
+\begin{gather*}
+  \mathbf{C}\cdot\operatorname{\mathbb{V}ar}\boldsymbol{\xi}\cdot\mathbf{C}^\mathsf{T} =
+  \frac{1}{75}\begin{pmatrix}
+    \sqrt{3} & \frac{\sqrt{3}}{2} \\
+    0 & \frac{5}{2} \\
+  \end{pmatrix}\begin{pmatrix}
+    28 & -6 \\
+    -6 & 12 \\
+  \end{pmatrix}\begin{pmatrix}
+    \sqrt{3} & 0 \\
+    \frac{\sqrt{3}}{2} & \frac{5}{2} \\
+  \end{pmatrix} = \\ =
+  \frac{1}{75}\begin{pmatrix}
+    25\sqrt{3} & 0 \\
+    -15 & 30 \\
+  \end{pmatrix}\begin{pmatrix}
+    \sqrt{3} & 0 \\
+    \frac{\sqrt{3}}{2} & \frac{5}{2} \\
+  \end{pmatrix} =
+  \frac{1}{75}\begin{pmatrix}
+    75 & 0 \\
+    0 & 75 \\
+  \end{pmatrix} =
+  \begin{pmatrix}
+    1 & 0 \\
+    0 & 1 \\
+  \end{pmatrix} = \mathbf{I}
+\end{gather*}
+\subsection*{Решение пункта 3:}
+\begin{displaymath}
+  \begin{pmatrix}
+    \psi_1 \\
+    \psi_2 \\
+  \end{pmatrix} = \mathbf{B}\begin{pmatrix}
+    \xi \\
+    \eta \\
+  \end{pmatrix} \sim
+  \mathcal{N}\left(\begin{pmatrix}
+    m_1 \\ m_2 \\
+  \end{pmatrix},\;\begin{pmatrix}
+    d_1 & 0 \\
+    0 & d_2 \\
+  \end{pmatrix}\right),\qquad
+  \mathbf{B}\mathbf{R}\mathbf{B}^\mathsf{T} = \mathbf{D} = \begin{pmatrix}
+    d_1 & 0 \\
+    0 & d_2 \\
+  \end{pmatrix}
+\end{displaymath}
+\begin{displaymath}
+  (\mathbf{R} - \lambda\mathbf{I})\mathbf{X} = \mathbf{0}
+\end{displaymath}
+\begin{align*}
+  |\mathbf{R} - \lambda\mathbf{I}| &=
+  \begin{vmatrix}
+    \frac{28}{75} - \lambda & -\frac{6}{75} \\
+    -\frac{6}{75} & \frac{12}{75} - \lambda \\
+  \end{vmatrix} =
+  \left(\frac{28}{75} - \lambda\right)\left(\frac{12}{75} - \lambda\right) - \frac{36}{75^2} = \\
+  &= \lambda^2 - \frac{8}{15}\lambda + \frac{4}{75} =
+  \left(\lambda - \frac{2}{15}\right)\left(\lambda - \frac{2}{5}\right)
+\end{align*}
+\begin{displaymath}
+  \lambda_1 = \frac{2}{15},\quad\lambda_2 = \frac{2}{5}
+\end{displaymath}
+\begin{alignat*}{3}
+  &\mathbf{R} - \lambda_1\mathbf{I} &&= \frac{1}{75}\begin{pmatrix}
+    18 & -6 \\
+    -6 & 2 \\
+  \end{pmatrix} \rightarrow \begin{pmatrix}
+    3 & -1 \\
+    3 & -1 \\
+  \end{pmatrix} \rightarrow \begin{pmatrix}
+    3 & -1 \\
+    0 & 0 \\
+  \end{pmatrix}\quad&&\Rightarrow\quad \mathbf{X}_1 = x_2\begin{pmatrix} \frac{1}{3} \\ 1 \end{pmatrix} \\
+  &\mathbf{R} - \lambda_2\mathbf{I} &&= \frac{1}{75}\begin{pmatrix}
+    -2 & -6 \\
+    -6 & -18 \\
+  \end{pmatrix} \rightarrow \begin{pmatrix}
+    1 & 3 \\
+    1 & 3 \\
+  \end{pmatrix} \rightarrow \begin{pmatrix}
+    1 & 3 \\
+    0 & 0 \\
+  \end{pmatrix}\quad&&\Rightarrow\quad \mathbf{X}_2 = x_2\begin{pmatrix} -3 \\ 1 \end{pmatrix}
+\end{alignat*}
+\begin{displaymath}
+  x_2 = 1:\quad |\mathbf{X}_1| = \sqrt{\frac{1}{9} + 1} = \frac{\sqrt{10}}{3},\qquad |\mathbf{X}_2| = \sqrt{9 + 1} = \sqrt{10}
+\end{displaymath}
+\begin{displaymath}
+  \mathbf{B} = \begin{pmatrix}
+    \mathbf{X}_1^\mathsf{T}/|\mathbf{X}_1| \\
+    \mathbf{X}_2^\mathsf{T}/|\mathbf{X}_2| \\
+  \end{pmatrix} = \frac{1}{\sqrt{10}}\begin{pmatrix}
+    1 & 3 \\
+    -3 & 1 \\
+  \end{pmatrix},\quad
+  \mathbf{m} = \mathbf{B}\mathbb{E}\boldsymbol{\xi} =
+  \frac{1}{\sqrt{10}}\begin{pmatrix}
+    1 & 3 \\
+    -3 & 1 \\
+  \end{pmatrix}\begin{pmatrix}
+    3 \\
+    -2 \\
+  \end{pmatrix} = \frac{1}{\sqrt{10}}\begin{pmatrix}
+    -3 \\
+    -11 \\
+  \end{pmatrix}
+\end{displaymath}
+\begin{displaymath}
+  \mathbf{D} = \mathbf{B}\mathbf{R}\mathbf{B}^\mathsf{T} =
+  \frac{1}{750}\begin{pmatrix}
+    1 & 3 \\
+    -3 & 1 \\
+  \end{pmatrix}\begin{pmatrix}
+    28 & -6 \\
+    -6 & 12 \\
+  \end{pmatrix}\begin{pmatrix}
+    1 & -3 \\
+    3 & 1 \\
+  \end{pmatrix} = \begin{pmatrix}
+    \frac{2}{15} & 0 \\
+    0 & \frac{2}{5} \\
+  \end{pmatrix}
+\end{displaymath}
+\begin{displaymath}
+  \begin{pmatrix}
+    \psi_1 \\
+    \psi_2 \\
+  \end{pmatrix} \sim \mathcal{N}\left(\frac{1}{\sqrt{10}}\begin{pmatrix}
+    -3 \\ -11 \\
+  \end{pmatrix},\;\begin{pmatrix}
+    \frac{2}{15} & 0 \\
+    0 & \frac{2}{5} \\
+  \end{pmatrix}\right)
+\end{displaymath}
+\subsection*{Решение пункта 4:}
+\begin{displaymath}
+  \boldsymbol{\nu} = \begin{pmatrix}
+    \nu_1 \\
+    \nu_2 \\
+  \end{pmatrix} = \begin{pmatrix}
+    4\xi - 2\eta \\
+    2\xi + 2\eta \\
+  \end{pmatrix} = \underbrace{\begin{pmatrix}
+    4 & -2 \\
+    2 & 2 \\
+  \end{pmatrix}}_{\mathbf{A}}\begin{pmatrix}
+    \xi \\
+    \eta \\
+  \end{pmatrix}
+\end{displaymath}
+\begin{displaymath}
+  \mathbb{E}\begin{pmatrix}
+    \nu_1 \\
+    \nu_2 \\
+  \end{pmatrix} = \mathbf{A}\,\mathbb{E}\boldsymbol{\xi} = \begin{pmatrix}
+    4 & -2 \\
+    2 & 2 \\
+  \end{pmatrix}\begin{pmatrix}
+    3 \\
+    -2 \\
+  \end{pmatrix} = \begin{pmatrix}
+    16 \\
+    2 \\
+  \end{pmatrix}
+\end{displaymath}
+\begin{gather*}
+  \operatorname{\mathbb{V}ar}\begin{pmatrix}
+    \nu_1 \\
+    \nu_2 \\
+  \end{pmatrix} = \mathbf{A}\operatorname{\mathbb{V}ar}\boldsymbol{\xi}\,\mathbf{A}^{\mathsf{T}} =
+  \frac{1}{75}\begin{pmatrix}
+    4 & -2 \\
+    2 & 2 \\
+  \end{pmatrix}\begin{pmatrix}
+    28 & -6 \\
+    -6 & 12 \\
+  \end{pmatrix}\begin{pmatrix}
+    4 & 2 \\
+    -2 & 2 \\
+  \end{pmatrix} = \\ =
+  \frac{1}{75}\begin{pmatrix}
+    124 & -48 \\
+    44 & 12 \\
+  \end{pmatrix}\begin{pmatrix}
+    4 & 2 \\
+    -2 & 2 \\
+  \end{pmatrix} =
+  \frac{1}{75}\begin{pmatrix}
+    592 & 152 \\
+    152 & 112 \\
+  \end{pmatrix} = \begin{pmatrix}
+    \sigma_1^2 & \rho\sigma_1\sigma_2 \\
+    \rho\sigma_1\sigma_2 & \sigma_2^2 \\
+  \end{pmatrix}
+\end{gather*}
+\begin{gather*}
+  \sigma_1^2 = \frac{592}{75},\quad\sigma_2^2 = \frac{112}{75},\quad\rho\sigma_1\sigma_2 = \frac{152}{75}
+  \quad\Rightarrow\quad
+  \rho = \frac{152}{\sqrt{592\cdot 112}} = \frac{19}{2\sqrt{259}} \approx 0{,}590, \\
+  1 - \rho^2 = \frac{675}{1036},\qquad
+  \sigma_1\sigma_2\sqrt{1 - \rho^2} = \sqrt{\frac{592\cdot 112}{75^2}\cdot\frac{675}{1036}} = \frac{8\sqrt{3}}{5}
+\end{gather*}
+\begin{displaymath}
+  \boldsymbol{\nu} \sim \mathcal{N}\left(
+    \begin{pmatrix} 16 \\ 2 \end{pmatrix},\;
+    \frac{1}{75}\begin{pmatrix}
+      592 & 152 \\
+      152 & 112 \\
+    \end{pmatrix}
+  \right)
+\end{displaymath}
+\begin{gather*}
+  p_{\nu_1,\nu_2}(u,v) = \frac{1}{2\pi\sigma_1\sigma_2\sqrt{1 - \rho^2}}\,\times \\
+  \times\exp\left(-\frac{1}{2(1 - \rho^2)}\left(\frac{(u - 16)^2}{\sigma_1^2} - 2\rho\frac{(u - 16)(v - 2)}{\sigma_1\sigma_2} + \frac{(v - 2)^2}{\sigma_2^2}\right)\right) = \\
+  = \frac{5\sqrt{3}}{48\pi}\cdot\exp\left(-\frac{1}{72}\left(7(u - 16)^2 - 19(u - 16)(v - 2) + 37(v - 2)^2\right)\right)
+\end{gather*}
+\subsection*{Решение пункта 5:}
+\begin{align*}
+  p_{\xi|\eta = y_0}(x)
+  &= \frac{p_{\xi,\eta}(x, y_0)}{p_{\eta}(y_0)}
+  = C_1(y_0)\cdot\exp\left(-\frac{1}{2}\cdot 3\left(x - 2 + \frac{y_0}{2}\right)^2 + C_2(y_0)\right) = \\
+  &= C_3(y_0)\cdot\exp\left(-\frac{1}{2}\cdot 3\left(x - 2 + \frac{y_0}{2}\right)^2\right),\qquad
+  C_3(y_0) = C_1(y_0)\,e^{C_2(y_0)}
+\end{align*}
+\begin{displaymath}
+  C_1(y_0) = \frac{5\sqrt{3}}{4\pi\,p_\eta(y_0)},\quad
+  C_2(y_0) = -\frac{25}{8}(y_0 + 2)^2,\quad
+  p_\eta(y_0) = \frac{5}{2\sqrt{2\pi}}e^{-\frac{25}{8}(y_0 + 2)^2}
+  \quad\Rightarrow\quad C_3 = \sqrt{\frac{3}{2\pi}}
+\end{displaymath}
+\begin{displaymath}
+  \sigma^2(y_0) = \frac{1}{3},\quad m(y_0) = 2 - \frac{y_0}{2},\quad
+  \mathbb{E}(\xi|\eta) = 2 - \frac{\eta}{2},\quad\mathbb{D}(\xi|\eta) = \frac{1}{3}
+\end{displaymath}
+\begin{displaymath}
+  \xi\,|\,\eta = y_0 \;\sim\; \mathcal{N}\left(2 - \frac{y_0}{2},\;\frac{1}{3}\right)
+\end{displaymath}
+\subsection*{Решение пункта 6:}
+Стандартный нормальный вектор обозначим \(\boldsymbol{\zeta}\) (как в пункте 2), чтобы не путать со второй компонентой \(\eta\).
+
+\textbf{1.} \(\boldsymbol{\zeta}\sim\mathcal{N}(\mathbf{0},\mathbf{I})\) --- вектор-столбец, \(\boldsymbol{\zeta}^\mathsf{T}\boldsymbol{\zeta} = \sum_{i=1}^n\zeta_i^2\sim\chi^2_n\).
+Пусть \(\boldsymbol{\xi}\sim\mathcal{N}(\mathbf{0},\Sigma)\), тогда существует \(\mathbf{A}\): \(\boldsymbol{\xi} = \mathbf{A}\boldsymbol{\zeta}\), \(\Sigma = \mathbf{A}\mathbf{A}^\mathsf{T}\) --- ковариационная матрица.
+\(|\Sigma|\neq 0\;\Rightarrow\;|\mathbf{A}|\neq 0\), \(\mathbf{A}\) невырождена \(\Rightarrow\) существует обратное преобразование \(\boldsymbol{\zeta} = \mathbf{A}^{-1}\boldsymbol{\xi}\):
+\begin{displaymath}
+  \boldsymbol{\zeta}^\mathsf{T}\boldsymbol{\zeta} = \left(\mathbf{A}^{-1}\boldsymbol{\xi}\right)^\mathsf{T}\left(\mathbf{A}^{-1}\boldsymbol{\xi}\right)
+  = \boldsymbol{\xi}^\mathsf{T}\left(\mathbf{A}^{-1}\right)^\mathsf{T}\mathbf{A}^{-1}\boldsymbol{\xi}
+  = \boldsymbol{\xi}^\mathsf{T}\left(\mathbf{A}\mathbf{A}^\mathsf{T}\right)^{-1}\boldsymbol{\xi}
+  = \boldsymbol{\xi}^\mathsf{T}\Sigma^{-1}\boldsymbol{\xi}\sim\chi^2_n
+\end{displaymath}
+У нас (пункт 2) \(\mathbf{A} = \mathbf{C}^{-1}\), \(\Sigma = \mathbf{R}\):
+\(\left(\boldsymbol{\xi} - \mathbb{E}\boldsymbol{\xi}\right)^\mathsf{T}\mathbf{R}^{-1}\left(\boldsymbol{\xi} - \mathbb{E}\boldsymbol{\xi}\right) = 3(\xi - 3)^2 + 3(\xi - 3)(\eta + 2) + 7(\eta + 2)^2\sim\chi^2_2\).
+
+\textbf{2.} \(\zeta_1^2\) --- ? \(\zeta_1\sim\mathcal{N}(0,1)\), \(\operatorname{supp}\zeta_1 = \mathbb{R}\), \(\operatorname{supp}\zeta_1^2 = \mathbb{R}_+\).
+\begin{displaymath}
+  F_{\zeta_1^2}(x) = \mathbb{P}\left(\zeta_1^2 < x\right) = \mathbb{P}\left(-\sqrt{x} < \zeta_1 < \sqrt{x}\right) = 2\int_0^{\sqrt{x}}\frac{1}{\sqrt{2\pi}}e^{-t^2/2}dt,\quad x > 0
+\end{displaymath}
+\begin{displaymath}
+  p_{\zeta_1^2}(x) = \begin{cases}
+    0, & x\leq 0, \\
+    \dfrac{1}{\sqrt{2\pi x}}\,e^{-x/2}, & x > 0,
+  \end{cases}
+  \qquad \zeta_1^2\sim\Gamma\left(\tfrac{1}{2},\,2\right),\quad
+  p_{\Gamma(p,b)}(x) = \frac{x^{p - 1}e^{-x/b}}{\Gamma(p)\,b^p}
+\end{displaymath}
+
+\textbf{3. Формула свёртки.} Для независимых \(\nu_1\sim\Gamma(p_1,b)\), \(\nu_2\sim\Gamma(p_2,b)\), \(x > 0\):
+\begin{gather*}
+  p_{\nu_1 + \nu_2}(x) = \int_{-\infty}^{+\infty}p_{\nu_1}(s)\,p_{\nu_2}(x - s)\,ds = \\
+  = \frac{e^{-x/b}}{\Gamma(p_1)\Gamma(p_2)\,b^{p_1 + p_2}}\underbrace{\int_0^x s^{p_1 - 1}(x - s)^{p_2 - 1}ds}_{x^{p_1 + p_2 - 1}\mathrm{B}(p_1,\,p_2)}
+  = p_{\Gamma(p_1 + p_2,\,b)}(x)
+\end{gather*}
+Применили \(n - 1\) раз: \(\zeta_2^2 + \dots + \zeta_n^2\sim\Gamma\left(\frac{n - 1}{2},\,2\right) = \chi^2_{n - 1}\).
+Все интегралы вещественные, переходить на комплексную плоскость не требуется.
+
+\textbf{4. Нецентральный случай.} \(\tilde{\zeta}_1\sim\mathcal{N}(m, 1)\):
+\begin{displaymath}
+  F_{\tilde{\zeta}_1^2}(x) = \begin{cases}
+    0, & x\leq 0, \\
+    \mathbb{P}\left(-\sqrt{x} < \tilde{\zeta}_1 < \sqrt{x}\right) = \Phi\left(\sqrt{x} - m\right) - \Phi\left(-\sqrt{x} - m\right), & x > 0
+  \end{cases}
+\end{displaymath}
+\begin{align*}
+  p_{\tilde{\zeta}_1^2}(x) = F'(x)
+  &= \frac{1}{2\sqrt{x}}\frac{1}{\sqrt{2\pi}}e^{-\frac{(\sqrt{x} - m)^2}{2}} + \frac{1}{2\sqrt{x}}\frac{1}{\sqrt{2\pi}}e^{-\frac{(\sqrt{x} + m)^2}{2}}
+  = \frac{e^{-\frac{x + m^2}{2}}}{\sqrt{2\pi x}}\cdot\underbrace{\frac{e^{m\sqrt{x}} + e^{-m\sqrt{x}}}{2}}_{\operatorname{ch}(m\sqrt{x})} = \\
+  &= \frac{e^{-\frac{x + m^2}{2}}}{\sqrt{2\pi x}}\sum_{i=0}^\infty\frac{m^{2i}x^i}{(2i)!}
+  = \sum_{i=0}^\infty c_i(m)\,x^{i - \frac{1}{2}}e^{-x/2}
+  = \sum_{i=0}^\infty c^*_i(m)\,p_{\Gamma\left(i + \frac{1}{2},\,2\right)}(x),
+\end{align*}
+\begin{displaymath}
+  c^*_i(m) = e^{-\frac{m^2}{2}}\frac{\left(m^2/2\right)^i}{i!},\qquad\sum_{i=0}^\infty c^*_i(m) = 1
+\end{displaymath}
+(коэффициенты пересчитаны по формуле \((2i)! = 2^{2i}i!\,\Gamma\left(i + \frac{1}{2}\right)/\sqrt{\pi}\)). Вместе с п.~3:
+\begin{displaymath}
+  \tilde{\zeta}_1^2 + \underbrace{\zeta_2^2 + \dots + \zeta_n^2}_{\Gamma\left(\frac{n - 1}{2},\,2\right)}
+  \sim\sum_{i=0}^\infty e^{-\frac{m^2}{2}}\frac{\left(m^2/2\right)^i}{i!}\,\Gamma\left(i + \frac{n}{2},\,2\right) = \chi^2_n\left(m^2\right),
+\end{displaymath}
+\begin{displaymath}
+  \varphi(t) = (1 - 2it)^{-\frac{n}{2}}\exp\left(\frac{itm^2}{1 - 2it}\right)
+\end{displaymath}
+Итак, надо представить \(Q_1\), \(Q_2\) через квадраты \emph{нормальных} величин с дисперсией \(1\) и найти их средние.
+
+\subsubsection*{Пункт 6а: форма \(Q_1\)}
+\begin{displaymath}
+  Q_1 = 64\xi^2 - 64\xi\eta + 16\eta^2 = 16\left(2\xi - \eta\right)^2 = 16U^2,\qquad U = 2\xi - \eta,
+\end{displaymath}
+\begin{displaymath}
+  \mathbf{A}_1 = \begin{pmatrix} 64 & -32 \\ -32 & 16 \end{pmatrix},\quad |\mathbf{A}_1| = 0\;\Rightarrow\;\operatorname{rank}\mathbf{A}_1 = 1
+\end{displaymath}
+\(U = \mathbf{v}^\mathsf{T}\boldsymbol{\xi}\), \(\mathbf{v} = (2, -1)^\mathsf{T}\) --- линейная функция нормального вектора. Через х.ф.\
+\(\varphi_{\boldsymbol{\xi}}(\mathbf{t}) = \exp\left(i\mathbf{t}^\mathsf{T}\mathbb{E}\boldsymbol{\xi} - \frac{1}{2}\mathbf{t}^\mathsf{T}\mathbf{R}\mathbf{t}\right)\):
+\begin{gather*}
+  \varphi_U(s) = \mathbb{E}e^{isU} = \varphi_{\boldsymbol{\xi}}(s\mathbf{v})
+  = \exp\Bigl(is\underbrace{\mathbf{v}^\mathsf{T}\mathbb{E}\boldsymbol{\xi}}_{2\cdot 3 - (-2) = 8} - \frac{s^2}{2}\underbrace{\mathbf{v}^\mathsf{T}\mathbf{R}\mathbf{v}}_{\frac{4\cdot 28 + 4\cdot 6 + 12}{75} = \frac{148}{75}}\Bigr)
+  = \exp\Bigl(is\underbrace{8}_{a} - \frac{s^2}{2}\underbrace{\tfrac{148}{75}}_{\sigma^2}\Bigr)
+\end{gather*}
+--- это х.ф.\ нормального закона, значит
+\begin{displaymath}
+  p_U(x) = \frac{1}{\sqrt{2\pi}\,\underbrace{\sqrt{148/75}}_{\sigma}}\exp\left(-\frac{\bigl(x - \overbrace{8}^{a}\bigr)^2}{2\cdot\underbrace{148/75}_{\sigma^2}}\right),
+  \qquad U\sim\mathcal{N}\Bigl(\underbrace{8}_{a},\;\underbrace{\tfrac{148}{75}}_{\sigma^2}\Bigr)
+\end{displaymath}
+Нормируем: \(\tilde{\zeta}_1 = \frac{U}{\sigma}\), \(p_{\tilde{\zeta}_1}(x) = \sigma\,p_U(\sigma x)\):
+\begin{gather*}
+  p_{\tilde{\zeta}_1}(x) = \frac{\sigma}{\sqrt{2\pi}\,\sigma}\exp\left(-\frac{(\sigma x - a)^2}{2\sigma^2}\right)
+  = \frac{1}{\sqrt{2\pi}\cdot\underbrace{1}_{\sigma}}\exp\left(-\frac{\bigl(x - \overbrace{a/\sigma}^{m_1}\bigr)^2}{2\cdot\underbrace{1}_{\sigma^2}}\right), \\
+  \tilde{\zeta}_1\sim\mathcal{N}\Bigl(\underbrace{m_1}_{\text{ср.}},\;\underbrace{1}_{\text{дисп.}}\Bigr)
+\end{gather*}
+\begin{gather*}
+  Q_1 = 16U^2 = \underbrace{16\sigma^2}_{\lambda_1 = \frac{2368}{75}}\,\tilde{\zeta}_1^2,\qquad
+  m_1 = \frac{a}{\sigma} = \frac{8}{\sqrt{148/75}} = \frac{20\sqrt{3}}{\sqrt{37}},\qquad
+  m_1^2 = \frac{1200}{37}
+\end{gather*}
+По п.~4 (\(n = 1\)), \(\lambda\,\Gamma(p, b) = \Gamma(p, \lambda b)\):
+\begin{gather*}
+  \boxed{\;Q_1 = \lambda_1\tilde{\zeta}_1^2 \sim \frac{2368}{75}\,\chi_1^2\!\left(\frac{1200}{37}\right)\;},\qquad
+  p_{Q_1}(x) = \sum_{i=0}^\infty e^{-\frac{600}{37}}\frac{\left(\frac{600}{37}\right)^i}{i!}\,p_{\Gamma\left(i + \frac{1}{2},\,\frac{4736}{75}\right)}(x), \\
+  \varphi_{Q_1}(t) = \left(1 - \frac{4736}{75}\,it\right)^{-1/2}\exp\left(\frac{1024\,it}{1 - \frac{4736}{75}\,it}\right)
+\end{gather*}
+\textbf{Классификация:} \(Q_1\) имеет (масштабированное нецентральное) \(\chi^2\)-распределение с одной степенью свободы.
+
+\subsubsection*{Пункт 6а: форма \(Q_2\)}
+\begin{displaymath}
+  \mathbf{A}_2 = \begin{pmatrix} -80 & 20 \\ 20 & -320 \end{pmatrix},\quad |\mathbf{A}_2| = 25200 > 0,\;\; -80 < 0
+  \;\Rightarrow\; \operatorname{rank}\mathbf{A}_2 = 2,\;\; Q_2\leq 0
+\end{displaymath}
+Переходим к независимым компонентам с единичной дисперсией (пункт 2): \(\mathbf{u} = \mathbf{C}\boldsymbol{\xi}\), \(\boldsymbol{\xi} = \mathbf{C}^{-1}\mathbf{u}\),
+\(\left|\mathbf{C}^{-1}\right| = \frac{2}{5\sqrt{3}}\). Плотность \(\mathbf{u}\) --- заменой переменных в \(p_{\xi,\eta}\):
+\begin{align*}
+  p_{\mathbf{u}}(\mathbf{z}) &= p_{\xi,\eta}\left(\mathbf{C}^{-1}\mathbf{z}\right)\left|\mathbf{C}^{-1}\right|
+  = \frac{5\sqrt{3}}{4\pi}\cdot\frac{2}{5\sqrt{3}}\exp\left(-\frac{1}{2}\left(\mathbf{C}^{-1}\mathbf{z} - \mathbb{E}\boldsymbol{\xi}\right)^\mathsf{T}\mathbf{R}^{-1}\left(\mathbf{C}^{-1}\mathbf{z} - \mathbb{E}\boldsymbol{\xi}\right)\right) = \\
+  &= \frac{1}{2\pi}\exp\Bigl(-\frac{1}{2}\bigl(\mathbf{z} - \underbrace{\mathbf{C}\,\mathbb{E}\boldsymbol{\xi}}_{\boldsymbol{\kappa}}\bigr)^\mathsf{T}
+  \underbrace{\left(\mathbf{C}^{-1}\right)^\mathsf{T}\mathbf{R}^{-1}\mathbf{C}^{-1}}_{\left(\mathbf{C}\mathbf{R}\mathbf{C}^\mathsf{T}\right)^{-1} = \mathbf{I}}
+  \bigl(\mathbf{z} - \boldsymbol{\kappa}\bigr)\Bigr)
+  \quad\Rightarrow\quad
+  \mathbf{u}\sim\mathcal{N}\Bigl(\underbrace{\boldsymbol{\kappa}}_{\text{ср.}},\;\underbrace{\mathbf{I}}_{\text{ков.}}\Bigr),
+\end{align*}
+\begin{gather*}
+  \boldsymbol{\kappa} = \begin{pmatrix}
+    \sqrt{3} & \frac{\sqrt{3}}{2} \\
+    0 & \frac{5}{2} \\
+  \end{pmatrix}\begin{pmatrix} 3 \\ -2 \end{pmatrix} = \begin{pmatrix} 2\sqrt{3} \\ -5 \end{pmatrix},\qquad
+  Q_2 = \boldsymbol{\xi}^\mathsf{T}\mathbf{A}_2\boldsymbol{\xi} = \mathbf{u}^\mathsf{T}\mathbf{G}\mathbf{u}, \\
+  \mathbf{G} = \left(\mathbf{C}^{-1}\right)^\mathsf{T}\mathbf{A}_2\mathbf{C}^{-1} =
+  \begin{pmatrix}
+    \frac{1}{\sqrt{3}} & 0 \\
+    -\frac{1}{5} & \frac{2}{5} \\
+  \end{pmatrix}\begin{pmatrix}
+    -80 & 20 \\
+    20 & -320 \\
+  \end{pmatrix}\begin{pmatrix}
+    \frac{1}{\sqrt{3}} & -\frac{1}{5} \\
+    0 & \frac{2}{5} \\
+  \end{pmatrix} =
+  \begin{pmatrix}
+    -\frac{80}{3} & 8\sqrt{3} \\
+    8\sqrt{3} & -\frac{288}{5} \\
+  \end{pmatrix}
+\end{gather*}
+\begin{displaymath}
+  |\mathbf{G} - \lambda\mathbf{I}| = \lambda^2 + \frac{1264}{15}\lambda + 1344 = 0
+  \;\Rightarrow\;
+  \lambda_{1,2} = \frac{-632 \mp 16\sqrt{379}}{15},\;\;
+  \lambda_1 \approx -62{,}899,\;\; \lambda_2 \approx -21{,}368
+\end{displaymath}
+\begin{displaymath}
+  \mathbf{X}_{1,2} = \begin{pmatrix} 15\sqrt{3} \\ -29 \mp 2\sqrt{379} \end{pmatrix},\qquad
+  \mathbf{T} = \left(\frac{\mathbf{X}_1}{|\mathbf{X}_1|},\; \frac{\mathbf{X}_2}{|\mathbf{X}_2|}\right) \approx \begin{pmatrix} 0{,}357 & 0{,}934 \\ -0{,}934 & 0{,}357 \end{pmatrix}
+\end{displaymath}
+Ортогональное преобразование \(\mathbf{w} = \mathbf{T}^\mathsf{T}\mathbf{u}\), \(\mathbf{u} = \mathbf{T}\mathbf{w}\), \(|\mathbf{T}| = \pm 1\), \(\mathbf{T}^\mathsf{T}\mathbf{T} = \mathbf{I}\):
+\begin{align*}
+  p_{\mathbf{w}}(\mathbf{z}) &= p_{\mathbf{u}}(\mathbf{T}\mathbf{z})\,|\mathbf{T}|
+  = \frac{1}{2\pi}\exp\left(-\frac{1}{2}\left(\mathbf{T}\mathbf{z} - \boldsymbol{\kappa}\right)^\mathsf{T}\left(\mathbf{T}\mathbf{z} - \boldsymbol{\kappa}\right)\right)
+  = \frac{1}{2\pi}\exp\Bigl(-\frac{1}{2}\bigl|\mathbf{z} - \underbrace{\mathbf{T}^\mathsf{T}\boldsymbol{\kappa}}_{(\vartheta_1,\,\vartheta_2)^\mathsf{T}}\bigr|^2\Bigr) = \\
+  &= \underbrace{\frac{1}{\sqrt{2\pi}\cdot\underbrace{1}_{\sigma}}\exp\left(-\frac{\bigl(z_1 - \overbrace{\vartheta_1}^{\text{ср.}}\bigr)^2}{2\cdot\underbrace{1}_{\sigma^2}}\right)}_{p_{w_1}(z_1):\;\mathcal{N}(\vartheta_1,\,1)}\cdot
+  \underbrace{\frac{1}{\sqrt{2\pi}\cdot\underbrace{1}_{\sigma}}\exp\left(-\frac{\bigl(z_2 - \overbrace{\vartheta_2}^{\text{ср.}}\bigr)^2}{2\cdot\underbrace{1}_{\sigma^2}}\right)}_{p_{w_2}(z_2):\;\mathcal{N}(\vartheta_2,\,1)}
+\end{align*}
+Плотность распалась в произведение --- \(w_1, w_2\) независимы (ортогональное преобразование независимости не теряет), и
+\begin{gather*}
+  \vartheta_j = \frac{\left(\mathbf{X}_j,\boldsymbol{\kappa}\right)}{|\mathbf{X}_j|} = \frac{235 \pm 10\sqrt{379}}{\sqrt{3032 \pm 116\sqrt{379}}},\quad
+  \vartheta_1 \approx 5{,}908,\;\;\vartheta_2 \approx 1{,}450 \\
+  Q_2 = \mathbf{u}^\mathsf{T}\mathbf{T}\Lambda\mathbf{T}^\mathsf{T}\mathbf{u}
+  = \lambda_1\underbrace{w_1^2}_{w_1\sim\mathcal{N}(\vartheta_1,\,1)} + \lambda_2\underbrace{w_2^2}_{w_2\sim\mathcal{N}(\vartheta_2,\,1)}
+  = \lambda_1\chi^2_1(\delta_1) + \lambda_2\chi^2_1(\delta_2), \\
+  \delta_1 = \vartheta_1^2\approx 34{,}899,\;\;\delta_2 = \vartheta_2^2\approx 2{,}101
+\end{gather*}
+(контроль: \(\delta_1 + \delta_2 = |\boldsymbol{\kappa}|^2 = 37\)).
+Каждое слагаемое распределено по п.~4 с \(m = \vartheta_j\); \(V_j = \lambda_j w_j^2\), \(-V_j\sim\sum_i c^*_i(\vartheta_j)\,\Gamma\left(i + \frac{1}{2},\,2|\lambda_j|\right)\).
+По формуле свёртки (п.~3), \(x < 0\):
+\begin{displaymath}
+  p_{Q_2}(x) = \int_{-\infty}^{+\infty}p_{V_1}(s)\,p_{V_2}(x - s)\,ds = \int_x^0 p_{V_1}(s)\,p_{V_2}(x - s)\,ds,\qquad p_{Q_2}(x) = 0\;\;(x \geq 0)
+\end{displaymath}
+Масштабы \(2|\lambda_1|\neq 2|\lambda_2|\), поэтому в отличие от п.~3 свёртка не сводится к одному \(\Gamma\)-распределению:
+\begin{displaymath}
+  \boxed{\;Q_2 = \lambda_1\chi^2_1(\delta_1) + \lambda_2\chi^2_1(\delta_2)\;},\qquad
+  \varphi_{Q_2}(t) = \prod_{j=1}^2\left(1 - 2it\lambda_j\right)^{-1/2}\exp\left(\frac{it\lambda_j\delta_j}{1 - 2it\lambda_j}\right)
+\end{displaymath}
+\textbf{Классификация:} \(Q_2\) --- не \(\chi^2\), а сумма независимых \(\chi^2_1\) с разными (отрицательными) коэффициентами.
+
+\subsubsection*{Пункт 6б: независимость \(Q_1\) и \(Q_2\)}
+\(Q_1\) зависит только от одной нормальной величины \(\tilde{w}_1 = \frac{U}{\sigma} = \tilde{\mathbf{e}}_1^\mathsf{T}\mathbf{u}\),
+\(\tilde{\mathbf{e}}_1 = \sqrt{\tfrac{75}{148}}\left(\tfrac{2}{\sqrt{3}}, -\tfrac{4}{5}\right)^\mathsf{T}\).
+Дополним до ортонормированного базиса \(\tilde{\mathbf{e}}_2 = \sqrt{\tfrac{75}{148}}\left(\tfrac{4}{5}, \tfrac{2}{\sqrt{3}}\right)^\mathsf{T}\) --- снова ортогональный поворот:
+\begin{gather*}
+  \begin{pmatrix} \tilde{w}_1 \\ \tilde{w}_2 \end{pmatrix}\sim\mathcal{N}\Biggl(
+  \underbrace{\begin{pmatrix} \tilde{\mathbf{e}}_1^\mathsf{T}\boldsymbol{\kappa} \\ \tilde{\mathbf{e}}_2^\mathsf{T}\boldsymbol{\kappa} \end{pmatrix}}_{(m_1,\;-13/\sqrt{37})^\mathsf{T}},\;
+  \underbrace{\begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}}_{\text{независимы}}\Biggr),\qquad
+  Q_1 = \lambda_1\tilde{w}_1^2, \\
+  Q_2 = g_{11}\tilde{w}_1^2 + 2g_{12}\tilde{w}_1\tilde{w}_2 + g_{22}\tilde{w}_2^2, \\
+  g_{11} = \tilde{\mathbf{e}}_1^\mathsf{T}\mathbf{G}\tilde{\mathbf{e}}_1 = -\frac{27568}{555},\quad
+  g_{12} = \tilde{\mathbf{e}}_2^\mathsf{T}\mathbf{G}\tilde{\mathbf{e}}_1 = \frac{1240\sqrt{3}}{111},\quad
+  g_{22} = -\frac{1280}{37}
+\end{gather*}
+Чтобы \(Q_2\) не зависела от \(Q_1\), она должна выражаться только через \(\tilde{w}_2\):
+\(g_{11} = g_{12} = 0\), т.е.\ \(Q_2 = g_{22}\tilde{w}_2^2\) и \(\operatorname{rank}\mathbf{A}_2 \leq 2 - \operatorname{rank}\mathbf{A}_1 = 1\).
+Но \(\operatorname{rank}\mathbf{A}_2 = 2\) и \(g_{11}, g_{12}\neq 0\) --- \(Q_2\) содержит ту же \(\tilde{w}_1\), что и \(Q_1\).
+Формально (критерий Крэйга--Сакамото и неравенство Сильвестра):
+\begin{gather*}
+  Q_1, Q_2\text{ независимы}\;\Leftrightarrow\;\mathbf{A}_1\mathbf{R}\mathbf{A}_2 = \mathbf{0},\qquad
+  \operatorname{rank}\left(\mathbf{A}_1\mathbf{R}\mathbf{A}_2\right) \geq \underbrace{\operatorname{rank}\mathbf{A}_1}_{1} + \underbrace{\operatorname{rank}\mathbf{R}\mathbf{A}_2}_{2} - 2 = 1, \\
+  \mathbf{A}_1\mathbf{R}\mathbf{A}_2 = \frac{1}{75}\begin{pmatrix}
+    1984 & -768 \\
+    -992 & 384 \\
+  \end{pmatrix}\begin{pmatrix}
+    -80 & 20 \\
+    20 & -320 \\
+  \end{pmatrix} = \frac{1}{15}\begin{pmatrix}
+    -34816 & 57088 \\
+    17408 & -28544 \\
+  \end{pmatrix} \neq \mathbf{0}
+\end{gather*}
+\begin{displaymath}
+  \boxed{\;Q_1 \text{ и } Q_2 \text{ зависимы}\;}
+\end{displaymath}
+\subsubsection*{Ответ к пункту 6}
+\textbf{а.}
+\begin{gather*}
+  \varphi_{Q_1}(t) = \left(1 - \frac{4736}{75}\,it\right)^{-1/2}\exp\left(\frac{1024\,it}{1 - \frac{4736}{75}\,it}\right),\qquad
+  Q_1 \sim \frac{2368}{75}\,\chi^2_1\!\left(\frac{1200}{37}\right) \\
+  \varphi_{Q_2}(t) = \Delta(t)^{-1/2}\exp\left(\frac{99456\,t^2 - 2240\,it}{\Delta(t)}\right),\qquad
+  \Delta(t) = 1 + \frac{2528}{15}\,it - 5376\,t^2 \\
+  Q_2 = \lambda_1\chi^2_1(\delta_1) + \lambda_2\chi^2_1(\delta_2),\qquad
+  \lambda_{1,2} = \frac{-632 \mp 16\sqrt{379}}{15},\quad
+  \delta_{1,2} = \frac{37}{2} \pm \frac{1277}{4\sqrt{379}}
+\end{gather*}
+\(Q_1\) --- масштабированное нецентральное \(\chi^2\) с одной степенью свободы;
+\(Q_2\) --- не \(\chi^2\): сумма двух независимых нецентральных \(\chi^2_1\) с разными отрицательными коэффициентами.
+
+\textbf{б.} \(Q_1\) и \(Q_2\) зависимы.
+\end{document}

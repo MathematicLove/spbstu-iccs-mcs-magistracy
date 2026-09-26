@@ -1,0 +1,56 @@
+name: crime-stack
+
+services:
+  crime-db:
+    image: ${CRIME_DB_IMAGE:-postgres:16-alpine}
+    container_name: crime_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${CRIME_DB_NAME:?см. credentials.env; запускайте через ./db_launch.sh up}
+      POSTGRES_USER: ${CRIME_DB_USER:?см. credentials.env; запускайте через ./db_launch.sh up}
+      POSTGRES_PASSWORD: ${CRIME_DB_PASSWORD:?см. credentials.env; запускайте через ./db_launch.sh up}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "${CRIME_DB_PORT:?см. credentials.env; запускайте через ./db_launch.sh up}:5432"
+    volumes:
+      - crime_pgdata:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - crime_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  crime-api:
+    build: ../api
+    container_name: crime_api
+    restart: unless-stopped
+    depends_on:
+      crime-db:
+        condition: service_healthy
+    environment:
+      SOURCE_ID: crime
+      DB_HOST: crime_db
+      DB_PORT: "5432"
+      DB_NAME: ${CRIME_DB_NAME:?см. credentials.env; запускайте через ./db_launch.sh up}
+      DB_USER: ${CRIME_DB_USER:?см. credentials.env; запускайте через ./db_launch.sh up}
+      DB_PASSWORD: ${CRIME_DB_PASSWORD:?см. credentials.env; запускайте через ./db_launch.sh up}
+    ports:
+      - "${CRIME_API_PORT:?см. credentials.env; запускайте через ./db_launch.sh up}:8000"
+    networks:
+      - crime_net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  crime_pgdata:
+    name: crime_pgdata
+
+networks:
+  crime_net:
+    name: crime_net

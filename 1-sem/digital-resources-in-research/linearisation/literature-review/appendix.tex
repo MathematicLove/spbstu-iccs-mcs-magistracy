@@ -1,0 +1,24 @@
+\documentclass[11pt]{article}
+\usepackage[paperwidth=420mm,paperheight=297mm,margin=15mm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[russian]{babel}
+\usepackage{array}
+\usepackage{url}
+% hyperref делает адреса DOI кликабельными, как в списке источников отчета.
+\usepackage{hyperref}
+
+\pagestyle{empty}
+
+% Ширина колонок подобрана так чтобы таблица помещалась по ширине листа.
+\newcolumntype{R}[1]{>{\raggedright\arraybackslash}m{#1}}
+
+% Номера строк совпадают с номерами источников в списке литературы отчета и с номерами файлов в linearisation/articles.
+% Индекс цит. это CiteScore журнала, ИФ это Impact Factor, Хирш дан для первого автора. Значения предоставлены автором отчета.
+% Колонка "Цит." заполнена по данным об индексации журналов в Scopus и Web of Science (SCIE).
+
+
+\begin{document}
+\input{appendix-table}
+
+\end{document}

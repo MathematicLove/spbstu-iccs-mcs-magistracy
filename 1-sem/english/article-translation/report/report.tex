@@ -1,0 +1,287 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[russian]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{parskip}
+\usepackage{longtable}
+\usepackage{array}
+
+\title{Translation \\}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{Original}
+
+Some previous literature has applied PH to image segmentation, but
+the PH calculation has typically been applied to the input image and
+used as a way to generate features which can then be used by another
+algorithm. Applications have included tumour segmentation [17], cell
+segmentation [18] and cardiac segmentation from computed tomography
+(CT) imaging [19].
+
+The important distinction between these methods and our approach is
+that we apply PH not to the input image being segmented, but rather
+to the candidate segmentation provided by the network. To the best
+of our knowledge, the first work to take this approach was our
+preliminary work in [4], although this idea has subsequently been
+developed for the specific case of one-dimensional topological
+features (i.e., connected components) in [20]. Here, we extend our
+preliminary work [4] by introducing an explicit topological loss
+function which can be used to introduce prior knowledge of any
+topological feature(s). We also include more extensive experiments
+on two different medical imaging modalities (including one
+three-dimensional modality) as well as the MNIST dataset.
+
+By applying PH to the candidate segmentations of a neural network,
+the topological information found by the PH calculation can be used
+to provide a training signal to the network, allowing us to compare
+the topological features present in a proposed segmentation with
+those specified to exist by some prior knowledge. Importantly, this
+can be done even if those topological features are not easily
+extracted from pixel intensities in the original image. The
+mathematical details that describe how PH quantifies the presence of
+topological features in an image, or a candidate segmentation, are
+introduced in the next section.
+
+Persistent homology is a method for calculating the robustness of topological features of a dataset at different scales. It
+is part of an emerging field known as topological data analysis, 
+in which ideas from topology are used to extract information from noisy and high-dimensional datasets. PH has
+found applications in neuroscience [21], studying phase
+transitions [22], analysis of tree-structured data [23], and in
+measuring image artefacts [24]. Below we give an overview
+of PH as it applies to our method, but for more thorough
+reviews we direct the reader to [11], [25], [26].
+PH is most often applied to data forming a high-dimensional point cloud, and the topology of simplicial complexes
+generated from that point cloud is the object of study. In our
+case though, the data derives from 2D images or 3D volumes, and so a cubical complex is a more natural representation.
+ A cubical complex is a set of points, unit line
+segments, unit squares, cubes, hypercubes, etc. We define
+an elementary interval as a closed subset of the real line 
+
+\section*{Перевод}
+
+В ряде предыдущих работ персистентные гомологии (ПГ) уже
+применялись к сегментации изображений однако расчёт ПГ как
+правило выполнялся для входного изображения и использовался как
+способ генерации признаков которые затем применялись каким-либо
+другим алгоритмом. Среди областей применения сегментация
+опухолей сегментация клетоки сегментация сердца по
+данным компьютерной томографии (КТ).
+
+Важное отличие этих методов от нашего подхода состоит в том, что мы
+применяем ПГ не к входному изображению подлежащему сегментации а
+к кандидатной сегментации полученной от сети. Насколько нам
+известно, первой работой использующей такой подход, была наша
+предварительная работа хотя впоследствии эта идея была развита
+для частного случая одномерных топологических признаков (т.е.
+связных компонент). В данной работе мы расширяем нашу
+предварительную работу вводя явную топологическую функцию
+потерь которая может использоваться для внедрения априорных знаний
+о любых топологических признаках. Мы также включаем более обширные
+эксперименты на двух разных модальностях медицинской визуализации
+(включая одну трёхмерную модальность) а также на наборе данных
+MNIST.
+
+Применяя ПГ к кандидатным сегментациям, полученным нейронной сетью
+мы можем использовать топологическую информацию найденную в
+результате расчёта ПГ в качестве обучающего сигнала длч сети что
+позволяет сравнивать топологические признаки присутствующие в
+предложенной сегментации с признаками заданными априорным знанием.
+Важно, что это можно сделать, даже если эти топологические признаки
+нелегко извлечь из значений интенсивности пикселей в исходном
+изображении. Математические детали описывающие то как ПГ
+количественно оценивает наличие топологических признаков на
+изображении или в кандидатной сегментации представлены в следующем
+разделе.
+
+Персистентная гомология - это метод вычисления устойчивости
+топологических особенностей набора данных в различных масштабах.
+Он является частью развивающейся области, известной как топологический анализ данных, в которой идеи из топологии 
+используются для извлечения информации из зашумленных и многомерных наборов данных. Персистентная гомология нашла применение в нейробиологии, 
+при изучении фазовых переходов,  анализе древовидных структур данных и при измерении артефактов изображения. 
+Ниже мы приводим обзор персистентной гомологии в применении к нашему методу, но для более подробного ознакомления рекомендуем обратиться к источникам.
+
+Персистентная гомология чаще всего применяется к данным, образующим многомерное облако точек, и объектом изучения является топология симплициальных
+комплексов, построенных на основе этого облака точек. Однако в нашем случае данные получены из 2D изображений или 3D объектов, поэтому более естественным 
+представлением является кубический комплекс. Кубический комплекс - это набор точек, единичных отрезков, единичных квадратов, кубов, гиперкубов и так далее.
+Элементарным интервалом мы называем замкнутое подмножество вещественной прямой.
+
+\newpage
+\section*{Glossary}
+
+\begin{longtable}{p{3.2cm}p{5.3cm}p{6.8cm}}
+\textbf{Term} & \textbf{English explanation} & \textbf{Russian explanation} \\
+\hline
+\endhead
+persistent homology (PH) &
+A method from topological data analysis that tracks the birth and
+death of topological features (components, loops, cavities) across
+a range of scales/thresholds. &
+Персистентные гомологии - метод топологического анализа данных,
+отслеживающий <<рождение>> и <<смерть>> топологических признаков
+(компонент, петель, полостей) на разных масштабах/порогах. \\
+
+topology &
+The branch of mathematics studying properties of shapes that are
+preserved under continuous deformation, such as connectivity. &
+Топология - раздел математики, изучающий свойства форм,
+сохраняющиеся при непрерывной деформации, например связность. \\
+
+candidate segmentation &
+The segmentation output currently produced by the network, prior to
+being evaluated or corrected. &
+Кандидатная сегментация - текущий результат сегментации,
+выданный сетью, до его оценки или коррекции. \\
+
+topological feature &
+A property such as a connected component, a loop/hole, or a cavity
+that characterises the shape of an object. &
+Топологический признак - свойство (например, связная компонента,
+петля/отверстие или полость), характеризующее форму объекта. \\
+
+connected component &
+One of the separate, internally connected pieces that make up a
+segmented object. &
+Связная компонента - одна из отдельных, внутренне связанных
+частей, из которых состоит сегментируемый объект. \\
+
+one-dimensional topological feature &
+Here: a topological feature of dimension zero in the Betti-number
+sense used casually to mean connected components (as opposed to
+loops or cavities). &
+Здесь: топологический признак, соответствующий связным компонентам
+(в отличие от петель или полостей). \\
+
+topological loss function &
+A differentiable loss term that penalises deviation of a
+segmentation's topology from prior knowledge. &
+Топологическая функция потерь - дифференцируемая составляющая
+функции потерь, штрафующая отклонение топологии сегментации от
+априорного знания. \\
+
+prior knowledge &
+Information about the object (here, its expected topology) known in
+advance, independent of the specific image. &
+Априорное знание - информация об объекте (здесь - его ожидаемая
+топология), известная заранее, независимо от конкретного
+изображения. \\
+
+training signal &
+Information derived from a loss function that is used to update a
+network's weights via gradient descent. &
+Обучающий сигнал - информация, получаемая из функции потерь и
+используемая для обновления весов сети методом градиентного спуска. \\
+
+pixel intensity &
+The numerical value representing brightness/colour of a pixel in an
+image. &
+Интенсивность пикселя - числовое значение, отражающее яркость
+или цвет пикселя изображения. \\
+\end{longtable}
+
+\section*{Words}
+
+\begin{longtable}{p{2.6cm}p{5.4cm}p{7.3cm}}
+\textbf{Word} & \textbf{English meaning} & \textbf{Russian meaning} \\
+\hline
+\endhead
+calculation &
+The process of computing PH for a given input. &
+Расчёт, вычисление (здесь - вычисление персистентных гомологий). \\
+
+feature &
+A distinguishing characteristic extracted from data (here,
+topological). &
+Признак - отличительная характеристика, извлекаемая из данных
+(здесь - топологическая). \\
+
+distinction &
+A difference that sets one thing apart from another. &
+Отличие, различие - то, что отделяет одно от другого. \\
+
+preliminary &
+Coming before the main or final work; introductory. &
+Предварительный - предшествующий основной или итоговой работе. \\
+
+subsequently &
+Afterwards, at a later point. &
+Впоследствии, позднее. \\
+
+extensive &
+Covering a large area or range; thorough. &
+Обширный, широкий - охватывающий большой объём или диапазон. \\
+
+modality &
+A particular type or method of medical imaging (e.g., MRI, CT,
+ultrasound). &
+Модальность - конкретный вид или метод медицинской визуализации
+(например, МРТ, КТ, УЗИ). \\
+
+quantify &
+To express or measure something as a numerical value. &
+Количественно оценивать, измерять числом. \\
+\end{longtable}
+
+\section*{Phrases and Collocations}
+
+\begin{longtable}{p{4.3cm}p{5cm}p{5.9cm}}
+\textbf{Phrase / Collocation} & \textbf{English explanation} & \textbf{Russian explanation} \\
+\hline
+\endhead
+to apply PH to X &
+To use the persistent-homology calculation on object X (an image or
+a segmentation). &
+Применять ПГ к X - использовать расчёт персистентных гомологий
+для объекта X (изображения или сегментации). \\
+
+to the best of our knowledge &
+A hedging phrase used to state that, as far as the authors are
+aware, a claim is true (common in academic writing). &
+Насколько нам известно - оговорка, используемая для утверждения,
+верного в пределах осведомлённости авторов (типично для научного
+стиля). \\
+
+to extend preliminary work &
+To build upon and develop further an earlier, less complete study. &
+Расширять предварительную работу - развивать и дополнять более
+раннее, менее полное исследование. \\
+
+to introduce a loss function &
+To define and add a new loss function to a training procedure. &
+Вводить функцию потерь - определять и добавлять новую функцию
+потерь в процедуру обучения. \\
+
+to provide a training signal &
+To supply information (via gradients) that guides the updating of a
+network's weights. &
+Обеспечивать обучающий сигнал - предоставлять информацию (через
+градиенты), направляющую обновление весов сети. \\
+
+to compare X with Y &
+To examine two things (here, predicted vs. prior-specified
+topological features) in order to note similarities/differences. &
+Сравнивать X с Y - сопоставлять два объекта (здесь - предсказанные
+и заданные априори топологические признаки) для выявления сходств
+или различий. \\
+
+to extract features from pixel intensities &
+To derive characteristics of an image directly from its raw pixel
+values. &
+Извлекать признаки из значений интенсивности пикселей - получать
+характеристики изображения непосредственно из его исходных
+значений. \\
+
+the mathematical details are introduced in the next section &
+A standard academic transition phrase pointing the reader to the
+following section for formal/technical content. &
+Математические детали представлены в следующем разделе -
+стандартная переходная фраза научного текста, отсылающая читателя к
+формальному/техническому содержанию далее. \\
+\end{longtable}
+
+\end{document}

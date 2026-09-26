@@ -1,0 +1,99 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{parskip}
+
+\title{A Topological Loss Function for Deep-Learning Based Image Segmentation Using Persistent Homology, IEEE TPAMI}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{1. Place of origin}
+    The article is printed in the international journal
+    IEEE Transactions on Pattern Analysis and Machine Intelligence
+    (IEEE TPAMI), published by the IEEE Computer Society. Has Q1 quartile.
+
+\section*{2. Time of origin}
+    The article is dated december 2022 (volume 44, number 12).
+
+\section*{3. Author}
+    The article is written by a group of authors - James Clough,
+    Nicholas Byrne, Ilkay Oksuz, Veronika Zimmer, Julia Schnabel,
+    and Andrew King, mostly affiliated in London and one from Istanbul and one from German.
+
+\section*{4. Theme / Topic}
+    The article deals with training convolutional neural networks (CNN)
+    for image and volume segmentation. It addresses the problem that
+    standard segmentation loss functions ignore the large-scale shape,
+    or topology, of the segmented object, and proposes a way to
+    incorporate prior topological knowledge into training using
+    persistent homology, a concept from topological data analysis.
+
+\section*{5. Main idea / Aim of the article}
+    The main idea is that pixel-wise loss functions, such as
+    cross-entropy or the Dice loss, only measure overlap between the
+    predicted and ground-truth segmentations and cannot capture whether
+    its large-scale structure is topologically correct. The aim of the
+    authors is to provide a differentiable topological loss function
+    that specifies the desired Betti numbers of an object - the number
+    of connected components, loops, and cavities - and to show that
+    driving the network towards the correct topology also improves
+    pixel-wise accuracy, even without ground-truth labels for every
+    case.
+
+\section*{6. Contents of the article}
+    The article can be divided into four parts.
+    The first part deals with the introduction and related work,
+    explaining why pixel-wise losses fail to capture topology.
+    The second covers the theory: persistent homology of cubical
+    complexes, Betti numbers, barcode diagrams, and the topological loss
+    function $L_{topo}$, applied either as post-processing or in a
+    semi-supervised framework.
+    The third touches upon four experiments: denoising MNIST digits;
+    segmenting the hearts myocardium from MRI data; the public ACDC
+    challenge dataset; and segmenting the placenta from 3-D ultrasound.
+    The fourth part includes the discussion and conclusion, addressing
+    the methods limitations and further applications.
+
+    The article is written mostly in the first person plural (like :we)
+    and includes equations, result tables, and figures such as barcode
+    diagrams. The authors start by stating that pixel-wise losses cannot
+    capture topological correctness, then describe the theory and derive
+    the loss function. According to the text, across all four
+    experiments the topological loss consistently improved both the
+    Dice score and the proportion of topologically correct
+    segmentations, especially on harder tasks. The authors conclude
+    that persistent homology is a viable tool for embedding topological
+    prior knowledge into segmentation training.
+
+\section*{7. Personal opinion / impression of the article}
+    I found the article interesting and useful, since it presents a
+    genuinely new approach to combining topology with machine learning.
+    Because topology is, by its nature, concerned with transformations
+    of shapes and connectivity patterns, it seems logical that it finds
+    application in computer vision, and in segmentation in particular. I
+    believe this direction - applying persistent homology to
+    segmentation - is very likely to become the topic of my own
+    masters thesis, aiming at either faster inference, faster training,
+    or better accuracy than classical pixel-wise loss functions.
+
+\section*{8. Personal view on the topic / idea / problem}
+    I share the authors view that pixel-wise loss functions alone are
+    insufficient whenever the global shape of an object matters. At the
+    same time, I see the problem in a slightly different way: computing
+    persistent homology adds computational cost, on the
+    order of seconds per batch or per volume, which makes the method
+    unsuitable for real-time segmentation. To my mind, this is the main
+    bottleneck of the approach, and improving the speed of the
+    computation is the most important open direction for future work,
+    including a possible direction for my own research. I dont quite
+    agree that computational optimisation should be left outside the
+    scope of the paper: without it, topological loss functions are
+    unlikely to be widely adopted in real clinical or industrial
+    pipelines.
+
+\end{document}

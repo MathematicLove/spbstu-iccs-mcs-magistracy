@@ -1,0 +1,56 @@
+name: taxi-stack
+
+services:
+  taxi-db:
+    image: ${TAXI_DB_IMAGE:-postgres:16-alpine}
+    container_name: taxi_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${TAXI_DB_NAME:?см. credentials.env; запускайте через ./db_launch.sh up}
+      POSTGRES_USER: ${TAXI_DB_USER:?см. credentials.env; запускайте через ./db_launch.sh up}
+      POSTGRES_PASSWORD: ${TAXI_DB_PASSWORD:?см. credentials.env; запускайте через ./db_launch.sh up}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "${TAXI_DB_PORT:?см. credentials.env; запускайте через ./db_launch.sh up}:5432"
+    volumes:
+      - taxi_pgdata:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - taxi_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  taxi-api:
+    build: ../api
+    container_name: taxi_api
+    restart: unless-stopped
+    depends_on:
+      taxi-db:
+        condition: service_healthy
+    environment:
+      SOURCE_ID: taxi
+      DB_HOST: taxi_db
+      DB_PORT: "5432"
+      DB_NAME: ${TAXI_DB_NAME:?см. credentials.env; запускайте через ./db_launch.sh up}
+      DB_USER: ${TAXI_DB_USER:?см. credentials.env; запускайте через ./db_launch.sh up}
+      DB_PASSWORD: ${TAXI_DB_PASSWORD:?см. credentials.env; запускайте через ./db_launch.sh up}
+    ports:
+      - "${TAXI_API_PORT:?см. credentials.env; запускайте через ./db_launch.sh up}:8000"
+    networks:
+      - taxi_net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  taxi_pgdata:
+    name: taxi_pgdata
+
+networks:
+  taxi_net:
+    name: taxi_net
