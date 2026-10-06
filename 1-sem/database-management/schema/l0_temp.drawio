@@ -1,0 +1,73 @@
+<mxfile host="65bd71144e">
+    <diagram id="D3v5MNzlxBjcn_CuemIk" name="Page-1">
+        <mxGraphModel dx="1745" dy="1382" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+                    <mxGeometry height="600" width="820" x="-270" y="270" as="geometry"/>
+                </mxCell>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Streamlit" vertex="1">
+                    <mxGeometry height="60" width="120" y="770" as="geometry"/>
+                </mxCell>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="matplotlib" vertex="1">
+                    <mxGeometry height="60" width="120" x="50" y="810" as="geometry"/>
+                </mxCell>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="seaborn" vertex="1">
+                    <mxGeometry height="60" width="120" x="90" y="840" as="geometry"/>
+                </mxCell>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="pandas" vertex="1">
+                    <mxGeometry height="60" width="120" x="60" y="900" as="geometry"/>
+                </mxCell>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="request" vertex="1">
+                    <mxGeometry height="60" width="120" x="140" y="930" as="geometry"/>
+                </mxCell>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="PostgreSQL" vertex="1">
+                    <mxGeometry height="60" width="120" x="220" y="960" as="geometry"/>
+                </mxCell>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Docker" vertex="1">
+                    <mxGeometry height="60" width="120" x="120" y="1020" as="geometry"/>
+                </mxCell>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="FastAPI" vertex="1">
+                    <mxGeometry height="60" width="120" x="190" y="1030" as="geometry"/>
+                </mxCell>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="uivicorn" vertex="1">
+                    <mxGeometry height="60" width="120" x="260" y="1050" as="geometry"/>
+                </mxCell>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="pydantic" vertex="1">
+                    <mxGeometry height="60" width="120" x="340" y="1090" as="geometry"/>
+                </mxCell>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="psycigg" vertex="1">
+                    <mxGeometry height="60" width="120" x="410" y="1130" as="geometry"/>
+                </mxCell>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="MAKE TEMPLATES" vertex="1">
+                    <mxGeometry height="80" width="120" x="350" y="320" as="geometry"/>
+                </mxCell>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-19" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="CHOOSE DB" vertex="1">
+                    <mxGeometry height="70" width="120" x="350" y="230" as="geometry"/>
+                </mxCell>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-25" connectable="0" parent="1" style="group" value="" vertex="1">
+                    <mxGeometry height="400" width="140" x="570" y="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-23" parent="CcVnAxLwMN4vKhUPuy1M-25" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+                    <mxGeometry height="370" width="140" y="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-2" parent="CcVnAxLwMN4vKhUPuy1M-25" style="rounded=0;whiteSpace=wrap;html=1;" value="UI" vertex="1">
+                    <mxGeometry height="30" width="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-14" parent="CcVnAxLwMN4vKhUPuy1M-25" style="rounded=0;whiteSpace=wrap;html=1;" value="TEMPLATES&lt;div&gt;UI&lt;/div&gt;" vertex="1">
+                    <mxGeometry height="80" width="120" x="10" y="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-15" parent="CcVnAxLwMN4vKhUPuy1M-25" style="rounded=0;whiteSpace=wrap;html=1;" value="QUERY&lt;br&gt;&lt;div&gt;UI&lt;/div&gt;" vertex="1">
+                    <mxGeometry height="70" width="120" x="10" y="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-17" parent="CcVnAxLwMN4vKhUPuy1M-25" style="rounded=0;whiteSpace=wrap;html=1;" value="MAKE PLOTS" vertex="1">
+                    <mxGeometry height="80" width="120" x="10" y="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="CcVnAxLwMN4vKhUPuy1M-20" parent="CcVnAxLwMN4vKhUPuy1M-25" style="rounded=0;whiteSpace=wrap;html=1;" value="SQL Query" vertex="1">
+                    <mxGeometry height="70" width="120" x="10" y="310" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

@@ -54,6 +54,24 @@
 \renewcommand{\lstlistingname}{Листинг}
 
 \setcounter{tocdepth}{2}
+% Отдельный горизонтальный лист A3 под схему: #1 - файл, #2 - подпись, #3 - метка
+\newcommand{\athreeschema}[3]{%
+    \clearpage
+    \begingroup
+    \KOMAoptions{paper=a3, paper=landscape, pagesize}
+    \areaset{390mm}{255mm}
+    \begin{figure}[p]
+        \centering
+        \includegraphics[width=\linewidth, height=0.93\textheight, keepaspectratio]{#1}
+        \caption{#2}
+        \label{#3}
+    \end{figure}
+    \clearpage
+    \endgroup
+    \KOMAoptions{paper=a4, paper=portrait, pagesize}
+    \restoregeometry
+}
+
 \begin{document}
 \sloppy
 	\thispagestyle{empty}
@@ -95,11 +113,16 @@
 \newpage
 \section{Постановка задачи}
 
-Требуется разработать систему включающую в себя три базы данных источников из единой СУБД работающих как отдельные 
+Требуется разработать систему, способную визуально показывать накопленные сведения в виде графиков и сводок,
+чтобы пользователь без специальной подготовки мог сам выбрать, 
+какие данные анализировать, отображать или отбирать нужные по условиям.
+Удачные варианты отчетов должны сохраняться для повторного использования, 
+а система должна сама замечать, когда состав собираемых сведений изменился, и предлагать учесть эти изменения.
+
+Система включает в себя три базы данных источников из единой СУБД работающих как отдельные 
 независимые контейнеры с помощью Docker, отдельную независимую базу данных имеющую аналог информационной 
 схемы, включающую в себя метаданные трех баз данных источников, а так же отдельную независимую базу данных содержащую 
 шаблоны запросов в виде SQL запросов. Сами базы данных общаются между собой с помощью API.
-
 Разработать интерфейс, включающий в себя поля выбора конкретной базы данных источников из трех,
 выбор столбцов баз данных, отображение таблиц, фильтр \guillemetleft И\guillemetright, отображение SQL запроса, вывод графика столбчетой диаграммы.
 Кнопка просмотра отличий баз данных с возможностью обновления до текущего состояния. 
@@ -116,41 +139,13 @@
     \item Информационная схема: Денормализованная;
     \item Способ общения между базами: REST;
     \item Язык написания интерфейса: Python;
+    \item Фильтрация по числовым данным для агрегированных функций;
     \item Библиотека отображения графиков: matplotlib, seaborn;
     \item Библиотека интерфейса: Streamlit;
     \item Правило фильтра: \guillemetleft И\guillemetright;
     \item Запрос: Обычный вывод таблицы.
 \end{itemize}
 
-Ниже на рисунке \ref{fig:task_arch}, предствлена архитектура поставленной задачи:
-
-Каждая база данных работает как отдельный контейнер, где каждый контейнер, 
-имеет собственный том, собственную сеть для общения. В верхней части архитектуры 
-показано, что запрос на получение метаданных идет по REST API, 
-после чего метаданные записываются в главную базу данных (metadata). 
-Справа от главной базы данных, база шаблонных запросов, 
-которая так же общается по REST. 
-Интерфейс работает локально без контейнера. В создании интерфейса
- используются 4 библиотеки языка Python. Для создания веб приложения 
- с интерфейсом используется streamlit, для отображения графиков matplotlib и seaborn,
- а для чтения данных и перевода их в DataFrame и в послествии в numpy массив для отображения графиков - pandas.
-
- В самом интерфейсе есть поля выбора базы данных источника, далее возможность выбора 
- типа графика (столбчетая диаграмма, обычный график, график разброса, heatmap).
- Ниже находятся кнопки просмотра отличий данных из баз данных источников.
- Слева сверху отображается сам SQL запрос, генерируемый путем заполнения форм.
- Запрос можно сохранить текстом в базу данных шаблонов, после чего использовать шаблоны 
- повторно. 
-
-
-\begin{figure}[H]
-    \center
-    \includegraphics[width=0.7\linewidth]{../schema/l1.png}
-    \caption{Архитектура задачи}
-    \label{fig:task_arch}
-\end{figure}
-
-Далее описываются архитектуры баз данных источников и визуализация архитектур.
 
 \newpage
 \section{Базы-источники}
@@ -186,12 +181,7 @@ review\_date - дата, rating - оценка от 1 до 5, review\_text - т�
 
 Ниже на рисунке \ref{fig:extradb}, показана схема базы данных:
 
-\begin{figure}[H]
-    \center
-    \includegraphics[width=\linewidth]{../schema/db-schema/extra-db/extra-db.png}
-    \caption{Архитектура базы данных учета репетиторов}
-    \label{fig:extradb}
-\end{figure}
+\athreeschema{../schema/db-schema/extra-db/extra-db.pdf}{Архитектура базы данных учета репетиторов}{fig:extradb}
 
 
 \subsection{База данных: Всероссийские соревнования по горнолыжному спорту}
@@ -221,12 +211,7 @@ attempt1\_result и attempt2\_result - время первой и второй �
 Спортсмен имеет не более одного результата на старте, что обеспечивается уникальным ограничением (athlete\_id, competition\_id).
 
 Далее показана схема базы данных горнолыжных соревнований \ref{fig:mountaindb}:
-\begin{figure}[H]
-    \center
-    \includegraphics[width=\linewidth]{../schema/db-schema/mountain-db/mountain-db.png}
-    \caption{Архитектура базы данных горнолыжных соревнований}
-    \label{fig:mountaindb}
-\end{figure}
+\athreeschema{../schema/db-schema/mountain-db/mountain-db.pdf}{Архитектура базы данных горнолыжных соревнований}{fig:mountaindb}
 
 \subsection{База данных: Спортсмены и соревнования в чирлидинге}
 
@@ -268,13 +253,9 @@ perfomance\_type - ссылка на номинацию, sportsman\_count - чи
 Атрибуты: perfomance\_sportsman\_id - идентификатор, perfomance\_id, sportsman\_id - ссылки, пара (perfomance\_id, sportsman\_id) уникальна.
 
 На рисунке \ref{fig:sportdb} показана схема базы данных чирлидинга:
-\begin{figure}[H]
-    \center
-    \includegraphics[width=\linewidth]{../schema/db-schema/sport-db/sport-db.png}
-    \caption{Архитектура базы данных спортсменов и соревнований в чирлидинге}
-    \label{fig:sportdb}
-\end{figure}
+\athreeschema{../schema/db-schema/sport-db/sport-db.pdf}{Архитектура базы данных спортсменов и соревнований в чирлидинге}{fig:sportdb}
 
+\newpage
 \section{Проектирование информационной схемы}
 
 На рисунке \ref{fig:metadb}, представлена схема базы данных имплементирующую логику денормализованной информационной схемы. 
@@ -341,6 +322,31 @@ perfomance\_type - ссылка на номинацию, sportsman\_count - чи
     \item ck\_catalog\_fk\_ref - поля fk\_key и ref\_* должны быть либо все пустыми, либо все заполненными. Это исключает \guillemetleft неполный\guillemetright внешний ключ, по которому нельзя построить JOIN.
 \end{itemize}
 
+Ниже показан пример составного ключа:
+Таблица tutor\_subject базы учета репетиторов, у которой первичный ключ (tutor\_id, subject\_id) и обе колонки
+одновременно ссылаются на tutors и subjects.
+
+В meta.catalog та же информация лежит в двух строках, по одной на колонку (см. табл. \ref{tab:catalog_example}). Строку определяет
+составной ключ каталога (source\_id, schema\_name, table\_name, column\_name), а составной ключ источника виден по номерам PK1 и PK2.
+Колонки schema\_name и ref\_schema\_name в обеих строках равны extra\_for\_students.
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Пример составного ключа в meta.catalog для tutor\_subject}
+    \label{tab:catalog_example}
+    \begin{tabular}{|l|l|l|c|c|l|l|}
+        \hline
+        source\_id & table\_name & column\_name & pk\_key & fk\_key & ref\_table\_name & ref\_column\_name \\ \hline
+        extra\_for\_students & tutor\_subject & tutor\_id & PK1 & FK1 & tutors & tutor\_id \\ \hline
+        extra\_for\_students & tutor\_subject & subject\_id & PK2 & FK2 & subjects & subject\_id \\ \hline
+    \end{tabular}
+\end{table}
+
+Номер PK берется из ordinal\_position первичного ключа, номер FK присваивается по порядку колонок в таблице. Колонки ref\_*
+строки tutor\_id указывают на строку каталога (extra\_for\_students, extra\_for\_students, tutors, tutor\_id), то есть
+внешний ключ каталога ведет на саму таблицу каталога, и для построения достаточно одного запроса к базе метаданных.
+
 \newpage
 \section{Проектирование базы данных шаблонов}
 
@@ -353,13 +359,16 @@ perfomance\_type - ссылка на номинацию, sportsman\_count - чи
     \item template\_name - уникальное имя шаблона, что бы в интерфейсе можно было назвать или выбрать; 
     \item sql\_text - сам SQL запрос;
     \item source\_id - идентификатор базы данных источника;
-    \item schema\_name - имя схемы в базе источнике 
+    \item schema\_name, table\_name - схема и таблица в базе источнике;
+    \item chart\_type - вид графика;
     \item dimension\_col - имя категориальной переменой что б понимать какую колонку выбирать;
     \item measure\_col - имя значений, так же что б понимать какую колонку выбрать;
-    \item second\_dim - имя вторыйх значений если будет возможность создать heatmap; 
-    \item agg\_func - выбор аггрегатной функции (только SUM, COUNT);
+    \item second\_dim\_col - вторая категориальная колонка для heatmap; 
+    \item agg\_func - выбор аггрегатной функции (SUM, AVG, COUNT);
+    \item filter\_summary - читаемая сводка условий WHERE;
     \item row\_limit - ограничение на количество строк (для LIMIT);
     \item created\_at - дата и время создания шаблона;
+    \item used\_count - сколько раз шаблон применяли;
     \item last\_used\_at - дата последнего использования, так как планируется удалять шаблон если не используется более 10 дней. 
 \end{itemize}
 
@@ -369,7 +378,7 @@ perfomance\_type - ссылка на номинацию, sportsman\_count - чи
 
 \begin{figure}[H]
     \center
-    \includegraphics[width=0.4\linewidth]{../schema/db-schema/template-db.png}
+    \includegraphics[width=0.3\linewidth]{../schema/db-schema/template-db.png}
     \caption{Архитектура базы шаблонов}
     \label{fig:template}
 \end{figure}
@@ -454,6 +463,58 @@ $$
 То есть например 5438:5432 означает, что подключения к порту 5438 хостовой системы перенаправляются на порт 
 5432 postgres внутри контейнера базы источника.
 
+
+\newpage
+\section{Проектирование архитектуры}
+
+Каждая база данных работает как отдельный контейнер, где каждый контейнер, 
+имеет собственный том, собственную сеть для общения. В верхней части архитектуры 
+показано, что запрос на получение метаданных идет по REST API, 
+после чего метаданные записываются в главную базу данных (metadata). 
+Справа от главной базы данных, база шаблонных запросов, 
+которая так же общается по REST. 
+
+Интерфейс работает локально без контейнера. В создании интерфейса
+используются 4 библиотеки языка Python. Для создания веб приложения 
+с интерфейсом используется streamlit, для отображения графиков matplotlib и seaborn,
+а для чтения данных и перевода их в DataFrame и в послествии в numpy массив для отображения графиков - pandas.
+
+ Ниже на рисунке \ref{fig:task_arch}, предствлена архитектура программы:
+
+\begin{figure}[H]
+    \center
+    \includegraphics[width=0.7\linewidth]{../schema/l1.png}
+    \caption{Архитектура программы}
+    \label{fig:task_arch}
+\end{figure}
+
+В самом интерфейсе есть поля выбора базы данных источника, далее возможность выбора 
+типа графика (столбчетая диаграмма, обычный график, график разброса, heatmap).
+Ниже находятся кнопки просмотра отличий данных из баз данных источников.
+Слева сверху отображается сам SQL запрос, генерируемый путем заполнения форм.
+Запрос можно сохранить текстом в базу данных шаблонов, после чего использовать шаблоны 
+повторно. 
+
+\newpage
+Так же на рисунке \ref{fig:module}, показана модульная схема программы:
+
+\begin{figure}[H]
+    \center
+    \includegraphics[width=\linewidth]{../schema/l0-modules.png}
+    \caption{Модульная архитектура программы}
+    \label{fig:module}
+\end{figure}
+
+На рисунке \ref{fig:module_buisness}, показана модульная схема бизнес процессов, автоматизированных с помощью 
+разрабатываемого ПО:
+
+\begin{figure}[H]
+    \center
+    \includegraphics[width=\linewidth]{../schema/l0_modules-2.png}
+    \caption{Модульная архитектура бизнес процессов}
+    \label{fig:module_buisness}
+\end{figure}
+
 \newpage
 \section{Разработка системы}
     % Про проектирование, psycopg
@@ -500,6 +561,7 @@ def catalog(source_id):
 из списка имен колонок и списка строк. Отдельным методом агент отдает описание своих таблиц и колонок,
 откуда база метаданных и наполняет каталог.
 
+\newpage
     \subsection{Шаблонный запрос}
     % как проектируется (с помощью чего, почему именно так) - как именно работает с другими БД источниками и мета данными
 Запрос к источнику описан одной строкой-шаблоном с именованными
@@ -534,7 +596,7 @@ ORDER BY table_name, ordinal_position
 
         \subsubsection{Агрегатные функции}
         % как интегрируем какие можно выбрать (count, sum) - как именно работает с другими БД источниками и мета данными
-Допустимых функций пока две, SUM и COUNT,
+Допустимых функций три: SUM, AVG и COUNT,
 и выбор ограничен списком, то есть в шаблон не может попасть произвольное слово.
 
 Аргументом служит колонка значений, выбранная пользователем и проверенная по каталогу. Если колонка не задана,
@@ -546,8 +608,39 @@ ORDER BY table_name, ordinal_position
 
         \subsubsection{Условие}
         % как интегрируем WHERE (что можно ставить)(пропустить) - как именно работает с другими БД источниками и мета данными
+Условие можно наложить только на выбранные колонки категорий и значений. Каждое условие хранится
+тройкой из имени колонки, оператора и значения, а в запрос они попадают через AND
+между шаблоном FROM и GROUP BY, то есть отбор строк выполняется до группировки.
+
+Какие операторы доступны, решает поле data\_type каталога. Для числовых колонок оператор выбирается из фиксированного
+списка $=, <, >, \leq, \geq$ и значение подставляется как есть. Для остальных оператор не выбирается,
+условие собирается как LIKE по вхождению подстроки, а одинарные кавычки в значении экранируются удвоением:
+
+\begin{lstlisting}[language=Python, caption={Сборка условий}, label={lis:where}]
+for col, op, value in filters:
+    if op == "LIKE":
+        escaped = str(value).replace("'", "''")
+        conds.append(f"{col} LIKE '%{escaped}%'")
+    elif op in COMPARISON_OPS:
+        conds.append(f"{col} {op} {value}")
+\end{lstlisting}
+
+Если ни одно условие не задано, WHERE в запрос не добавляется вовсе. Тот же набор условий используется и для
+запроса дополнительных колонок, поэтому обе таблицы результата показывают одни и те же строки.
+
         \subsubsection{Ограничение по строкам}
         % как интегрируем LIMIT (пропустить) - как именно работает с другими БД источниками и мета данными
+Ограничение задается текстовым полем и дописывается последней строкой запроса, после GROUP BY, так что
+его выполняет сам источник и через REST передается уже урезанный результат.
+
+Пустое поле или не число заменяются значением по умолчанию 500, чтобы случайно не выгрузить всю таблицу.
+Ноль или отрицательное число означают отсутствие ограничения, и тогда LIMIT не добавляется.
+Для запроса дополнительных колонок, где группировки нет и строк может быть много, при отсутствии ограничения
+подставляется LIMIT 200.
+
+При смене базы, таблицы или колонок поле сбрасывается, так как старое ограничение к новому запросу
+обычно не относится.
+
         \subsubsection{Группировка}
         % как определяется как интегрируется как работает (в приложении) - как именно работает с другими БД источниками и мета данными
 Группировка определяется набором выбранных атрибутов. 
@@ -561,6 +654,23 @@ ORDER BY table_name, ordinal_position
 
     \subsection{Сохранение шаблонов запросов}
     % пропустить
+Шаблоны хранятся в отдельной базе tpl, к которой, как и к источникам, обращаются через свой REST.
+Он дает четыре метода: получить список шаблонов, создать шаблон, отметить использование и удалить.
+
+При сохранении отправляется готовый текст запроса вместе с параметрами формы: источник, схема, таблица, вид графика,
+колонки, агрегат и лимит. Условия сохраняются дважды: сами уже есть в тексте запроса, а в поле filter\_summary
+кладется их читаемая сводка для списка шаблонов. Если имя не задано, его выдает триггер при вставке:
+
+\begin{lstlisting}[language=SQL, caption={Имя шаблона по умолчанию}, label={lis:tpl_name}]
+IF NEW.template_name IS NULL OR btrim(NEW.template_name) = '' THEN
+    NEW.template_name := 'template_' || nextval('tpl.template_name_seq');
+END IF;
+\end{lstlisting}
+
+Проверки на уровне таблицы не дают сохранить неизвестный вид графика или агрегат, неположительный лимит
+и запрос, начинающийся не с SELECT. При применении шаблона параметры переносятся обратно в форму, а
+в базе увеличивается счетчик used\_count и обновляется last\_used\_at, по которому потом можно удалять
+неиспользуемые шаблоны.
 
     \subsection{Перевод в NumPy массив}
     % как получаем данные, как переводим их (переход к тому что они нужны для matplotlib, seaborn - пропусти только matplotlib)
@@ -568,6 +678,7 @@ ORDER BY table_name, ordinal_position
 А для построения графика данные нужно разложить на две однотипные последовательности.
 Последняя колонка это агрегат, остальные это подписи. Подписи склеиваются
 в строку, значения приводятся к числу с плавающей точкой, после чего обе последовательности оборачиваются в массивы NumPy:
+
 
 \begin{lstlisting}[language=Python, caption={Перевод результата в массивы}, label={lis:to_arrays}]
 def to_arrays(rows):
@@ -891,7 +1002,12 @@ SQL запроса, после чего запрос отправляется RE
 \newpage
 \section{Результаты работы}
 
+Ниже в главах \ref{sec:scenario_1} - \ref{sec:scenario_11}, представлены 11 сценариев использования 
+разработанной минимальной BI-системы с 
+интерфейсом и итоговым запросом. 
+
 \subsection{Сценарий 1}
+\label{sec:scenario_1}
 Вывод первых 500 результатов горнолыжников из таблицы result базы mountain\_sport, где attempt1\_result $>$ 0, в виде диаграммы рассеивания времени первой попытки (attempt1\_result) против второй (attempt2\_result).
 Итоговый SQL запрос приведен в листинге \ref{lis:scen1}, результат на рисунке \ref{fig:scen1}.
 \begin{lstlisting}[language=SQL, caption={Сценарий 1: итоговый SQL запрос}, label={lis:scen1}]
@@ -908,7 +1024,7 @@ LIMIT 500
 \end{figure}
 
 \subsection{Сценарий 2}
-Вывод столбчатой диаграммы суммарной стоимости занятий SUM(cost) по предметам subject\_id из таблицы lesson базы extra\_for\_students, где стоимость cost $\geq$ 1000 рублей.
+Вывод столбчатой диаграммы суммарной стоимости занятий по предметам subject\_id из таблицы lesson базы extra\_for\_students, где стоимость cost $\geq$ 1000 рублей.
 Итоговый SQL запрос приведен в листинге \ref{lis:scen2}, результат на рисунке \ref{fig:scen2}.
 \begin{lstlisting}[language=SQL, caption={Сценарий 2: итоговый SQL запрос}, label={lis:scen2}]
 SELECT subject_id, SUM(cost) AS cost
@@ -925,7 +1041,7 @@ LIMIT 500
 \end{figure}
 
 \subsection{Сценарий 3}
-Вывод круговой диаграммы доли выступлений по номинациям COUNT(perfomance\_id) по perfomance\_type из таблицы perfomance базы sport\_and\_cheerleaders.
+Вывод круговой диаграммы доли выступлений по номинациям по perfomance\_type из таблицы perfomance базы sport\_and\_cheerleaders.
 Итоговый SQL запрос приведен в листинге \ref{lis:scen3}, результат на рисунке \ref{fig:scen3}.
 \begin{lstlisting}[language=SQL, caption={Сценарий 3: итоговый SQL запрос}, label={lis:scen3}]
 SELECT perfomance_type, COUNT(perfomance_id) AS perfomance_id
@@ -940,8 +1056,9 @@ LIMIT 500
     \label{fig:scen3}
 \end{figure}
 
+\newpage
 \subsection{Сценарий 4}
-Вывод тепловой карты средней стоимости занятия AVG(cost) по предметам subject\_id и форматам format\_id из таблицы lesson базы extra\_for\_students.
+Вывод тепловой карты средней стоимости занятия по предметам subject\_id и форматам format\_id из таблицы lesson базы extra\_for\_students.
 Итоговый SQL запрос приведен в листинге \ref{lis:scen4}, результат на рисунке \ref{fig:scen4}.
 \begin{lstlisting}[language=SQL, caption={Сценарий 4: итоговый SQL запрос}, label={lis:scen4}]
 SELECT subject_id, format_id, AVG(cost) AS cost
@@ -956,9 +1073,11 @@ LIMIT 500
     \label{fig:scen4}
 \end{figure}
 
+\newpage
 \subsection{Сценарий 5}
-Сравнение двух сохраненных шаблонов по таблице lesson - SUM(cost) по subject\_id без условия и с условием cost $\geq$ 1000 и лимитом 10 - через флажки compare в форме выбора шаблона.
+Сравнение двух сохраненных шаблонов по таблице lesson по subject\_id без условия и с условием cost $\geq$ 1000 и лимитом 10 - через флажки compare в форме выбора шаблона.
 Итоговые SQL запросы сравниваемых шаблонов приведены в листингах \ref{lis:scen5a} и \ref{lis:scen5b}, результат сравнения на рисунке \ref{fig:scen5}.
+
 \begin{lstlisting}[language=SQL, caption={Сценарий 5: шаблон lesson\_cost\_by\_subject}, label={lis:scen5a}]
 SELECT subject_id, SUM(cost) AS cost
 FROM extra_for_students.lesson
@@ -974,7 +1093,7 @@ LIMIT 10
 \end{lstlisting}
 \begin{figure}[H]
     \center
-    \includegraphics[width=0.5\linewidth]{img/SCEN_5.png}
+    \includegraphics[width=0.4\linewidth]{img/SCEN_5.png}
     \caption{Сценарий 5: сравнение двух шаблонов}
     \label{fig:scen5}
 \end{figure}
@@ -999,7 +1118,7 @@ ALTER TABLE mountain_sport.athlete ADD COLUMN height SMALLINT;
 \end{figure}
 
 \subsection{Сценарий 7}
-Вывод количества спортсменов COUNT(sportsman\_id) по клубам club\_id из таблицы sportsman базы sport\_and\_cheerleaders, где club\_id $\leq$ 50, с дополнительными колонками sportsman\_lastname и sportsman\_birthdate в таблице Details.
+Вывод количества спортсменов по клубам club\_id из таблицы sportsman базы sport\_and\_cheerleaders, где club\_id $\leq$ 50, с дополнительными колонками sportsman\_lastname и sportsman\_birthdate в таблице Details.
 Итоговый SQL запрос приведен в листинге \ref{lis:scen7}, результат на рисунке \ref{fig:scen7}.
 \begin{lstlisting}[language=SQL, caption={Сценарий 7: итоговый SQL запрос}, label={lis:scen7}]
 SELECT club_id, COUNT(sportsman_id) AS sportsman_id
@@ -1016,7 +1135,7 @@ LIMIT 500
 \end{figure}
 
 \subsection{Сценарий 8}
-Вывод среднего опыта репетиторов AVG(experience) по городам city\_id из таблицы tutors базы extra\_for\_students, где опыт experience $\geq$ 5 лет.
+Вывод среднего опыта репетиторов по городам city\_id из таблицы tutors базы extra\_for\_students, где опыт experience $\geq$ 5 лет.
 Итоговый SQL запрос приведен в листинге \ref{lis:scen8}, результат на рисунке \ref{fig:scen8}.
 \begin{lstlisting}[language=SQL, caption={Сценарий 8: итоговый SQL запрос}, label={lis:scen8}]
 SELECT city_id, AVG(experience) AS experience
@@ -1033,7 +1152,7 @@ LIMIT 500
 \end{figure}
 
 \subsection{Сценарий 9}
-Вывод суммарного числа спортсменов-призеров SUM(sportsman\_count) по занятым местам perfomance\_place из таблицы perfomance базы sport\_and\_cheerleaders, где perfomance\_place $\leq$ 3.
+Вывод суммарного числа спортсменов-призеров sportsman\_count по занятым местам perfomance\_place из таблицы perfomance базы sport\_and\_cheerleaders, где perfomance\_place $\leq$ 3.
 Итоговый SQL запрос приведен в листинге \ref{lis:scen9}, результат на рисунке \ref{fig:scen9}.
 \begin{lstlisting}[language=SQL, caption={Сценарий 9: итоговый SQL запрос}, label={lis:scen9}]
 SELECT perfomance_place, SUM(sportsman_count) AS sportsman_count
@@ -1050,7 +1169,7 @@ LIMIT 500
 \end{figure}
 
 \subsection{Сценарий 10}
-Вывод количества результатов COUNT(result\_id) по итогам выступления attempt\_id (финишировал, DNF, DSQ, DNS) из таблицы result базы mountain\_sport.
+Вывод количества результатов result\_id по итогам выступления attempt\_id (финишировал, DNF, DSQ, DNS) из таблицы result базы mountain\_sport.
 Итоговый SQL запрос приведен в листинге \ref{lis:scen10}, результат на рисунке \ref{fig:scen10}.
 \begin{lstlisting}[language=SQL, caption={Сценарий 10: итоговый SQL запрос}, label={lis:scen10}]
 SELECT attempt_id, COUNT(result_id) AS result_id
@@ -1066,7 +1185,8 @@ LIMIT 500
 \end{figure}
 
 \subsection{Сценарий 11}
-Вывод среднего лучшего времени первой попытки AVG(attempt1\_result) по дисциплинам discipline из таблицы competition базы mountain\_sport, где attempt1\_result $>$ 0.
+\label{sec:scenario_11}
+Вывод среднего лучшего времени первой попытки attempt1\_result по дисциплинам discipline из таблицы competition базы mountain\_sport, где attempt1\_result $>$ 0.
 Итоговый SQL запрос приведен в листинге \ref{lis:scen11}, результат на рисунке \ref{fig:scen11}.
 \begin{lstlisting}[language=SQL, caption={Сценарий 11: итоговый SQL запрос}, label={lis:scen11}]
 SELECT discipline, AVG(attempt1_result) AS attempt1_result
