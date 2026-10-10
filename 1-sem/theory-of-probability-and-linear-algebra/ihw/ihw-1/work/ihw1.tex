@@ -1,0 +1,471 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[english,russian]{babel}
+\usepackage[left=25mm, right=15mm, top=20mm, bottom=20mm]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\begin{document}
+
+\begin{center}
+    \textbf{\large Вариант 16 (30126)}
+\end{center}
+
+\section{Условие}
+
+\[
+    (\xi, \eta) \sim U(D), \qquad
+    D = \left\{(x,y) : x \in [-1, 3],\; y \in [0, 2]\right\},
+\]
+\[
+    \zeta = 3\xi^2 - 3, \qquad \nu = [3\eta], \qquad \mu = 2\xi + 4\eta.
+\]
+
+\section{Совместная плотность, компоненты, независимость}
+
+\subsection{Совместная плотность}
+
+Пусть $D \subset \mathbb{R}^2$ --- область площади $S_D$. Тогда
+\[
+    (\xi,\eta) \sim U(D)
+    \quad\Longleftrightarrow\quad
+    p_{\xi\eta}(x, y) =
+    \begin{cases}
+        \dfrac{1}{S_D}, & (x, y) \in D, \\[2ex]
+        0, & (x, y) \notin D.
+    \end{cases}
+\]
+
+\[
+    S_D = (3 - (-1))(2 - 0) = 8
+    \quad\Longrightarrow\quad
+    \boxed{\;
+    p_{\xi\eta}(x, y) =
+    \begin{cases}
+        \dfrac{1}{8}, & (x, y) \in D, \\[2ex]
+        0, & (x, y) \notin D.
+    \end{cases}
+    \;}
+\]
+
+\[
+    \iint\limits_{\mathbb{R}^2} p_{\xi\eta}\,\mathrm{d}x\,\mathrm{d}y
+    = \int_{-1}^{3}\!\!\int_{0}^{2} \frac{1}{8}\,\mathrm{d}y\,\mathrm{d}x
+    = \frac{1}{8}\cdot 4 \cdot 2 = 1. \quad \blacksquare
+\]
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{plots/task_region.png}
+\end{figure}
+
+\subsection{Плотности и функции распределения компонент}
+
+\[
+    p_\xi(x) = \int_{-\infty}^{+\infty} p_{\xi\eta}(x,y)\,\mathrm{d}y
+    = \int_{0}^{2} \frac{\mathrm{d}y}{8} = \frac{1}{4}, \quad x \in [-1,3];
+    \qquad p_\xi(x) = 0, \quad x \notin [-1,3].
+\]
+\[
+    p_\eta(y) = \int_{-\infty}^{+\infty} p_{\xi\eta}(x,y)\,\mathrm{d}x
+    = \int_{-1}^{3} \frac{\mathrm{d}x}{8} = \frac{1}{2}, \quad y \in [0,2];
+    \qquad p_\eta(y) = 0, \quad y \notin [0,2].
+\]
+
+\[
+    \boxed{\;\xi \sim U(-1, 3), \qquad \eta \sim U(0, 2)\;}
+\]
+
+Для $U(a,b)$:
+\[
+    p(x) =
+    \begin{cases}
+        \dfrac{1}{b-a}, & x \in [a, b], \\[2ex]
+        0, & x \notin [a, b],
+    \end{cases}
+    \qquad
+    F(x) = \int_{-\infty}^{x} p(s)\,\mathrm{d}s =
+    \begin{cases}
+        0, & x < a, \\[1ex]
+        \dfrac{x-a}{b-a}, & x \in [a, b], \\[2ex]
+        1, & x > b.
+    \end{cases}
+\]
+
+\[
+    F_\xi(x) =
+    \begin{cases}
+        0, & x < -1, \\[1ex]
+        \dfrac{x+1}{4}, & x \in [-1, 3], \\[2ex]
+        1, & x > 3,
+    \end{cases}
+    \qquad
+    F_\eta(y) =
+    \begin{cases}
+        0, & y < 0, \\[1ex]
+        \dfrac{y}{2}, & y \in [0, 2], \\[2ex]
+        1, & y > 2.
+    \end{cases}
+\]
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{plots/task_marginals.png}
+\end{figure}
+
+\subsection{Независимость}
+
+\[
+    (x,y) \in D: \quad p_\xi(x)\,p_\eta(y) = \frac{1}{4}\cdot\frac{1}{2} = \frac{1}{8} = p_{\xi\eta}(x,y),
+\]
+\[
+    (x,y) \notin D: \quad p_\xi(x)\,p_\eta(y) = 0 = p_{\xi\eta}(x,y),
+\]
+\[
+    \Longrightarrow \quad
+    \boxed{\; p_{\xi\eta}(x,y) \equiv p_\xi(x)\,p_\eta(y)
+    \;\Longrightarrow\; \xi \text{ и } \eta \text{ независимы} \;}
+\]
+
+Факторизация прошла из-за того, что $D$ --- прямоугольник со сторонами вдоль осей;
+для непрямоугольной области её бы не было.
+
+\section{Распределения $\zeta = 3\xi^2 - 3$ и $\nu = [3\eta]$}
+
+\subsection{Моменты $U(a,b)$}
+
+\[
+    \mathbb{E}\xi = \int_{a}^{b} \frac{x\,\mathrm{d}x}{b-a}
+    = \frac{x^2}{2(b-a)}\bigg|_{a}^{b}
+    = \frac{b^2-a^2}{2(b-a)} = \frac{a+b}{2},
+\]
+\[
+    \mathbb{E}\xi^2 = \int_{a}^{b} \frac{x^2\,\mathrm{d}x}{b-a}
+    = \frac{x^3}{3(b-a)}\bigg|_{a}^{b}
+    = \frac{b^3-a^3}{3(b-a)} = \frac{a^2+ab+b^2}{3},
+\]
+\begin{align*}
+    \mathbb{D}\xi &= \mathbb{E}\xi^2 - (\mathbb{E}\xi)^2
+    = \frac{a^2+ab+b^2}{3} - \frac{(a+b)^2}{4}
+    = \frac{4(a^2+ab+b^2) - 3(a+b)^2}{12} = \\
+    &= \frac{a^2 - 2ab + b^2}{12} = \frac{(b-a)^2}{12}.
+\end{align*}
+
+\[
+    \boxed{\; U(a,b): \quad \mathbb{E} = \frac{a+b}{2}, \qquad \mathbb{D} = \frac{(b-a)^2}{12} \;}
+\]
+
+\[
+    \xi \sim U(-1,3): \quad
+    \mathbb{E}\xi = \frac{-1+3}{2} = 1, \quad
+    \mathbb{D}\xi = \frac{4^2}{12} = \frac{4}{3}, \quad
+    \mathbb{E}\xi^2 = \frac{4}{3} + 1 = \frac{7}{3};
+\]
+\[
+    \eta \sim U(0,2): \quad
+    \mathbb{E}\eta = 1, \quad \mathbb{D}\eta = \frac{2^2}{12} = \frac{1}{3}, \quad
+    \mathbb{E}\eta^2 = \frac{1}{3} + 1 = \frac{4}{3}.
+\]
+
+\subsection{Функция распределения $\zeta$}
+
+$g(x) = 3x^2-3$ не монотонна на $[-1,3]$, поэтому идём по определению.
+
+\[
+    x \in [-1,3] \;\Rightarrow\; x^2 \in [0,9] \;\Rightarrow\; \zeta \in [-3, 24].
+\]
+
+\begin{align*}
+    F_\zeta(z) &= \mathbb{P}(3\xi^2 - 3 \le z)
+    = \mathbb{P}\!\left(\xi^2 \le \frac{z+3}{3}\right)
+    = \mathbb{P}(-t \le \xi \le t), \\
+    t &= \sqrt{\frac{z+3}{3}} \ge 0.
+\end{align*}
+
+\[
+    \mathbb{P}(-t \le \xi \le t)
+    = \int\limits_{[-t,\,t]\,\cap\,[-1,\,3]} \frac{\mathrm{d}x}{4}
+\]
+
+\[
+    t \le 1 \;\Leftrightarrow\; z \le 0: \qquad
+    [-t,t] \cap [-1,3] = [-t,t], \qquad
+    F_\zeta(z) = \int_{-t}^{t} \frac{\mathrm{d}x}{4} = \frac{2t}{4} = \frac{t}{2};
+\]
+\[
+    1 < t \le 3 \;\Leftrightarrow\; 0 < z \le 24: \qquad
+    [-t,t] \cap [-1,3] = [-1,t], \qquad
+    F_\zeta(z) = \int_{-1}^{t} \frac{\mathrm{d}x}{4} = \frac{t+1}{4};
+\]
+\[
+    t > 3 \;\Leftrightarrow\; z > 24: \qquad F_\zeta(z) = 1.
+\]
+
+\[
+    \boxed{\;
+    F_\zeta(z) =
+    \begin{cases}
+        0, & z < -3, \\[1ex]
+        \dfrac{1}{2}\sqrt{\dfrac{z+3}{3}}, & -3 \le z \le 0, \\[2.5ex]
+        \dfrac{1}{4}\left(\sqrt{\dfrac{z+3}{3}} + 1\right), & 0 < z \le 24, \\[2.5ex]
+        1, & z > 24.
+    \end{cases}
+    \;}
+\]
+
+\[
+    F_\zeta(0^-) = \frac{1}{2} = F_\zeta(0^+), \qquad F_\zeta(24) = \frac{3+1}{4} = 1.
+\]
+
+\subsection{Плотность $\zeta$}
+
+\[
+    \left(\sqrt{\frac{z+3}{3}}\right)' = \frac{1}{2\sqrt{3}\sqrt{z+3}} = \frac{1}{2\sqrt{3(z+3)}}
+\]
+
+\[
+    \boxed{\;
+    p_\zeta(z) = F'_\zeta(z) =
+    \begin{cases}
+        \dfrac{1}{4\sqrt{3(z+3)}}, & -3 < z < 0, \\[2.5ex]
+        \dfrac{1}{8\sqrt{3(z+3)}}, & 0 < z < 24, \\[2.5ex]
+        0, & \text{иначе}.
+    \end{cases}
+    \;}
+\]
+
+\[
+    p_\zeta(0^-) = \frac{1}{12}, \qquad p_\zeta(0^+) = \frac{1}{24}
+    \quad\Longrightarrow\quad \text{разрыв в } z = 0
+\]
+(при $z < 0$ в прообраз входят обе ветви параболы, при $z > 0$ --- только правая).
+
+\begin{align*}
+    \int_{-3}^{0} \frac{\mathrm{d}z}{4\sqrt{3(z+3)}}
+    &= \frac{2\sqrt{z+3}}{4\sqrt{3}}\bigg|_{-3}^{0} = \frac{2\sqrt{3}}{4\sqrt{3}} = \frac{1}{2}, \\
+    \int_{0}^{24} \frac{\mathrm{d}z}{8\sqrt{3(z+3)}}
+    &= \frac{2\sqrt{z+3}}{8\sqrt{3}}\bigg|_{0}^{24} = \frac{2(3\sqrt{3}-\sqrt{3})}{8\sqrt{3}} = \frac{1}{2},
+    \qquad \text{сумма} = 1. \quad\blacksquare
+\end{align*}
+
+\subsection{$\mathbb{E}\zeta$, $\mathbb{D}\zeta$}
+
+\[
+    \mathbb{E}\zeta = \mathbb{E}(3\xi^2-3) = 3\,\mathbb{E}\xi^2 - 3
+    = 3\cdot\frac{7}{3} - 3 = 4.
+\]
+\[
+    \mathbb{E}\xi^4 = \int_{-1}^{3} \frac{x^4}{4}\,\mathrm{d}x
+    = \frac{x^5}{20}\bigg|_{-1}^{3} = \frac{243+1}{20} = \frac{61}{5},
+\]
+\[
+    \mathbb{D}(\xi^2) = \mathbb{E}\xi^4 - \left(\mathbb{E}\xi^2\right)^2
+    = \frac{61}{5} - \frac{49}{9} = \frac{549-245}{45} = \frac{304}{45},
+\]
+\[
+    \mathbb{D}\zeta = \mathbb{D}(3\xi^2-3) = 9\,\mathbb{D}(\xi^2)
+    = 9\cdot\frac{304}{45} = \frac{304}{5} = 60.8.
+\]
+
+\subsection{$\nu = [3\eta]$}
+
+\[
+    \eta \sim U(0,2) \;\Rightarrow\; 3\eta \sim U(0,6) \;\Rightarrow\; \nu \in \{0,1,2,3,4,5\},
+\]
+\[
+    \{\nu = k\} = \{k \le 3\eta < k+1\} = \left\{\frac{k}{3} \le \eta < \frac{k+1}{3}\right\},
+\]
+\[
+    \mathbb{P}(\nu = k) = \int_{k/3}^{(k+1)/3} \frac{\mathrm{d}y}{2} = \frac{1}{2}\cdot\frac{1}{3}
+    = \frac{1}{6}, \qquad k = \overline{0,5}; \qquad \mathbb{P}(\nu = 6) = \mathbb{P}(\eta = 2) = 0.
+\]
+
+\begin{center}
+\begin{tabular}{l|cccccc}
+    \toprule
+    $k$ & 0 & 1 & 2 & 3 & 4 & 5 \\
+    $\mathbb{P}(\nu = k)$ & $1/6$ & $1/6$ & $1/6$ & $1/6$ & $1/6$ & $1/6$ \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+
+\[
+    \mathbb{E}\nu = \sum_{k=0}^{5} \frac{k}{6} = \frac{15}{6} = \frac{5}{2}, \qquad
+    \mathbb{E}\nu^2 = \sum_{k=0}^{5} \frac{k^2}{6} = \frac{55}{6},
+\]
+\[
+    \mathbb{D}\nu = \frac{55}{6} - \frac{25}{4} = \frac{110-75}{12} = \frac{35}{12} \approx 2.917.
+\]
+
+\section{Вектор мат. ожиданий и ковариационные характеристики $(\xi,\eta)$}
+
+\[
+    \mathbb{E}\xi = \int_{-1}^{3} \frac{x\,\mathrm{d}x}{4} = \frac{x^2}{8}\bigg|_{-1}^{3} = \frac{9-1}{8} = 1,
+    \qquad
+    \mathbb{E}\eta = \int_{0}^{2} \frac{y\,\mathrm{d}y}{2} = \frac{y^2}{4}\bigg|_{0}^{2} = 1,
+\]
+\[
+    \boxed{\; \mathbb{E}(\xi,\eta) = \begin{pmatrix} 1 \\ 1 \end{pmatrix} \;}
+\]
+
+\[
+    \mathbb{E}(\xi\eta) = \int_{-1}^{3}\!\!\int_{0}^{2} \frac{xy}{8}\,\mathrm{d}y\,\mathrm{d}x
+    = \frac{1}{8}\left(\int_{-1}^{3} x\,\mathrm{d}x\right)\!\left(\int_{0}^{2} y\,\mathrm{d}y\right)
+    = \frac{1}{8}\cdot 4 \cdot 2 = 1,
+\]
+\[
+    \mathrm{cov}(\xi,\eta) = \mathbb{E}(\xi\eta) - \mathbb{E}\xi\,\mathbb{E}\eta = 1 - 1 = 0,
+    \qquad
+    \mathrm{corr}(\xi,\eta) = \frac{0}{\sqrt{\mathbb{D}\xi\,\mathbb{D}\eta}} = 0.
+\]
+
+\[
+    \boxed{\;
+    \Sigma =
+    \begin{pmatrix}
+        \mathbb{D}\xi & \mathrm{cov}(\xi,\eta) \\
+        \mathrm{cov}(\xi,\eta) & \mathbb{D}\eta
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+        \dfrac{4}{3} & 0 \\[1.5ex]
+        0 & \dfrac{1}{3}
+    \end{pmatrix},
+    \qquad
+    R = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}
+    \;}
+\]
+
+\subsection{Условное распределение $\xi$ при условии $\eta$}
+
+\[
+    p_{\xi\mid\eta}(x \mid y) = \frac{p_{\xi\eta}(x,y)}{p_\eta(y)} = \frac{1/8}{1/2} = \frac{1}{4},
+    \qquad x \in [-1,3], \;\; y \in [0,2],
+\]
+\[
+    \boxed{\;
+    p_{\xi\mid\eta}(x \mid y) =
+    \begin{cases}
+        \dfrac{1}{4}, & x \in [-1,3], \\[2ex]
+        0, & \text{иначе}
+    \end{cases}
+    \;=\; p_\xi(x)
+    \quad\Longrightarrow\quad (\xi \mid \eta) \sim U(-1,3)
+    \;}
+\]
+
+\[
+    \mathbb{E}(\xi \mid \eta) = \int_{-1}^{3} x\,p_{\xi\mid\eta}(x \mid y)\,\mathrm{d}x = \mathbb{E}\xi = 1,
+    \qquad
+    \mathbb{D}(\xi \mid \eta) = \mathbb{D}\xi = \frac{4}{3}.
+\]
+
+\[
+    \mathbb{E}\big[\mathbb{D}(\xi \mid \eta)\big] + \mathbb{D}\big[\mathbb{E}(\xi \mid \eta)\big]
+    = \frac{4}{3} + 0 = \frac{4}{3} = \mathbb{D}\xi. \quad\blacksquare
+\]
+
+\section{Распределение $\mu = 2\xi + 4\eta$}
+
+\begin{align*}
+    \alpha &= 2\xi \sim U(-2, 6), &&p_\alpha(s) = \frac{1}{8}, \;\; s \in [-2,6], \\
+    \beta &= 4\eta \sim U(0, 8), &&p_\beta(s) = \frac{1}{8}, \;\; s \in [0,8];
+\end{align*}
+\[
+    \alpha \perp \beta \quad\Longrightarrow\quad
+    p_\mu(m) = \int_{-\infty}^{+\infty} p_\alpha(s)\,p_\beta(m-s)\,\mathrm{d}s,
+    \qquad m \in [-2, 14].
+\]
+
+\[
+    p_\alpha(s)\,p_\beta(m-s) \ne 0
+    \;\Longleftrightarrow\;
+    \begin{cases}
+        -2 \le s \le 6, \\
+        m - 8 \le s \le m
+    \end{cases}
+    \;\Longleftrightarrow\;
+    s \in [\max(-2,\, m-8),\; \min(6,\, m)],
+\]
+\[
+    p_\mu(m) = \frac{1}{8}\cdot\frac{1}{8}\Big(\min(6, m) - \max(-2, m-8)\Big)
+    = \frac{\min(6,m) - \max(-2,m-8)}{64},
+\]
+\begin{align*}
+    -2 \le m \le 6: &\quad p_\mu(m) = \frac{m - (-2)}{64} = \frac{m+2}{64}, \\
+    6 < m \le 14: &\quad p_\mu(m) = \frac{6 - (m-8)}{64} = \frac{14-m}{64}.
+\end{align*}
+
+\[
+    \boxed{\;
+    p_\mu(m) =
+    \begin{cases}
+        \dfrac{m+2}{64}, & -2 \le m \le 6, \\[2.5ex]
+        \dfrac{14-m}{64}, & 6 < m \le 14, \\[2.5ex]
+        0, & \text{иначе}
+    \end{cases}
+    \;}
+\]
+
+\[
+    \int_{-2}^{14} p_\mu(m)\,\mathrm{d}m = \frac{1}{2}\cdot 16 \cdot \frac{1}{8} = 1 \quad\blacksquare
+\]
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{plots/task_mu.png}
+\end{figure}
+
+\[
+    F_\mu(m) =
+    \begin{cases}
+        0, & m < -2, \\[1ex]
+        \displaystyle\int_{-2}^{m} \frac{s+2}{64}\,\mathrm{d}s = \frac{(m+2)^2}{128}, & -2 \le m \le 6, \\[2.5ex]
+        1 - \displaystyle\int_{m}^{14} \frac{14-s}{64}\,\mathrm{d}s = 1 - \frac{(14-m)^2}{128}, & 6 < m \le 14, \\[2.5ex]
+        1, & m > 14.
+    \end{cases}
+\]
+
+\subsection{$\mathbb{E}\mu$, $\mathbb{D}\mu$}
+
+\begin{align*}
+    \mathbb{E}\mu &= \int_{-\infty}^{+\infty} m\,p_\mu(m)\,\mathrm{d}m
+    = \int_{-2}^{6} \frac{m(m+2)}{64}\,\mathrm{d}m + \int_{6}^{14} \frac{m(14-m)}{64}\,\mathrm{d}m = \\[1ex]
+    &= \frac{1}{64}\left(\frac{m^3}{3} + m^2\right)\bigg|_{-2}^{6}
+     + \frac{1}{64}\left(7m^2 - \frac{m^3}{3}\right)\bigg|_{6}^{14} = \\[1ex]
+    &= \frac{1}{64}\left(108 - \frac{4}{3}\right) + \frac{1}{64}\left(\frac{1372}{3} - 180\right)
+     = \frac{1}{64}\cdot\frac{320}{3} + \frac{1}{64}\cdot\frac{832}{3} = \\[1ex]
+    &= \frac{5}{3} + \frac{13}{3} = \frac{18}{3} = 6.
+\end{align*}
+
+\begin{align*}
+    \mathbb{E}\mu^2 &= \int_{-\infty}^{+\infty} m^2 p_\mu(m)\,\mathrm{d}m
+    = \int_{-2}^{6} \frac{m^2(m+2)}{64}\,\mathrm{d}m + \int_{6}^{14} \frac{m^2(14-m)}{64}\,\mathrm{d}m = \\[1ex]
+    &= \frac{1}{64}\left(\frac{m^4}{4} + \frac{2m^3}{3}\right)\bigg|_{-2}^{6}
+     + \frac{1}{64}\left(\frac{14m^3}{3} - \frac{m^4}{4}\right)\bigg|_{6}^{14} = \\[1ex]
+    &= \frac{1}{64}\left(468 + \frac{4}{3}\right) + \frac{1}{64}\left(\frac{9604}{3} - \frac{2052}{3}\right)
+     = \frac{1}{64}\cdot\frac{1408}{3} + \frac{1}{64}\cdot\frac{7552}{3} = \\[1ex]
+    &= \frac{22}{3} + \frac{118}{3} = \frac{140}{3}.
+\end{align*}
+
+\[
+    \boxed{\;
+    \mathbb{E}\mu = 6, \qquad
+    \mathbb{D}\mu = \mathbb{E}\mu^2 - (\mathbb{E}\mu)^2 = \frac{140}{3} - 36 = \frac{140 - 108}{3}
+    = \frac{32}{3} \approx 10.667
+    \;}
+\]
+
+Контроль по формуле треугольного распределения на $[a,b]$ с вершиной посередине:
+\[
+    \mathbb{D} = \frac{(b-a)^2}{24} = \frac{(14-(-2))^2}{24} = \frac{256}{24} = \frac{32}{3}. \quad\blacksquare
+\]
+
+
+\end{document}
