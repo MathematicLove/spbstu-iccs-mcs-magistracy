@@ -115,9 +115,11 @@
 
 Требуется разработать систему, способную визуально показывать накопленные сведения в виде графиков и сводок,
 чтобы пользователь без специальной подготовки мог сам выбрать, 
-какие данные анализировать, отображать или отбирать нужные по условиям.
-Удачные варианты отчетов должны сохраняться для повторного использования, 
-а система должна сама замечать, когда состав собираемых сведений изменился, и предлагать учесть эти изменения.
+какие данные анализировать, отображать или отбирать нужные по условиям, таким образом собирая отчет.
+Удачные варианты отчетов должны сохраняться для повторного использования.
+Система должна фиксировать, когда состав собираемых сведений изменился, и должна иметь возможность показывать эти изменения.
+
+Отчет в данном случае подразумивает собой страницу, на которой отображен график по выбранным данным данным и сами данные, по условиям которые выбрал пользователь.
 
 Система включает в себя три базы данных источников из единой СУБД работающих как отдельные 
 независимые контейнеры с помощью Docker, отдельную независимую базу данных имеющую аналог информационной 
@@ -133,7 +135,7 @@
 Условия:
 
 \begin{itemize}
-    \item СУБД: postgres;
+    \item СУБД: Postgres;
     \item Контейнеризация: Docker;
     \item Кол-во записей в базах данных источников: не менее 200000;
     \item Информационная схема: Денормализованная;
@@ -481,12 +483,9 @@ $$
 
  Ниже на рисунке \ref{fig:task_arch}, предствлена архитектура программы:
 
-\begin{figure}[H]
-    \center
-    \includegraphics[width=0.7\linewidth]{../schema/l1.png}
-    \caption{Архитектура программы}
-    \label{fig:task_arch}
-\end{figure}
+\athreeschema{../schema/l1.png}{Архитектура программы}{fig:task_arch}
+
+Цвета кнопок и названий элементов интерфейса связаны переходами между элементами интерфейса (синяя кнопка \textcolor{blue}{use template} -> интерфейс \textcolor{blue}{templates}).
 
 В самом интерфейсе есть поля выбора базы данных источника, далее возможность выбора 
 типа графика (столбчетая диаграмма, обычный график, график разброса, heatmap).
@@ -496,14 +495,14 @@ $$
 повторно. 
 
 \newpage
-Так же на рисунке \ref{fig:module}, показана модульная схема программы:
+% Так же на рисунке \ref{fig:module}, показана модульная схема программы:
 
-\begin{figure}[H]
-    \center
-    \includegraphics[width=\linewidth]{../schema/l0-modules.png}
-    \caption{Модульная архитектура программы}
-    \label{fig:module}
-\end{figure}
+% \begin{figure}[H]
+%     \center
+%     \includegraphics[width=\linewidth]{../schema/l0-modules.png}
+%     \caption{Модульная архитектура программы}
+%     \label{fig:module}
+% \end{figure}
 
 На рисунке \ref{fig:module_buisness}, показана модульная схема бизнес процессов, автоматизированных с помощью 
 разрабатываемого ПО:
@@ -985,15 +984,12 @@ SQL запроса, после чего запрос отправляется RE
 \end{figure}
 
 \subsection{Результат}
-На рисунке \ref{fig:ui_final} показан итоговый интерфейс, собранный из всех описанных элементов. Выбрана база crime, таблица incidents, 
-столбчатый график суммы ward по year с условием year $\geq$ 2010 и лимитом 200. 
-Слева сверху выводится итоговый SQL запрос, под ним график, снизу таблица Result с результатом запроса и таблица Details с дополнительными колонками. 
-Обе таблицы выводятся постранично по 10 строк, под каждой указан диапазон строк и общее их количество.
-Страница делится на колонки методом st.columns, SQL запрос выводится через st.code, график - через st.pyplot, таблицы - через st.dataframe, подписи под ними - через st.caption.
-
+На рисунке \ref{fig:ui_final} показан итоговый интерфейс. По умолчанию данные не заполнены. 
+Можно выбрать: базу данных, таблицу, ее атрибуты, тип графика. Далее ввести условия и лимит выводимых строк,
+после чего нажать кнопку \guillemetleft Generate report\guillemetright.
 \begin{figure}[H]
     \center
-    \includegraphics[width=\linewidth]{img/UI_FINAL.png}
+    \includegraphics[width=\linewidth]{../interface/BASE.png}
     \caption{Итоговый интерфейс}
     \label{fig:ui_final}
 \end{figure}
@@ -1010,7 +1006,7 @@ SQL запроса, после чего запрос отправляется RE
 \label{sec:scenario_1}
 Вывод первых 500 результатов горнолыжников из таблицы result базы mountain\_sport, где attempt1\_result $>$ 0, в виде диаграммы рассеивания времени первой попытки (attempt1\_result) против второй (attempt2\_result).
 Итоговый SQL запрос приведен в листинге \ref{lis:scen1}, результат на рисунке \ref{fig:scen1}.
-\begin{lstlisting}[language=SQL, caption={Сценарий 1: итоговый SQL запрос}, label={lis:scen1}]
+\begin{lstlisting}[language=SQL, caption={Запрос сценария 1}, label={lis:scen1}]
 SELECT attempt1_result, attempt2_result
 FROM mountain_sport.result
 WHERE attempt1_result > 0
@@ -1018,7 +1014,7 @@ LIMIT 500
 \end{lstlisting}
 \begin{figure}[H]
     \center
-    \includegraphics[width=\linewidth]{img/SCEN_1.png}
+    \includegraphics[width=0.75\linewidth]{img/SCENARIO_1.png}
     \caption{Сценарий 1}
     \label{fig:scen1}
 \end{figure}
@@ -1026,7 +1022,7 @@ LIMIT 500
 \subsection{Сценарий 2}
 Вывод столбчатой диаграммы суммарной стоимости занятий по предметам subject\_id из таблицы lesson базы extra\_for\_students, где стоимость cost $\geq$ 1000 рублей.
 Итоговый SQL запрос приведен в листинге \ref{lis:scen2}, результат на рисунке \ref{fig:scen2}.
-\begin{lstlisting}[language=SQL, caption={Сценарий 2: итоговый SQL запрос}, label={lis:scen2}]
+\begin{lstlisting}[language=SQL, caption={Запрос сценария 2}, label={lis:scen2}]
 SELECT subject_id, SUM(cost) AS cost
 FROM extra_for_students.lesson
 WHERE cost >= 1000
@@ -1035,7 +1031,7 @@ LIMIT 500
 \end{lstlisting}
 \begin{figure}[H]
     \center
-    \includegraphics[width=\linewidth]{img/SCEN_2.png}
+    \includegraphics[width=0.75\linewidth]{img/SCENARIO_2.png}
     \caption{Сценарий 2}
     \label{fig:scen2}
 \end{figure}
@@ -1043,7 +1039,7 @@ LIMIT 500
 \subsection{Сценарий 3}
 Вывод круговой диаграммы доли выступлений по номинациям по perfomance\_type из таблицы perfomance базы sport\_and\_cheerleaders.
 Итоговый SQL запрос приведен в листинге \ref{lis:scen3}, результат на рисунке \ref{fig:scen3}.
-\begin{lstlisting}[language=SQL, caption={Сценарий 3: итоговый SQL запрос}, label={lis:scen3}]
+\begin{lstlisting}[language=SQL, caption={Запрос сценария 3}, label={lis:scen3}]
 SELECT perfomance_type, COUNT(perfomance_id) AS perfomance_id
 FROM sport_and_cheerleaders.perfomance
 GROUP BY perfomance_type
@@ -1051,7 +1047,7 @@ LIMIT 500
 \end{lstlisting}
 \begin{figure}[H]
     \center
-    \includegraphics[width=\linewidth]{img/SCEN_3.png}
+    \includegraphics[width=0.75\linewidth]{img/SCENARIO_3.png}
     \caption{Сценарий 3}
     \label{fig:scen3}
 \end{figure}
@@ -1060,7 +1056,7 @@ LIMIT 500
 \subsection{Сценарий 4}
 Вывод тепловой карты средней стоимости занятия по предметам subject\_id и форматам format\_id из таблицы lesson базы extra\_for\_students.
 Итоговый SQL запрос приведен в листинге \ref{lis:scen4}, результат на рисунке \ref{fig:scen4}.
-\begin{lstlisting}[language=SQL, caption={Сценарий 4: итоговый SQL запрос}, label={lis:scen4}]
+\begin{lstlisting}[language=SQL, caption={Запрос сценария 4}, label={lis:scen4}]
 SELECT subject_id, format_id, AVG(cost) AS cost
 FROM extra_for_students.lesson
 GROUP BY subject_id, format_id
@@ -1068,51 +1064,51 @@ LIMIT 500
 \end{lstlisting}
 \begin{figure}[H]
     \center
-    \includegraphics[width=\linewidth]{img/SCEN_4.png}
+    \includegraphics[width=0.75\linewidth]{img/SCENARIO_4.png}
     \caption{Сценарий 4}
     \label{fig:scen4}
 \end{figure}
 
 \newpage
 \subsection{Сценарий 5}
-Сравнение двух сохраненных шаблонов по таблице lesson по subject\_id без условия и с условием cost $\geq$ 1000 и лимитом 10 - через флажки compare в форме выбора шаблона.
-Итоговые SQL запросы сравниваемых шаблонов приведены в листингах \ref{lis:scen5a} и \ref{lis:scen5b}, результат сравнения на рисунке \ref{fig:scen5}.
+Применение сохраненного шаблона lesson\_cost\_by\_subject (сумма стоимости занятий cost по предметам subject\_id из таблицы lesson базы extra\_for\_students) через кнопку Use template.
+В окне выводится список сохраненных шаблонов (см. рис. \ref{fig:scen5}), после нажатия на шаблон его параметры переносятся в форму и отчет строится сразу (см. рис. \ref{fig:scen5a}).
+SQL запрос шаблона приведен в листинге \ref{lis:scen5a}.
 
-\begin{lstlisting}[language=SQL, caption={Сценарий 5: шаблон lesson\_cost\_by\_subject}, label={lis:scen5a}]
+\begin{lstlisting}[language=SQL, caption={Запрос сценария 5}, label={lis:scen5a}]
 SELECT subject_id, SUM(cost) AS cost
 FROM extra_for_students.lesson
 GROUP BY subject_id
 LIMIT 500
 \end{lstlisting}
-\begin{lstlisting}[language=SQL, caption={Сценарий 5: шаблон lesson\_cost\_by\_subject\_1000}, label={lis:scen5b}]
-SELECT subject_id, SUM(cost) AS cost
-FROM extra_for_students.lesson
-WHERE cost >= 1000
-GROUP BY subject_id
-LIMIT 10
-\end{lstlisting}
 \begin{figure}[H]
     \center
-    \includegraphics[width=0.4\linewidth]{img/SCEN_5.png}
-    \caption{Сценарий 5: сравнение двух шаблонов}
+    \includegraphics[width=0.5\linewidth]{img/SCENARIO_5.png}
+    \caption{Сценарий 5: список сохраненных шаблонов}
     \label{fig:scen5}
+\end{figure}
+\begin{figure}[H]
+    \center
+    \includegraphics[width=0.75\linewidth]{img/SCENARIO_5_APPLIED.png}
+    \caption{Сценарий 5: отчет по примененному шаблону}
+    \label{fig:scen5a}
 \end{figure}
 
 \subsection{Сценарий 6}
 Добавление в источнике mountain\_sport новой колонки в таблицу athlete, ее обнаружение кнопкой Show diff как добавленной и синхронизация meta.catalog кнопкой Update.
 Изменение источника приведено в листинге \ref{lis:scen6}, найденное отличие и состояние после обновления на рисунках \ref{fig:scen6} и \ref{fig:scen6u}.
-\begin{lstlisting}[language=SQL, caption={Сценарий 6: изменение схемы источника}, label={lis:scen6}]
+\begin{lstlisting}[language=SQL, caption={Запрос сценария 6}, label={lis:scen6}]
 ALTER TABLE mountain_sport.athlete ADD COLUMN height SMALLINT;
 \end{lstlisting}
 \begin{figure}[H]
     \center
-    \includegraphics[width=0.5\linewidth]{img/SCEN_6.png}
+    \includegraphics[width=0.5\linewidth]{img/SCENARIO_6.png}
     \caption{Сценарий 6: найденное отличие источника}
     \label{fig:scen6}
 \end{figure}
 \begin{figure}[H]
     \center
-    \includegraphics[width=0.5\linewidth]{img/SCEN_6_UPDATED.png}
+    \includegraphics[width=0.5\linewidth]{img/SCENARIO_6_UPDATED.png}
     \caption{Сценарий 6: каталог после обновления}
     \label{fig:scen6u}
 \end{figure}
@@ -1120,7 +1116,7 @@ ALTER TABLE mountain_sport.athlete ADD COLUMN height SMALLINT;
 \subsection{Сценарий 7}
 Вывод количества спортсменов по клубам club\_id из таблицы sportsman базы sport\_and\_cheerleaders, где club\_id $\leq$ 50, с дополнительными колонками sportsman\_lastname и sportsman\_birthdate в таблице Details.
 Итоговый SQL запрос приведен в листинге \ref{lis:scen7}, результат на рисунке \ref{fig:scen7}.
-\begin{lstlisting}[language=SQL, caption={Сценарий 7: итоговый SQL запрос}, label={lis:scen7}]
+\begin{lstlisting}[language=SQL, caption={Запрос сценария 7}, label={lis:scen7}]
 SELECT club_id, COUNT(sportsman_id) AS sportsman_id
 FROM sport_and_cheerleaders.sportsman
 WHERE club_id <= 50
@@ -1129,7 +1125,7 @@ LIMIT 500
 \end{lstlisting}
 \begin{figure}[H]
     \center
-    \includegraphics[width=\linewidth]{img/SCEN_7.png}
+    \includegraphics[width=0.75\linewidth]{img/SCENARIO_7.png}
     \caption{Сценарий 7}
     \label{fig:scen7}
 \end{figure}
@@ -1137,7 +1133,7 @@ LIMIT 500
 \subsection{Сценарий 8}
 Вывод среднего опыта репетиторов по городам city\_id из таблицы tutors базы extra\_for\_students, где опыт experience $\geq$ 5 лет.
 Итоговый SQL запрос приведен в листинге \ref{lis:scen8}, результат на рисунке \ref{fig:scen8}.
-\begin{lstlisting}[language=SQL, caption={Сценарий 8: итоговый SQL запрос}, label={lis:scen8}]
+\begin{lstlisting}[language=SQL, caption={Запрос сценария 8}, label={lis:scen8}]
 SELECT city_id, AVG(experience) AS experience
 FROM extra_for_students.tutors
 WHERE experience >= 5
@@ -1146,7 +1142,7 @@ LIMIT 500
 \end{lstlisting}
 \begin{figure}[H]
     \center
-    \includegraphics[width=\linewidth]{img/SCEN_8.png}
+    \includegraphics[width=0.75\linewidth]{img/SCENARIO_8.png}
     \caption{Сценарий 8}
     \label{fig:scen8}
 \end{figure}
@@ -1154,7 +1150,7 @@ LIMIT 500
 \subsection{Сценарий 9}
 Вывод суммарного числа спортсменов-призеров sportsman\_count по занятым местам perfomance\_place из таблицы perfomance базы sport\_and\_cheerleaders, где perfomance\_place $\leq$ 3.
 Итоговый SQL запрос приведен в листинге \ref{lis:scen9}, результат на рисунке \ref{fig:scen9}.
-\begin{lstlisting}[language=SQL, caption={Сценарий 9: итоговый SQL запрос}, label={lis:scen9}]
+\begin{lstlisting}[language=SQL, caption={Запрос сценария 9}, label={lis:scen9}]
 SELECT perfomance_place, SUM(sportsman_count) AS sportsman_count
 FROM sport_and_cheerleaders.perfomance
 WHERE perfomance_place <= 3
@@ -1163,7 +1159,7 @@ LIMIT 500
 \end{lstlisting}
 \begin{figure}[H]
     \center
-    \includegraphics[width=\linewidth]{img/SCEN_9.png}
+    \includegraphics[width=0.75\linewidth]{img/SCENARIO_9.png}
     \caption{Сценарий 9}
     \label{fig:scen9}
 \end{figure}
@@ -1171,7 +1167,7 @@ LIMIT 500
 \subsection{Сценарий 10}
 Вывод количества результатов result\_id по итогам выступления attempt\_id (финишировал, DNF, DSQ, DNS) из таблицы result базы mountain\_sport.
 Итоговый SQL запрос приведен в листинге \ref{lis:scen10}, результат на рисунке \ref{fig:scen10}.
-\begin{lstlisting}[language=SQL, caption={Сценарий 10: итоговый SQL запрос}, label={lis:scen10}]
+\begin{lstlisting}[language=SQL, caption={Запрос сценария 10}, label={lis:scen10}]
 SELECT attempt_id, COUNT(result_id) AS result_id
 FROM mountain_sport.result
 GROUP BY attempt_id
@@ -1179,7 +1175,7 @@ LIMIT 500
 \end{lstlisting}
 \begin{figure}[H]
     \center
-    \includegraphics[width=\linewidth]{img/SCEN_10.png}
+    \includegraphics[width=0.75\linewidth]{img/SCENARIO_10.png}
     \caption{Сценарий 10}
     \label{fig:scen10}
 \end{figure}
@@ -1188,7 +1184,7 @@ LIMIT 500
 \label{sec:scenario_11}
 Вывод среднего лучшего времени первой попытки attempt1\_result по дисциплинам discipline из таблицы competition базы mountain\_sport, где attempt1\_result $>$ 0.
 Итоговый SQL запрос приведен в листинге \ref{lis:scen11}, результат на рисунке \ref{fig:scen11}.
-\begin{lstlisting}[language=SQL, caption={Сценарий 11: итоговый SQL запрос}, label={lis:scen11}]
+\begin{lstlisting}[language=SQL, caption={Запрос сценария 11}, label={lis:scen11}]
 SELECT discipline, AVG(attempt1_result) AS attempt1_result
 FROM mountain_sport.competition
 WHERE attempt1_result > 0
@@ -1197,7 +1193,7 @@ LIMIT 500
 \end{lstlisting}
 \begin{figure}[H]
     \center
-    \includegraphics[width=\linewidth]{img/SCEN_11.png}
+    \includegraphics[width=0.75\linewidth]{img/SCENARIO_11.png}
     \caption{Сценарий 11}
     \label{fig:scen11}
 \end{figure}

@@ -53,93 +53,62 @@ MAX_LABELED_TICKS = 40
 MAX_PIE_LABELS = 30
 MAX_HEATMAP_ANNOT_CELLS = 80
 
+NONE = "-"
+
 def render_controls(catalog):
     if st.button("Use template", width="stretch"):
         open_use_template_dialog()
 
-    source_options = ["(all sources)"] + all_sources()
-    default_idx = 1 if len(source_options) > 1 else 0
-    source_choice = st.selectbox("Choose Database", source_options, index=default_idx, key="source_select")
-    source_id = None if source_choice == "(all sources)" else source_choice
+    source_choice = st.selectbox(
+        "Choose Database", [NONE, "(all sources)"] + all_sources(), index=0, key="source_select",
+    )
+    source_id = None if source_choice in (NONE, "(all sources)") else source_choice
 
     table_name = None
-    if source_id:
+    if source_choice == NONE:
+        st.selectbox("Choose table", [NONE], index=0, key="table_select", disabled=True)
+    elif source_id:
         tables = tables_for(source_id, catalog)
         if not tables:
             st.write(f"No tables found for {source_id}.")
-            return None
-        table_name = st.selectbox("Choose table", tables, index=0, key="table_select")
+        choice = st.selectbox("Choose table", [NONE] + tables, index=0, key="table_select",
+                              disabled=not tables)
+        table_name = None if choice == NONE else choice
 
-    chart_type = st.selectbox("Choose plot type", CHART_TYPES, index=0, key="chart_type_select")
+    chart_choice = st.selectbox("Choose plot type", [NONE] + CHART_TYPES, index=0, key="chart_type_select")
+    chart_type = None if chart_choice == NONE else chart_choice
 
-    cols = columns_for(catalog, source_id, table_name)
-    if not cols:
-        st.write("No columns available for this selection.")
-        return None
+    cols = []
+    if source_choice == "(all sources)" or table_name:
+        cols = columns_for(catalog, source_id, table_name)
 
     def label_of(c):
         return c[3] if source_id else f"{c[3]} ({c[0]}.{c[2]})"
 
-    labels = [label_of(c) for c in cols]
-
-    def pick(label, key, default_label=None, default_idx=0, exclude=()):
+    def pick(label, key, exclude=()):
         subset = [c for c in cols if c[3] not in exclude]
         sub_labels = [label_of(c) for c in subset]
-        if not sub_labels:
-            st.write(f"Not enough columns left in this table to pick {label}.")
-            return None
-        idx = sub_labels.index(default_label) if default_label in sub_labels else min(default_idx, len(sub_labels) - 1)
         type_of = {label_of(c): _short_type_label(c[4]) for c in subset}
         sel = st.selectbox(
-            label, sub_labels, index=idx, key=key,
-            format_func=lambda lbl: f"{lbl}  [{type_of[lbl]}]",
+            label, [NONE] + sub_labels, index=0, key=key, disabled=not sub_labels,
+            format_func=lambda lbl: lbl if lbl == NONE else f"{lbl}  [{type_of[lbl]}]",
         )
-        return subset[sub_labels.index(sel)]
+        return None if sel == NONE else subset[sub_labels.index(sel)]
 
-    def default_dim_col():
-        for c in cols:
-            if not c[5] and not c[6]:
-                return c[3]
-        return cols[0][3]
-
-    dim = pick("Choose column of variable", "dim_col", default_dim_col())
-    if dim is None:
-        return None
-
-    def default_measure_col():
-        def candidates(same_table_only, numeric_only):
-            for c in cols:
-                if c[3] == dim[3]:
-                    continue
-                if same_table_only and (c[0], c[2]) != (dim[0], dim[2]):
-                    continue
-                if numeric_only and not (is_numeric(c[4]) and not c[5] and not c[6]):
-                    continue
-                return c[3]
-            return None
-
-        for same_table_only in (True, False):
-            for numeric_only in (True, False):
-                name = candidates(same_table_only, numeric_only)
-                if name is not None:
-                    return name
-        return None
-
-    val = pick("Choose column of values", "measure_col", default_measure_col(), exclude=(dim[3],))
-    if val is None:
-        return None
+    dim = pick("Choose column of variable", "dim_col")
+    val = pick("Choose column of values", "measure_col", exclude=(dim[3],) if dim else ())
 
     second_dim = None
     if chart_type == "heatmap":
-        second_dim = pick("Second dimension (heatmap)", "second_dim_col", exclude=(dim[3], val[3]))
-        if second_dim is None:
-            return None
+        taken = tuple(c[3] for c in (dim, val) if c)
+        second_dim = pick("Second dimension (heatmap)", "second_dim_col", exclude=taken)
 
     agg_func = None
     if chart_type != "scatter":
-        agg_func = st.selectbox("Aggregate", AGG_FUNCS, index=0, key="agg_func_select")
+        agg_choice = st.selectbox("Aggregate", [NONE] + AGG_FUNCS, index=0, key="agg_func_select")
+        agg_func = None if agg_choice == NONE else agg_choice
 
-    row_limit_context = (source_id, table_name, dim[3], val[3])
+    row_limit_context = (source_id, table_name, dim[3] if dim else None, val[3] if val else None)
     if st.session_state.get("_row_limit_context") != row_limit_context:
         st.session_state["_row_limit_context"] = row_limit_context
         st.session_state["row_limit_input"] = ""
@@ -150,7 +119,11 @@ def render_controls(catalog):
 
     where_filters = []
     with st.popover("WHERE filter", width="stretch"):
+        if not (dim or val):
+            st.caption("Choose columns first.")
         for c in (dim, val):
+            if c is None:
+                continue
             type_label = _short_type_label(c[4])
             if is_numeric(c[4]):
                 name_col, type_col, op_col, val_col = st.columns([2, 1, 1, 2])
@@ -179,28 +152,68 @@ def render_controls(catalog):
 
     extra_cols = []
     with st.popover("Additional columns", width="stretch"):
-        for c in cols:
-            if c[3] in (dim[3], val[3]):
-                continue
-            box_col, type_col = st.columns([3, 1])
-            if box_col.checkbox(c[3], key=f"extra_{c[0]}_{c[2]}_{c[3]}"):
-                extra_cols.append(c[3])
-            type_col.caption(_short_type_label(c[4]))
+        if not (dim and val):
+            st.caption("Choose columns first.")
+        else:
+            for c in cols:
+                if c[3] in (dim[3], val[3]):
+                    continue
+                box_col, type_col = st.columns([3, 1])
+                if box_col.checkbox(c[3], key=f"extra_{c[0]}_{c[2]}_{c[3]}"):
+                    extra_cols.append(c[3])
+                type_col.caption(_short_type_label(c[4]))
 
-    effective_source, effective_schema, effective_table = dim[0], dim[1], dim[2]
-    if source_id is None and (dim[0], dim[2]) != (val[0], val[2]):
+    if source_id is None and dim and val and (dim[0], dim[2]) != (val[0], val[2]):
         st.caption(
             f"Variable and Values are from different tables; "
-            f"query runs against {effective_source}.{effective_table}."
+            f"query runs against {dim[0]}.{dim[2]}."
         )
 
-    return dict(
-        source_id=effective_source, schema_name=effective_schema, table_name=effective_table,
+    generate = st.button("Generate report", width="stretch", type="primary")
+    if st.session_state.pop("_generate_now", False):
+        generate = True
+    if not generate:
+        error = st.session_state.get("report_error")
+        if error:
+            st.error(error)
+        return
+
+    missing = []
+    if source_choice == NONE:
+        missing.append("Database")
+    if source_choice != "(all sources)" and table_name is None:
+        missing.append("table")
+    if chart_type is None:
+        missing.append("plot type")
+    if dim is None:
+        missing.append("column of variable")
+    if val is None:
+        missing.append("column of values")
+    if chart_type == "heatmap" and second_dim is None:
+        missing.append("second dimension")
+    if chart_type != "scatter" and agg_func is None:
+        missing.append("aggregate")
+    if missing:
+        st.session_state["report_error"] = "Need to choose: " + ", ".join(missing)
+        st.session_state.pop("report_spec", None)
+        st.error(st.session_state["report_error"])
+        return
+
+    st.session_state["report_error"] = None
+    spec = dict(
+        source_id=dim[0], schema_name=dim[1], table_name=dim[2],
         chart_type=chart_type, dim_col=dim[3], measure_col=val[3],
         second_dim_col=second_dim[3] if second_dim else None,
         agg_func=agg_func, filters=where_filters, extra_cols=extra_cols,
         row_limit=row_limit,
     )
+    spec["sql_text"] = build_sql(
+        spec["schema_name"], spec["table_name"], spec["chart_type"],
+        spec["dim_col"], spec["measure_col"], spec["second_dim_col"],
+        spec["agg_func"], spec["filters"], spec["row_limit"],
+    )
+    st.session_state["report_spec"] = spec
+    st.session_state["last_spec"] = spec
 
 def render_chart(df, spec):
     chart_type = spec["chart_type"]
@@ -291,10 +304,9 @@ def open_use_template_dialog():
             st.rerun()
         return
 
-    compare_ids = []
     for t in templates:
         label = f"{t['template_name']} - {t['source_id']}.{t['table_name']}: {t['chart_type']}({t['dimension_col']}, {t['measure_col']})"
-        use_col, cmp_col, del_col = st.columns([4, 1, 1])
+        use_col, del_col = st.columns([5, 1])
         if del_col.button("Delete", key=f"del_{t['template_id']}", width="stretch"):
             try:
                 delete_template(t["template_id"])
@@ -321,49 +333,13 @@ def open_use_template_dialog():
                 st.session_state["_row_limit_context"] = (
                     t["source_id"], t["table_name"], t["dimension_col"], t["measure_col"],
                 )
+                st.session_state["_generate_now"] = True
                 st.rerun()
-        if cmp_col.checkbox("compare", key=f"cmp_{t['template_id']}"):
-            compare_ids.append(t["template_id"])
-
-    st.divider()
-    if len(compare_ids) != 2:
-        st.caption("Tick \"compare\" on exactly 2 templates to see a diff between them.")
-        return
-
-    t_a = next(t for t in templates if t["template_id"] == compare_ids[0])
-    t_b = next(t for t in templates if t["template_id"] == compare_ids[1])
-    try:
-        meta_catalog = get_meta_catalog()
-    except BackendError as exc:
-        st.write(str(exc))
-        return
-
-    diff_result = compare_templates(t_a, t_b, meta_catalog)
-    st.write(f"Diff: {t_a['template_name']} vs {t_b['template_name']}")
-
-    rows = [dict(field=f, A=str(va), B=str(vb)) for f, va, vb, differs in diff_result["fields"] if differs]
-    if rows:
-        st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
-    else:
-        st.caption("All fields are identical.")
-
-    if diff_result["columns"]:
-        st.write("Column details:")
-        col_rows = [dict(role=role,
-                         A=f"{a[0]} - {a[1]}" if a else "-",
-                         B=f"{b[0]} - {b[1]}" if b else "-")
-                    for role, a, b in diff_result["columns"]]
-        st.dataframe(pd.DataFrame(col_rows), width="stretch", hide_index=True)
-
-    if diff_result["warnings"]:
-        st.write("Warnings:")
-        for w in diff_result["warnings"]:
-            st.write(f"- {w}")
 
 @st.dialog("Show diff")
 def open_show_diff_dialog():
     if st.session_state.get("source_select") == "(all sources)":
-        st.write("Choose a specific Database first — Show diff needs to know which source to check.")
+        st.write("Choose a specific Database first - Show diff needs to know which source to check.")
         if st.button("Exit"):
             st.rerun()
         return
@@ -422,30 +398,26 @@ for err in catalog_errors:
 left, right = st.columns([1, 1])
 
 with right:
-    spec = render_controls(catalog)
+    render_controls(catalog)
+
+spec = st.session_state.get("report_spec")
 
 with left:
     st.write("SQL Query:")
     df = None
     if spec:
-        sql_text = build_sql(
-            spec["schema_name"], spec["table_name"], spec["chart_type"],
-            spec["dim_col"], spec["measure_col"], spec["second_dim_col"],
-            spec["agg_func"], spec["filters"], spec["row_limit"],
-        )
-        st.code(sql_text, language=None)
+        st.code(spec["sql_text"], language=None)
         try:
-            df = run_query(spec["source_id"], sql_text)
+            df = run_query(spec["source_id"], spec["sql_text"])
         except BackendError as exc:
             st.write(str(exc))
         else:
-            st.session_state.last_spec = dict(spec, sql_text=sql_text)
             try:
                 render_chart(df, spec)
             except Exception:
                 st.write("Could not draw this chart for the selected columns.")
     else:
-        st.code("-- select columns on the right --", language=None)
+        st.code("Choose values on the right and press Generate report!", language=None)
 
 st.divider()
 
