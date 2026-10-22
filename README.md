@@ -10,7 +10,7 @@
 помощью добавления блока
 поканальной свертки (стр. 52-58)<sup>1</sup>](https://naukaip.ru/wp-content/uploads/2026/10/MK-2794.pdf)
 
- <p><sup>1</sup> - <a href="https://mathematiclove.github.io/my-cv/certificates/salimli-diploma-segformer.jpg" target="_blank">Лучший доклад в секции: "Технические науки"</a></p>
+ <p><sup>1</sup> - <a href="https://mathematiclove.github.io/my-cv/certificates/salimli-diploma-segformer.jpg" target="_blank">Первое место в секции: "Технические науки"</a></p>
 
 - ## [Учебные проекты](https://github.com/MathematicLove/spbstu-iccs-mcs-magistracy/tree/main/):
 - ### [**1-ый семестр**](https://github.com/MathematicLove/spbstu-iccs-mcs-magistracy/tree/main/1-sem):
