@@ -14,3 +14,7 @@
   - [Параллельное программирование на суперкомпьютерных системах](https://github.com/MathematicLove/spbstu-iccs-mcs-magistracy/tree/main/1-sem/parallel-programming-on-supercomputer/old-reports);
   - [Управление знаниями и технологии баз данных](https://github.com/MathematicLove/spbstu-iccs-mcs-magistracy/tree/main/1-sem/database-management);
   - [Иностранный язык в профессиональной коммуникации, Английский](https://github.com/MathematicLove/spbstu-iccs-mcs-magistracy/tree/main/1-sem/english).
+
+<h2 align="center">Бакалавриат</h2>
+
+[Работы бакалавра (репозиторий)](https://github.com/MathematicLove/spbstu-iccs-mcs)
