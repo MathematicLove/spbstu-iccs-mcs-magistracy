@@ -4,6 +4,14 @@
 <h2 align="center">02.04.01: Математика и компьютерные науки</h2>
 <h2 align="center">Искусственный интеллект и машинное обучение</h2>
 
+- ## [Статьи](https://github.com/MathematicLove/spbstu-iccs-mcs-magistracy/articles)
+  - [Улучшение декодера SegFormer для
+семантической сегментации с
+помощью добавления блока
+поканальной свертки (стр. 52-58)<sup>1</sup>](https://naukaip.ru/wp-content/uploads/2026/10/MK-2794.pdf)
+
+ <p><sup>1</sup> - <a href="https://mathematiclove.github.io/my-cv/certificates/salimli-diploma-segformer.jpg" target="_blank">Первое место в секции: "Технические науки"</a></p>
+
 - ## [Учебные проекты](https://github.com/MathematicLove/spbstu-iccs-mcs-magistracy/tree/main/):
 - ### [**1-ый семестр**](https://github.com/MathematicLove/spbstu-iccs-mcs-magistracy/tree/main/1-sem):
   - [Машинное обучение](https://github.com/MathematicLove/spbstu-iccs-mcs-magistracy/tree/main/1-sem/machine-learning);
