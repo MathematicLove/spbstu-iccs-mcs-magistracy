@@ -1,0 +1,188 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage[margin=2cm]{geometry}
+\usepackage{enumitem}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\D}{\mathbb{D}}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+
+\begin{document}
+
+\subsection*{1.а)}
+\[
+  \E\xi = -1\cdot\tfrac14 + 0\cdot\tfrac38 + 1\cdot\tfrac18 + 2\cdot\tfrac14
+        = -\tfrac28 + \tfrac18 + \tfrac48 = \frac38 .
+\]
+\[
+  \E\xi^2 = 1\cdot\tfrac14 + 0\cdot\tfrac38 + 1\cdot\tfrac18 + 4\cdot\tfrac14
+          = \tfrac28 + \tfrac18 + \tfrac88 = \frac{11}{8} .
+\]
+\[
+  \D\xi = \frac{11}{8} - \frac{9}{64} = \frac{88-9}{64} = \boxed{\frac{79}{64}},
+  \qquad \boxed{\E\xi = \frac38}.
+\]
+
+\subsection*{1.б)}
+$F_\xi$ ступенчатая $\Rightarrow$ $\xi$ дискретна; значения — точки скачков,
+вероятности — величины скачков:
+\[
+  P(\xi=-1) = \tfrac12 - 0 = \tfrac12, \qquad P(\xi=2) = 1 - \tfrac12 = \tfrac12 .
+\]
+\[
+  \E\xi = -1\cdot\tfrac12 + 2\cdot\tfrac12 = \boxed{\frac12}, \qquad
+  \E\xi^2 = 1\cdot\tfrac12 + 4\cdot\tfrac12 = \frac52 .
+\]
+\[
+  \D\xi = \frac52 - \frac14 = \boxed{\frac94}.
+\]
+
+\subsection*{1.в)} (распределение Пуассона)
+\[
+  \E\xi = \sum_{k=0}^{\infty} k\,\frac{\lambda^k}{k!}e^{-\lambda}
+        = \lambda e^{-\lambda}\sum_{k=1}^{\infty}\frac{\lambda^{k-1}}{(k-1)!}
+        = \lambda e^{-\lambda}e^{\lambda} = \boxed{\lambda}.
+\]
+$\E\xi^2$ удобнее считать через $\E\xi(\xi-1)$:
+\[
+  \E\xi(\xi-1) = \sum_{k=2}^{\infty} k(k-1)\frac{\lambda^k}{k!}e^{-\lambda}
+  = \lambda^2 e^{-\lambda}\sum_{k=2}^{\infty}\frac{\lambda^{k-2}}{(k-2)!}
+  = \lambda^2 .
+\]
+\[
+  \E\xi^2 = \E\xi(\xi-1) + \E\xi = \lambda^2 + \lambda, \qquad
+  \D\xi = \lambda^2 + \lambda - \lambda^2 = \boxed{\lambda}.
+\]
+
+\subsection*{2.а)}
+Проверка нормировки:
+\[
+  \int_{-1}^{0}\tfrac12\,dx + \int_0^\infty e^{-x/2}\,dx = \frac12 + 2 = \frac52 \neq 1 .
+\]
+
+Это не плотность распределения. 
+
+\subsection*{2.б)}
+$F_\xi$ непрерывна в точке $2$: \ $\dfrac{2^3}{C} = 1 \;\Rightarrow\; C = 8$.
+\[
+  p_\xi(x) = F_\xi'(x) = \frac{3x^2}{8}, \quad 0<x\le 2 .
+\]
+\[
+  \E\xi = \int_0^2 x\cdot\frac{3x^2}{8}\,dx = \frac38\cdot\frac{x^4}{4}\Big|_0^2
+        = \frac38\cdot 4 = \boxed{\frac32}.
+\]
+\[
+  \E\xi^2 = \int_0^2 \frac{3x^4}{8}\,dx = \frac38\cdot\frac{32}{5} = \frac{12}{5},
+  \qquad
+  \D\xi = \frac{12}{5} - \frac94 = \frac{48-45}{20} = \boxed{\frac{3}{20}}.
+\]
+
+\subsection*{2.в)}
+Нормировка:
+\[
+  \int_{-\pi}^{\pi} C|\sin x|\,dx = 2C\int_0^\pi \sin x\,dx = 2C\cdot 2 = 4C = 1
+  \;\Rightarrow\; C = \frac14 .
+\]
+Плотность чётная $\Rightarrow$ $x\,p_\xi(x)$ нечётна:
+\[
+  \E\xi = \int_{-\pi}^{\pi}\frac{x|\sin x|}{4}\,dx = \boxed{0}.
+\]
+\[
+  \E\xi^2 = 2\cdot\frac14\int_0^\pi x^2\sin x\,dx .
+\]
+По частям:
+\[
+  \int_0^\pi x^2\sin x\,dx
+  = \big[-x^2\cos x\big]_0^\pi + 2\int_0^\pi x\cos x\,dx
+  = \pi^2 + 2\Big(\big[x\sin x\big]_0^\pi - \int_0^\pi \sin x\,dx\Big)
+  = \pi^2 + 2(0-2) = \pi^2 - 4 .
+\]
+\[
+  \E\xi^2 = \frac{\pi^2-4}{2}, \qquad \D\xi = \boxed{\frac{\pi^2-4}{2}}.
+\]
+
+\subsection*{2.г)}
+\[
+  p_\xi(x) = F_\xi'(x) = \cos x, \quad 0\le x\le \tfrac{\pi}{2} .
+\]
+\[
+  \E\xi = \int_0^{\pi/2} x\cos x\,dx
+        = \big[x\sin x\big]_0^{\pi/2} - \int_0^{\pi/2}\sin x\,dx
+        = \frac{\pi}{2} - 1 .
+\]
+\[
+  \E\xi^2 = \int_0^{\pi/2} x^2\cos x\,dx
+          = \big[x^2\sin x\big]_0^{\pi/2} - 2\int_0^{\pi/2} x\sin x\,dx
+          = \frac{\pi^2}{4} - 2\Big(\big[-x\cos x\big]_0^{\pi/2} + \int_0^{\pi/2}\cos x\,dx\Big)
+          = \frac{\pi^2}{4} - 2 .
+\]
+\[
+  \D\xi = \frac{\pi^2}{4} - 2 - \Big(\frac{\pi}{2}-1\Big)^2
+        = \frac{\pi^2}{4} - 2 - \frac{\pi^2}{4} + \pi - 1 = \boxed{\pi - 3},
+  \qquad \boxed{\E\xi = \frac{\pi}{2}-1}.
+\]
+
+\subsection*{2.д)} (гамма-распределение)
+Сразу считаем момент $\E\xi^k$, замена $t = ax$:
+\[
+  \E\xi^k = \frac{a^p}{\Gamma(p)}\int_0^\infty x^{p+k-1}e^{-ax}\,dx
+          = \frac{a^p}{\Gamma(p)}\cdot\frac{\Gamma(p+k)}{a^{p+k}}
+          = \frac{\Gamma(p+k)}{\Gamma(p)\,a^k} .
+\]
+С учётом $\Gamma(p+1)=p\Gamma(p)$, \ $\Gamma(p+2)=(p+1)p\,\Gamma(p)$:
+\[
+  \E\xi = \frac{p\,\Gamma(p)}{\Gamma(p)\,a} = \boxed{\frac{p}{a}}, \qquad
+  \E\xi^2 = \frac{p(p+1)}{a^2} .
+\]
+\[
+  \D\xi = \frac{p(p+1)}{a^2} - \frac{p^2}{a^2} = \boxed{\frac{p}{a^2}}.
+\]
+
+\subsection*{2.е)}
+\[
+  p_\xi(x) = F_\xi'(x) = \frac{1}{x^2}, \quad x>1 .
+\]
+\[
+  \E\xi = \int_1^\infty x\cdot\frac{1}{x^2}\,dx = \int_1^\infty\frac{dx}{x}
+        = \ln x\Big|_1^\infty = +\infty .
+\]
+Интеграл расходится $\Rightarrow$ \textbf{математическое ожидание не существует},
+а значит не существует и дисперсия.
+
+\subsection*{3.а)} $\eta = \xi^2$, \ $\xi\sim U[-1,1]$.
+\[
+  \E\eta = \E\xi^2 = \int_{-1}^{1}\frac{x^2}{2}\,dx = \frac{x^3}{6}\Big|_{-1}^{1} = \boxed{\frac13}.
+\]
+\[
+  \E\eta^2 = \E\xi^4 = \int_{-1}^{1}\frac{x^4}{2}\,dx = \frac{x^5}{10}\Big|_{-1}^{1} = \frac15,
+  \qquad
+  \D\eta = \frac15 - \frac19 = \boxed{\frac{4}{45}}.
+\]
+
+\subsection*{3.б)} $\eta = e^{\xi-1}$.
+
+Замена $t = x - a$:
+\[
+  \E\eta = \int_a^\infty e^{x-1}\,\lambda e^{-\lambda(x-a)}\,dx
+         = \lambda e^{a-1}\int_0^\infty e^{-(\lambda-1)t}\,dt
+         = \boxed{\frac{\lambda\,e^{a-1}}{\lambda-1}}, \qquad \lambda>1 .
+\]
+При $\lambda\le 1$ интеграл расходится: $\E\eta = +\infty$.
+\[
+  \E\eta^2 = \int_a^\infty e^{2(x-1)}\,\lambda e^{-\lambda(x-a)}\,dx
+           = \lambda e^{2(a-1)}\int_0^\infty e^{-(\lambda-2)t}\,dt
+           = \frac{\lambda\,e^{2(a-1)}}{\lambda-2}, \qquad \lambda>2 .
+\]
+\[
+  \D\eta = \lambda e^{2(a-1)}\left(\frac{1}{\lambda-2} - \frac{\lambda}{(\lambda-1)^2}\right)
+         = \lambda e^{2(a-1)}\,\frac{(\lambda-1)^2 - \lambda(\lambda-2)}{(\lambda-2)(\lambda-1)^2}
+         = \boxed{\frac{\lambda\,e^{2(a-1)}}{(\lambda-2)(\lambda-1)^2}}, \qquad \lambda>2 .
+\]
+При $1<\lambda\le 2$: $\E\eta$ конечно, но $\D\eta = +\infty$.
+
+\end{document}
