@@ -1,0 +1,274 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage[margin=2cm]{geometry}
+
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\sol}{\par\noindent\textbf{Решение.} }
+\newcommand{\ans}{\par\smallskip\noindent\textbf{Ответ.} }
+
+\begin{document}
+
+\begin{center}
+  \Large\textbf{Домашнее задание 1}
+\end{center}
+
+\noindent\textbf{Используемые факты.}
+\begin{itemize}
+  \item \emph{Критерий факторизации:} $T(X)$ достаточна $\iff$
+        $L(x;\theta)=g(T(x),\theta)\,h(x)$.
+  \item \emph{Критерий минимальности:} $T$ минимальна достаточна, если
+        $\dfrac{L(x;\theta)}{L(y;\theta)}$ не зависит от $\theta$
+        $\iff T(x)=T(y)$.
+  \item \emph{Информация Фишера} одного наблюдения:
+        $i(\theta)=-\E_\theta\,\dfrac{\partial^2}{\partial\theta^2}\ln p_\theta(X_1)$,
+        для выборки $I_n(\theta)=n\,i(\theta)$.
+\end{itemize}
+Обозначения: $X_{(1)}=\min X_i$, $X_{(n)}=\max X_i$, $S=\sum_{i=1}^n X_i$,
+$\bar X = S/n$.
+
+%==================================================================
+\section*{Задача 1}
+
+%------------------------------------------------------------------
+\subsection*{1(a) \quad $p_\theta(x)=\frac1\theta\,\I\{x\in[-\theta,0]\}$}
+\sol
+\begin{enumerate}
+  \item Функция правдоподобия:
+  \[
+    L(x;\theta)=\prod_{i=1}^n\frac1\theta\,\I\{-\theta\le x_i\le 0\}
+    =\theta^{-n}\,\I\{\theta\ge -x_{(1)}\}\cdot\I\{x_{(n)}\le 0\}.
+  \]
+  \item Факторизация: $g(T,\theta)=\theta^{-n}\I\{\theta\ge -T\}$,
+        $h(x)=\I\{x_{(n)}\le0\}$, $T=X_{(1)}$ $\Rightarrow$ $X_{(1)}$ достаточна.
+  \item Минимальность: отношение
+  $\dfrac{L(x;\theta)}{L(y;\theta)}=\dfrac{\I\{\theta\ge -x_{(1)}\}}{\I\{\theta\ge -y_{(1)}\}}$
+  не зависит от $\theta$ только при $x_{(1)}=y_{(1)}$ (иначе на промежутке
+  между $-x_{(1)}$ и $-y_{(1)}$ оно равно $0$ или $\infty$, а правее~--- $1$).
+  \item ОМП: при $\theta<-X_{(1)}$ имеем $L=0$; при $\theta\ge -X_{(1)}$
+        $L=\theta^{-n}$ строго убывает. Максимум в левой границе.
+\end{enumerate}
+\ans $T=X_{(1)}$ (эквивалентно $-X_{(1)}=\max_i(-X_i)$);
+\quad $\hat\theta=-X_{(1)}$.
+
+%------------------------------------------------------------------
+\subsection*{1(b) \quad $p_\theta(x)=\frac1{2\theta}\,\I\{x\in[-\theta,\theta]\}$}
+\sol
+\begin{enumerate}
+  \item $L(x;\theta)=(2\theta)^{-n}\prod\I\{|x_i|\le\theta\}
+        =(2\theta)^{-n}\,\I\{\theta\ge \max_i|x_i|\}$.
+  \item Факторизация с $h(x)\equiv1$, $T=\max_i|X_i|$ $\Rightarrow$ $T$ достаточна.
+  \item Минимальность: $\dfrac{L(x;\theta)}{L(y;\theta)}
+        =\dfrac{\I\{\theta\ge\max|x_i|\}}{\I\{\theta\ge\max|y_i|\}}$ не зависит
+        от $\theta\iff \max|x_i|=\max|y_i|$.
+  \item ОМП: $L=0$ при $\theta<\max|X_i|$, далее $(2\theta)^{-n}$ убывает
+        $\Rightarrow$ максимум в точке $\theta=\max|X_i|$.
+\end{enumerate}
+\ans $T=\max_i|X_i|$;\quad $\hat\theta=\max_i|X_i|$.
+
+%------------------------------------------------------------------
+\subsection*{1(c) \quad $p_\theta(x)=\frac{2\theta^{3/2}\sqrt x}{\sqrt\pi}e^{-\theta x},\ x\ge0$}
+\sol
+\begin{enumerate}
+  \item (Это гамма-распределение $\Gamma(3/2,\theta)$.)
+  \[
+    L(x;\theta)=\Big(\tfrac{2}{\sqrt\pi}\Big)^n\prod\sqrt{x_i}\,\I\{x_{(1)}\ge0\}
+      \cdot \theta^{3n/2}e^{-\theta\sum x_i}.
+  \]
+  \item Факторизация: $g(S,\theta)=\theta^{3n/2}e^{-\theta S}$, $T=S=\sum X_i$.
+  \item Минимальность: $\dfrac{L(x;\theta)}{L(y;\theta)}
+        =\dfrac{h(x)}{h(y)}\,e^{-\theta(S(x)-S(y))}$ не зависит от
+        $\theta\iff S(x)=S(y)$.
+  \item ОМП: $\ln L=\text{const}+\frac{3n}{2}\ln\theta-\theta S$,
+  \[
+    \frac{\partial\ln L}{\partial\theta}=\frac{3n}{2\theta}-S=0
+    \ \Rightarrow\ \hat\theta=\frac{3n}{2S},\qquad
+    \frac{\partial^2\ln L}{\partial\theta^2}=-\frac{3n}{2\theta^2}<0
+    \ \Rightarrow\ \text{максимум}.
+  \]
+\end{enumerate}
+\ans $T=\sum X_i$;\quad $\hat\theta=\dfrac{3}{2\bar X}$.
+
+%------------------------------------------------------------------
+\subsection*{1(d) \quad $p_\theta(x)=\exp\big((x-\theta)-e^{x-\theta}\big),\ x\in\mathbb R$}
+\sol
+\begin{enumerate}
+  \item $L(x;\theta)=\exp\Big(\sum x_i\Big)\cdot
+        \exp\Big(-n\theta-e^{-\theta}\sum e^{x_i}\Big)$.
+  \item Факторизация: $h(x)=e^{\sum x_i}$,
+        $g(T,\theta)=e^{-n\theta-e^{-\theta}T}$, $T=\sum e^{X_i}$.
+  \item Минимальность: $\dfrac{L(x;\theta)}{L(y;\theta)}
+        =\dfrac{h(x)}{h(y)}\exp\big(-e^{-\theta}(T(x)-T(y))\big)$ не зависит
+        от $\theta\iff T(x)=T(y)$.
+  \item ОМП: $\ln L=\sum x_i-n\theta-e^{-\theta}T$,
+  \[
+    \frac{\partial\ln L}{\partial\theta}=-n+e^{-\theta}T=0
+    \ \Rightarrow\ e^{\theta}=\frac Tn,\qquad
+    \frac{\partial^2\ln L}{\partial\theta^2}=-e^{-\theta}T<0.
+  \]
+\end{enumerate}
+\ans $T=\sum e^{X_i}$;\quad $\hat\theta=\ln\Big(\dfrac1n\sum_{i=1}^n e^{X_i}\Big)$.
+
+%------------------------------------------------------------------
+\subsection*{1(e) \quad $p_\theta(x)=\frac{\sqrt\theta}{\sqrt{2\pi x}}e^{-\theta x/2},\ x\ge0$}
+\sol
+\begin{enumerate}
+  \item (Это $\Gamma(1/2,\theta/2)$.)
+  $L(x;\theta)=(2\pi)^{-n/2}\prod x_i^{-1/2}\,\I\{x_{(1)}\ge0\}\cdot
+   \theta^{n/2}e^{-\theta S/2}$.
+  \item Факторизация: $g(S,\theta)=\theta^{n/2}e^{-\theta S/2}$, $T=S=\sum X_i$.
+  \item Минимальность: $\dfrac{L(x;\theta)}{L(y;\theta)}
+        =\dfrac{h(x)}{h(y)}e^{-\theta(S(x)-S(y))/2}$ не зависит от
+        $\theta\iff S(x)=S(y)$.
+  \item ОМП: $\ln L=\text{const}+\frac n2\ln\theta-\frac{\theta S}{2}$,
+  \[
+    \frac{\partial\ln L}{\partial\theta}=\frac{n}{2\theta}-\frac S2=0
+    \ \Rightarrow\ \hat\theta=\frac nS,\qquad
+    \frac{\partial^2\ln L}{\partial\theta^2}=-\frac{n}{2\theta^2}<0.
+  \]
+\end{enumerate}
+\ans $T=\sum X_i$;\quad $\hat\theta=\dfrac1{\bar X}$.
+
+%------------------------------------------------------------------
+\subsection*{1(f) \quad $p_\theta(x)=\frac1{2b}e^{-|x-a|/b},\ x\in\mathbb R,\ \theta=(a,b)$}
+\sol
+\begin{enumerate}
+  \item $L(x;a,b)=(2b)^{-n}\exp\Big(-\frac1b\sum_{i=1}^n|x_i-a|\Big)$.
+  \item Достаточность: $\sum|x_i-a|$ зависит от выборки только через
+        вариационный ряд, поэтому $T=(X_{(1)},\dots,X_{(n)})$ достаточна.
+  \item Минимальность: $\dfrac{L(x;a,b)}{L(y;a,b)}
+        =\exp\Big(-\frac1b\big[\varphi_x(a)-\varphi_y(a)\big]\Big)$,
+        где $\varphi_x(a)=\sum|x_i-a|$.
+        Отношение не зависит от $(a,b)$ $\iff$ $\varphi_x(a)\equiv\varphi_y(a)$.
+        Функция $\varphi_x$ кусочно-линейна, её излом в точке $t$ равен
+        $2\cdot\#\{i:x_i=t\}$. Совпадение функций означает совпадение изломов,
+        т.е. совпадение наборов $\{x_i\}$ и $\{y_i\}$ с кратностями,
+        т.е. $x_{(\cdot)}=y_{(\cdot)}$. Сжать вариационный ряд дальше нельзя.
+  \item ОМП по $a$ (при любом фиксированном $b$): максимизировать $L$
+        $\iff$ минимизировать $\varphi(a)=\sum|X_i-a|$.
+        $\varphi'(a)=\#\{X_i<a\}-\#\{X_i>a\}$ меняет знак с $-$ на $+$ в медиане
+        $\Rightarrow\hat a=\operatorname{med}(X_1,\dots,X_n)$
+        (при чётном $n$~--- любая точка из $[X_{(n/2)},X_{(n/2+1)}]$).
+  \item ОМП по $b$: $\ln L=-n\ln(2b)-\frac1b\varphi(\hat a)$,
+  \[
+    \frac{\partial\ln L}{\partial b}=-\frac nb+\frac{\varphi(\hat a)}{b^2}=0
+    \ \Rightarrow\ \hat b=\frac{\varphi(\hat a)}{n}.
+  \]
+  При $b<\hat b$ производная $>0$, при $b>\hat b$~--- $<0$ $\Rightarrow$ максимум.
+\end{enumerate}
+\ans $T=(X_{(1)},\dots,X_{(n)})$;\quad
+$\hat a=\operatorname{med}X$,\quad $\hat b=\dfrac1n\sum_{i=1}^n|X_i-\hat a|$.
+
+%==================================================================
+\section*{Задача 2. Информация Фишера для 1(c)--1(e)}
+
+Во всех трёх случаях носитель не зависит от $\theta$, плотность дважды
+дифференцируема по $\theta$ $\Rightarrow$ условия регулярности выполнены и
+$i(\theta)=-\E\,\partial^2_\theta\ln p_\theta(X_1)$.
+
+%------------------------------------------------------------------
+\subsection*{2(c)}
+\sol
+\begin{enumerate}
+  \item $\ln p_\theta(x)=\ln\frac2{\sqrt\pi}+\frac32\ln\theta+\frac12\ln x-\theta x$.
+  \item $\partial_\theta\ln p=\frac{3}{2\theta}-x$,\quad
+        $\partial^2_\theta\ln p=-\frac{3}{2\theta^2}$ (не зависит от $x$).
+  \item $i(\theta)=\frac3{2\theta^2}$.
+\end{enumerate}
+\ans $i(\theta)=\dfrac{3}{2\theta^2}$,\quad $I_n(\theta)=\dfrac{3n}{2\theta^2}$.
+
+%------------------------------------------------------------------
+\subsection*{2(d)}
+\sol
+\begin{enumerate}
+  \item $\ln p_\theta(x)=(x-\theta)-e^{x-\theta}$.
+  \item $\partial_\theta\ln p=-1+e^{x-\theta}$,\quad
+        $\partial^2_\theta\ln p=-e^{x-\theta}$.
+  \item Найдём $\E e^{X-\theta}$. Пусть $Y=e^{X-\theta}$; при $u=x-\theta$
+        плотность $U=X-\theta$ равна $e^{u-e^u}$, замена $y=e^u$, $dy=e^u du$:
+        $p_Y(y)=e^{-y}$, $y>0$, т.е. $Y\sim\mathrm{Exp}(1)$, $\E Y=1$.
+  \item $i(\theta)=\E e^{X-\theta}=1$.
+\end{enumerate}
+\ans $i(\theta)=1$,\quad $I_n(\theta)=n$.
+
+%------------------------------------------------------------------
+\subsection*{2(e)}
+\sol
+\begin{enumerate}
+  \item $\ln p_\theta(x)=\frac12\ln\theta-\frac12\ln(2\pi x)-\frac{\theta x}2$.
+  \item $\partial_\theta\ln p=\frac1{2\theta}-\frac x2$,\quad
+        $\partial^2_\theta\ln p=-\frac1{2\theta^2}$.
+  \item $i(\theta)=\frac1{2\theta^2}$.
+\end{enumerate}
+\ans $i(\theta)=\dfrac{1}{2\theta^2}$,\quad $I_n(\theta)=\dfrac{n}{2\theta^2}$.
+
+%==================================================================
+\section*{Задача 3}
+
+%------------------------------------------------------------------
+\subsection*{3(a) \quad $q_\theta(k)=C_m^k\theta^k(1-\theta)^{m-k},\ k=0,\dots,m$}
+\sol
+\begin{enumerate}
+  \item $L(x;\theta)=\prod C_m^{x_i}\cdot\theta^{S}(1-\theta)^{nm-S}$,
+        $S=\sum X_i$.
+  \item Факторизация: $h(x)=\prod C_m^{x_i}$,
+        $g(S,\theta)=\theta^S(1-\theta)^{nm-S}$ $\Rightarrow$ $S$ достаточна.
+  \item Минимальность: $\dfrac{L(x;\theta)}{L(y;\theta)}
+        =\dfrac{h(x)}{h(y)}\Big(\dfrac{\theta}{1-\theta}\Big)^{S(x)-S(y)}$
+        не зависит от $\theta\iff S(x)=S(y)$.
+  \item ОМП: $\ln L=\text{const}+S\ln\theta+(nm-S)\ln(1-\theta)$,
+  \[
+    \frac{\partial\ln L}{\partial\theta}=\frac S\theta-\frac{nm-S}{1-\theta}=0
+    \ \Rightarrow\ S(1-\theta)=(nm-S)\theta\ \Rightarrow\ \hat\theta=\frac{S}{nm}.
+  \]
+  $\partial^2_\theta\ln L=-\frac S{\theta^2}-\frac{nm-S}{(1-\theta)^2}<0$
+  $\Rightarrow$ максимум. (При $S=0$ или $S=nm$ максимум достигается на
+  границе, $\hat\theta\notin(0,1)$.)
+  \item Фишер: $\ln q_\theta(k)=\ln C_m^k+k\ln\theta+(m-k)\ln(1-\theta)$,
+  \[
+    \partial^2_\theta\ln q=-\frac k{\theta^2}-\frac{m-k}{(1-\theta)^2},
+    \qquad \E X_1=m\theta,
+  \]
+  \[
+    i(\theta)=\frac{m\theta}{\theta^2}+\frac{m(1-\theta)}{(1-\theta)^2}
+    =\frac m\theta+\frac m{1-\theta}=\frac{m}{\theta(1-\theta)}.
+  \]
+\end{enumerate}
+\ans $T=\sum X_i$;\quad $\hat\theta=\dfrac{\bar X}{m}$;\quad
+$i(\theta)=\dfrac{m}{\theta(1-\theta)}$, $I_n(\theta)=\dfrac{nm}{\theta(1-\theta)}$.
+
+%------------------------------------------------------------------
+\subsection*{3(b) \quad $q_\theta(k)=\frac{\theta^k}{(\theta+1)^{k+1}},\ k=0,1,\dots$}
+\sol
+\begin{enumerate}
+  \item Это геометрическое распределение:
+        $q_\theta(k)=\frac1{1+\theta}\big(\frac\theta{1+\theta}\big)^k$,
+        $\E X_1=\theta$.
+  \item $L(x;\theta)=\theta^{S}(1+\theta)^{-(S+n)}$, $S=\sum X_i$
+        $\Rightarrow$ по факторизации ($h\equiv1$) $S$ достаточна.
+  \item Минимальность: $\dfrac{L(x;\theta)}{L(y;\theta)}
+        =\Big(\dfrac{\theta}{1+\theta}\Big)^{S(x)-S(y)}$ не зависит от
+        $\theta\iff S(x)=S(y)$.
+  \item ОМП: $\ln L=S\ln\theta-(S+n)\ln(1+\theta)$,
+  \[
+    \frac{\partial\ln L}{\partial\theta}=\frac S\theta-\frac{S+n}{1+\theta}=0
+    \ \Rightarrow\ S(1+\theta)=(S+n)\theta\ \Rightarrow\ \hat\theta=\frac Sn.
+  \]
+  Производная $>0$ при $\theta<\hat\theta$ и $<0$ при $\theta>\hat\theta$
+  $\Rightarrow$ максимум.
+  \item Фишер: $\ln q_\theta(k)=k\ln\theta-(k+1)\ln(1+\theta)$,
+  \[
+    \partial^2_\theta\ln q=-\frac{k}{\theta^2}+\frac{k+1}{(1+\theta)^2},
+  \]
+  \[
+    i(\theta)=\frac{\theta}{\theta^2}-\frac{\theta+1}{(1+\theta)^2}
+    =\frac1\theta-\frac1{1+\theta}=\frac1{\theta(1+\theta)}.
+  \]
+\end{enumerate}
+\ans $T=\sum X_i$;\quad $\hat\theta=\bar X$;\quad
+$i(\theta)=\dfrac{1}{\theta(\theta+1)}$, $I_n(\theta)=\dfrac{n}{\theta(\theta+1)}$.
+
+\end{document}

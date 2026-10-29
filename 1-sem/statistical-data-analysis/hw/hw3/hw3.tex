@@ -1,0 +1,281 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage[margin=2cm]{geometry}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\sol}{\par\noindent\textbf{Решение.} }
+\newcommand{\ans}{\par\smallskip\noindent\textbf{Ответ.} }
+
+\begin{document}
+
+\begin{center}
+  \Large\textbf{Домашнее задание (Д.И.)}
+\end{center}
+
+\noindent\textbf{Обозначения.} Уровень доверия $1-\alpha$;
+$z=z_{1-\alpha/2}$~--- квантиль $N(0,1)$;
+$t_{\nu,p}$, $\chi^2_{\nu,p}$, $F_{\nu_1,\nu_2,p}$~--- квантили уровня $p$
+распределений Стьюдента, хи-квадрат и Фишера.
+$\bar X=\frac1n\sum X_i$, $Q_X=\sum_{i=1}^n(X_i-\bar X)^2$,
+$s_X^2=\frac{Q_X}{n-1}$ (аналогично для $Y,Z$).
+
+\smallskip
+\noindent\textbf{Факты.}
+\begin{itemize}
+  \item Для $X_i\sim N(a,\sigma^2)$: $\bar X\sim N(a,\sigma^2/n)$,
+        $Q_X/\sigma^2\sim\chi^2_{n-1}$, и $\bar X$, $Q_X$ независимы.
+  \item ОМП асимптотически нормальна:
+        $\sqrt{n\,i(\theta)}\,(\hat\theta-\theta)\xrightarrow{d}N(0,1)$;
+        по лемме Слуцкого $i(\theta)$ можно заменить на $i(\hat\theta)$.
+  \item Дельта-метод: если $\sqrt n(\hat p-p)\xrightarrow{d}N(0,\Sigma)$,
+        то $\sqrt n\big(g(\hat p)-g(p)\big)\xrightarrow{d}
+        N\big(0,\nabla g^\top\Sigma\nabla g\big)$.
+\end{itemize}
+
+%==================================================================
+\section*{Задача 1. \ $\theta=3a+2b-c$}
+$X_i\sim N(a,\sigma^2)$, $Y_j\sim N(b,3\sigma^2)$, $Z_l\sim N(c,3\sigma^2)$,
+$\sigma$ неизвестна.
+
+\sol
+\begin{enumerate}
+  \item Точечная оценка: $\hat\theta=3\bar X+2\bar Y-\bar Z$ (несмещённая).
+  \item Распределение: сумма независимых нормальных величин нормальна,
+  \[
+    \D\hat\theta=9\frac{\sigma^2}{n}+4\frac{3\sigma^2}{m}+\frac{3\sigma^2}{k}
+    =\sigma^2 d,\qquad d=\frac9n+\frac{12}m+\frac3k,
+  \]
+  \[
+    \frac{\hat\theta-\theta}{\sigma\sqrt d}\sim N(0,1).
+  \]
+  \item Оценка $\sigma^2$ по всем трём выборкам:
+  \[
+    \frac{Q_X}{\sigma^2}\sim\chi^2_{n-1},\quad
+    \frac{Q_Y}{3\sigma^2}\sim\chi^2_{m-1},\quad
+    \frac{Q_Z}{3\sigma^2}\sim\chi^2_{k-1}
+    \ \Rightarrow\
+    \frac{Q_X+\frac13(Q_Y+Q_Z)}{\sigma^2}\sim\chi^2_{N},\quad N=n+m+k-3.
+  \]
+  Положим $s^2=\dfrac{Q_X+\frac13(Q_Y+Q_Z)}{N}$; $s^2$ не зависит от
+  $\bar X,\bar Y,\bar Z$.
+  \item Стьюдентова дробь (нормальная делённая на $\sqrt{\chi^2_N/N}$):
+  \[
+    T=\frac{\hat\theta-\theta}{s\sqrt d}\sim t_N.
+  \]
+  \item $P\big(|T|\le t_{N,1-\alpha/2}\big)=1-\alpha$; разрешаем относительно $\theta$.
+\end{enumerate}
+\ans
+\[
+  \theta\in\Big(3\bar X+2\bar Y-\bar Z\ \mp\ t_{N,1-\alpha/2}\; s\sqrt{\tfrac9n+\tfrac{12}m+\tfrac3k}\Big),
+  \qquad N=n+m+k-3,\ \ s^2=\frac{Q_X+\frac13(Q_Y+Q_Z)}{n+m+k-3}.
+\]
+(Если $\sigma$ известна: $\hat\theta\mp z\,\sigma\sqrt d$.)
+
+%==================================================================
+\section*{Задача 2. \ $\theta=\log\sigma_1-\log\sigma_2$}
+$X_i\sim N(a,\sigma_1^2)$, $Y_j\sim N(b,\sigma_2^2)$, $a,b$ неизвестны.
+
+\sol
+\begin{enumerate}
+  \item Заметим $\theta=\frac12\ln\dfrac{\sigma_1^2}{\sigma_2^2}$~---
+        монотонная функция отношения дисперсий. Достаточно построить
+        интервал для $\sigma_1^2/\sigma_2^2$.
+  \item $\dfrac{(n-1)s_X^2}{\sigma_1^2}\sim\chi^2_{n-1}$,
+        $\dfrac{(m-1)s_Y^2}{\sigma_2^2}\sim\chi^2_{m-1}$, независимы
+        $\Rightarrow$
+  \[
+    F=\frac{s_X^2/\sigma_1^2}{s_Y^2/\sigma_2^2}\sim F_{n-1,m-1}.
+  \]
+  \item $P\big(F_{n-1,m-1,\alpha/2}\le F\le F_{n-1,m-1,1-\alpha/2}\big)=1-\alpha$.
+        Разрешаем относительно $\sigma_1^2/\sigma_2^2$:
+  \[
+    \frac{s_X^2/s_Y^2}{F_{n-1,m-1,1-\alpha/2}}\le\frac{\sigma_1^2}{\sigma_2^2}
+    \le\frac{s_X^2/s_Y^2}{F_{n-1,m-1,\alpha/2}}.
+  \]
+  \item Применяем монотонную функцию $\frac12\ln(\cdot)$ и используем
+        $1/F_{n-1,m-1,\alpha/2}=F_{m-1,n-1,1-\alpha/2}$.
+\end{enumerate}
+\ans
+\[
+  \theta\in\Big(\ln\frac{s_X}{s_Y}-\tfrac12\ln F_{n-1,m-1,1-\alpha/2}\,;\ \
+  \ln\frac{s_X}{s_Y}+\tfrac12\ln F_{m-1,n-1,1-\alpha/2}\Big).
+\]
+(Если $a,b$ известны: $s_X^2=\frac1n\sum(X_i-a)^2$, $s_Y^2=\frac1m\sum(Y_j-b)^2$,
+степени свободы $(n,m)$.)
+
+%==================================================================
+\section*{Задача 3. Асимптотические ДИ на базе ОМП}
+
+Общая схема: найти ОМП $\hat\theta$, найти $i(\theta)$, тогда
+$\theta\in\Big(\hat\theta\mp\dfrac{z}{\sqrt{n\,i(\hat\theta)}}\Big)$.
+Во всех пунктах носитель не зависит от параметра, условия регулярности
+выполнены.
+
+%------------------------------------------------------------------
+\subsection*{3(а) \quad $p_a(x)=ae^{-ax},\ x\ge0$}
+\sol
+\begin{enumerate}
+  \item $\ln L=n\ln a-a\sum X_i$, \ $\partial_a\ln L=\frac na-\sum X_i=0$
+        $\Rightarrow\hat a=\dfrac1{\bar X}$.
+  \item $\ln p=\ln a-ax$, \ $\partial_a^2\ln p=-\frac1{a^2}$
+        $\Rightarrow i(a)=\dfrac1{a^2}$.
+  \item $\sqrt{n\,i(\hat a)}=\sqrt n/\hat a$.
+\end{enumerate}
+\ans $a\in\Big(\hat a\mp\dfrac{z\,\hat a}{\sqrt n}\Big)
+     =\Big(\dfrac1{\bar X}\big(1\mp\tfrac{z}{\sqrt n}\big)\Big)$,
+     \quad $i(a)=1/a^2$.
+
+%------------------------------------------------------------------
+\subsection*{3(б) \quad $p_b(x)=\frac1{2b}e^{-|x|/b},\ x\in\mathbb R$}
+\sol
+\begin{enumerate}
+  \item $\ln L=-n\ln(2b)-\frac1b\sum|X_i|$,
+        \ $\partial_b\ln L=-\frac nb+\frac{\sum|X_i|}{b^2}=0$
+        $\Rightarrow\hat b=\dfrac1n\sum|X_i|$.
+  \item $\ln p=-\ln2-\ln b-\frac{|x|}b$,\quad
+        $\partial_b^2\ln p=\frac1{b^2}-\frac{2|x|}{b^3}$.
+  \item $|X_1|\sim\mathrm{Exp}(1/b)$, $\E|X_1|=b$ $\Rightarrow$
+        $i(b)=-\frac1{b^2}+\frac{2b}{b^3}=\dfrac1{b^2}$.
+\end{enumerate}
+\ans $b\in\Big(\hat b\mp\dfrac{z\,\hat b}{\sqrt n}\Big)$,\quad
+     $\hat b=\frac1n\sum|X_i|$,\quad $i(b)=1/b^2$.
+
+%------------------------------------------------------------------
+\subsection*{3(в) \quad Логнормальное: $\theta=(a,\sigma)$}
+\sol
+\begin{enumerate}
+  \item Положим $Y_i=\ln X_i\sim N(a,\sigma^2)$.
+  $\ln L=-n\ln\sigma-\sum\ln X_i-\frac{1}{2\sigma^2}\sum(Y_i-a)^2+\text{const}$.
+  \item Уравнения правдоподобия:
+  \[
+    \partial_a\ln L=\frac{1}{\sigma^2}\sum(Y_i-a)=0\Rightarrow\hat a=\bar Y=\frac1n\sum\ln X_i,
+  \]
+  \[
+    \partial_\sigma\ln L=-\frac n\sigma+\frac1{\sigma^3}\sum(Y_i-a)^2=0
+    \Rightarrow\hat\sigma^2=\frac1n\sum(\ln X_i-\hat a)^2.
+  \]
+  \item Матрица Фишера одного наблюдения ($y=\ln x$):
+  \[
+    \partial_a^2\ln p=-\frac1{\sigma^2},\quad
+    \partial_a\partial_\sigma\ln p=-\frac{2(y-a)}{\sigma^3},\quad
+    \partial_\sigma^2\ln p=\frac1{\sigma^2}-\frac{3(y-a)^2}{\sigma^4}.
+  \]
+  С учётом $\E(Y-a)=0$, $\E(Y-a)^2=\sigma^2$:
+  \[
+    i(a,\sigma)=\begin{pmatrix}\frac1{\sigma^2}&0\\0&\frac2{\sigma^2}\end{pmatrix},
+    \qquad i^{-1}=\begin{pmatrix}\sigma^2&0\\0&\frac{\sigma^2}2\end{pmatrix}.
+  \]
+  \item Значит $\sqrt n(\hat a-a)\to N(0,\sigma^2)$,
+        $\sqrt n(\hat\sigma-\sigma)\to N(0,\sigma^2/2)$; заменяем $\sigma$
+        на $\hat\sigma$.
+\end{enumerate}
+\ans
+\[
+  a\in\Big(\hat a\mp\frac{z\,\hat\sigma}{\sqrt n}\Big),\qquad
+  \sigma\in\Big(\hat\sigma\mp\frac{z\,\hat\sigma}{\sqrt{2n}}\Big),
+  \qquad i(a,\sigma)=\operatorname{diag}\Big(\frac1{\sigma^2},\frac2{\sigma^2}\Big).
+\]
+(Для $\sigma^2$: $i(\sigma^2)=\frac1{2\sigma^4}$,
+$\ \sigma^2\in\big(\hat\sigma^2\mp z\hat\sigma^2\sqrt{2/n}\big)$.)
+
+%------------------------------------------------------------------
+\subsection*{3(г) \quad $p_a(x)=ae^{ax},\ x\le0$}
+\sol
+\begin{enumerate}
+  \item $\ln L=n\ln a+a\sum X_i$, \ $\partial_a\ln L=\frac na+\sum X_i=0$
+        $\Rightarrow\hat a=-\dfrac1{\bar X}$ ($>0$, т.к. $X_i\le0$).
+  \item $\ln p=\ln a+ax$, \ $\partial_a^2\ln p=-\frac1{a^2}$
+        $\Rightarrow i(a)=\dfrac1{a^2}$.
+  \item (Это пункт (а) для $-X_i$.)
+\end{enumerate}
+\ans $a\in\Big(\hat a\mp\dfrac{z\,\hat a}{\sqrt n}\Big)$,\quad
+     $\hat a=-1/\bar X$,\quad $i(a)=1/a^2$.
+
+%==================================================================
+\section*{Задача 4. Геометрическое распределение, $\theta=p$}
+\sol
+\begin{enumerate}
+  \item $\ln L=n\ln p+S\ln(1-p)$, $S=\sum X_i$;
+  \[
+    \partial_p\ln L=\frac np-\frac S{1-p}=0\Rightarrow n(1-p)=Sp
+    \Rightarrow\hat p=\frac{n}{n+S}=\frac1{1+\bar X}.
+  \]
+  \item $\ln P(X=k)=\ln p+k\ln(1-p)$,\quad
+        $\partial_p^2=-\frac1{p^2}-\frac k{(1-p)^2}$,\quad $\E X_1=\frac{1-p}p$.
+  \[
+    i(p)=\frac1{p^2}+\frac{1-p}{p(1-p)^2}=\frac1{p^2}+\frac1{p(1-p)}
+    =\frac{1}{p^2(1-p)}.
+  \]
+  \item $\dfrac1{\sqrt{n\,i(\hat p)}}=\dfrac{\hat p\sqrt{1-\hat p}}{\sqrt n}$.
+\end{enumerate}
+\ans $p\in\Big(\hat p\mp z\,\dfrac{\hat p\sqrt{1-\hat p}}{\sqrt n}\Big)$,\quad
+     $\hat p=\dfrac1{1+\bar X}$,\quad $i(p)=\dfrac1{p^2(1-p)}$.
+
+%==================================================================
+\section*{Задача 5. Две выборки Бернулли}
+\sol (общая часть)
+\begin{enumerate}
+  \item $\hat p_1=\bar X$, $\hat p_2=\bar Y$ (ОМП); обозначим $q_j=1-p_j$.
+  \item По ЦПТ $\sqrt n(\hat p_j-p_j)\to N(0,p_jq_j)$, выборки независимы:
+        $\Sigma=\operatorname{diag}(p_1q_1,\,p_2q_2)$.
+  \item Для $\theta=g(p_1,p_2)$ по дельта-методу
+  \[
+    \sqrt n(\hat\theta-\theta)\to N(0,\tau^2),\qquad
+    \tau^2=(\partial_1g)^2p_1q_1+(\partial_2g)^2p_2q_2,
+  \]
+  по Слуцкому подставляем $\hat p_j$; ДИ: $\hat\theta\mp z\,\hat\tau/\sqrt n$.
+  (Требуется $\hat p_j\in(0,1)$.)
+\end{enumerate}
+
+%------------------------------------------------------------------
+\subsection*{5(а) \quad $\theta=p_1-p_2$}
+\sol $\partial_1g=1$, $\partial_2g=-1$ $\Rightarrow$ $\tau^2=p_1q_1+p_2q_2$.
+\ans $\theta\in\Big(\hat p_1-\hat p_2\mp z\sqrt{\dfrac{\hat p_1\hat q_1+\hat p_2\hat q_2}{n}}\Big)$.
+
+%------------------------------------------------------------------
+\subsection*{5(б) \quad $\theta=p_1/p_2$}
+\sol
+\begin{enumerate}
+  \item $\partial_1g=\frac1{p_2}$, $\partial_2g=-\frac{p_1}{p_2^2}$,
+  \[
+    \tau^2=\frac{p_1q_1}{p_2^2}+\frac{p_1^2p_2q_2}{p_2^4}
+    =\theta^2\Big(\frac{q_1}{p_1}+\frac{q_2}{p_2}\Big).
+  \]
+  \item Удобнее через логарифм: $\ln\theta=\ln p_1-\ln p_2$,
+        $\tau^2_{\ln}=\frac{q_1}{p_1}+\frac{q_2}{p_2}$; потом
+        экспоненцируем (интервал остаётся положительным).
+\end{enumerate}
+\ans $\theta\in\Big(\hat\theta\mp z\,\hat\theta\,\delta\Big)$, или
+     $\theta\in\big(\hat\theta e^{-z\delta},\ \hat\theta e^{z\delta}\big)$,
+     где $\hat\theta=\dfrac{\hat p_1}{\hat p_2}$,
+     $\delta=\sqrt{\dfrac1n\Big(\dfrac{\hat q_1}{\hat p_1}+\dfrac{\hat q_2}{\hat p_2}\Big)}$.
+
+%------------------------------------------------------------------
+\subsection*{5(в) \quad $\theta=\frac{p_1}{1-p_1}-\frac{p_2}{1-p_2}$}
+\sol $\frac{d}{dp}\frac p{1-p}=\frac1{(1-p)^2}$ $\Rightarrow$
+     $\tau^2=\dfrac{p_1q_1}{q_1^4}+\dfrac{p_2q_2}{q_2^4}
+     =\dfrac{p_1}{q_1^3}+\dfrac{p_2}{q_2^3}$.
+\ans $\theta\in\Big(\dfrac{\hat p_1}{\hat q_1}-\dfrac{\hat p_2}{\hat q_2}
+     \mp z\sqrt{\dfrac1n\Big(\dfrac{\hat p_1}{\hat q_1^3}+\dfrac{\hat p_2}{\hat q_2^3}\Big)}\Big)$.
+
+%------------------------------------------------------------------
+\subsection*{5(г) \quad $\theta=\frac{p_1(1-p_2)}{p_2(1-p_1)}$ (отношение шансов)}
+\sol
+\begin{enumerate}
+  \item Логарифмируем: $\ln\theta=\ln\frac{p_1}{q_1}-\ln\frac{p_2}{q_2}$.
+  \item $\frac{d}{dp}\ln\frac p{1-p}=\frac1{p(1-p)}$ $\Rightarrow$
+        $\tau^2_{\ln}=\dfrac{p_1q_1}{(p_1q_1)^2}+\dfrac{p_2q_2}{(p_2q_2)^2}
+        =\dfrac1{p_1q_1}+\dfrac1{p_2q_2}$.
+  \item ДИ для $\ln\theta$: $\ln\hat\theta\mp z\delta$, затем экспоненцируем.
+        (Прямой дельта-метод для $\theta$ даёт $\tau^2=\theta^2\tau^2_{\ln}$.)
+\end{enumerate}
+\ans $\theta\in\big(\hat\theta e^{-z\delta},\ \hat\theta e^{z\delta}\big)$
+     \ (или $\hat\theta\mp z\hat\theta\delta$), где
+     $\hat\theta=\dfrac{\hat p_1\hat q_2}{\hat p_2\hat q_1}$,
+     $\delta=\sqrt{\dfrac1n\Big(\dfrac1{\hat p_1\hat q_1}+\dfrac1{\hat p_2\hat q_2}\Big)}$.
+
+\end{document}
