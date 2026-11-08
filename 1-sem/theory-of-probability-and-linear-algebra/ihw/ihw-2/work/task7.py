@@ -4,19 +4,14 @@ np.random.seed(16)
 np.set_printoptions(precision=4, suppress=True)
 
 transition_matrix1 = np.array([
-    [2, 2, 4, 2, 0],
-    [3, 2, 0, 3, 2],
-    [1, 0, 1, 3, 5],
-    [2, 3, 2, 3, 0],
-    [0, 4, 1, 3, 2]
-]) / 10
-transition_matrix2 = np.array([
-    [3, 7],
-    [4, 6]
+    [2, 3, 1, 2, 2],
+    [1, 2, 3, 4, 0],
+    [1, 0, 5, 0, 4],
+    [2, 3, 0, 4, 1],
+    [3, 0, 2, 2, 3]
 ]) / 10
 
-labels1 = [1, 2, 3, 6, 7]
-labels2 = [4, 8]
+labels1 = [1, 2, 5, 7, 8]
 
 
 def simulate_markov_chain(transition_matrix, initial_state, steps):
@@ -60,14 +55,8 @@ def simulation(steps, initial_state, transition_matrix, labels):
     print(f"Difference: {difference}\n")
 
 
-print("Class 1: states (1, 2, 3, 6, 7)\n")
+print("Class 1: states (1, 2, 5, 7, 8)\n")
 simulation(10, 0, transition_matrix1, labels1)
 simulation(50, 1, transition_matrix1, labels1)
 simulation(100, 2, transition_matrix1, labels1)
 simulation(1000, 3, transition_matrix1, labels1)
-
-print("Class 2: states (4, 8)\n")
-simulation(10, 0, transition_matrix2, labels2)
-simulation(50, 1, transition_matrix2, labels2)
-simulation(100, 0, transition_matrix2, labels2)
-simulation(1000, 1, transition_matrix2, labels2)
