@@ -26,3 +26,11 @@
 <h2 align="center">Бакалавриат</h2>
 
 [Работы бакалавра (репозиторий)](https://github.com/MathematicLove/spbstu-iccs-mcs)
+
+<a href="https://www.star-history.com/?repos=mathematiclove%2Fspbstu-iccs-mcs-magistracy&type=date&legend=bottom-right">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=mathematiclove/spbstu-iccs-mcs-magistracy&type=date&theme=dark&logscale&legend=bottom-right" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=mathematiclove/spbstu-iccs-mcs-magistracy&type=date&logscale&legend=bottom-right" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=mathematiclove/spbstu-iccs-mcs-magistracy&type=date&logscale&legend=bottom-right" />
+ </picture>
+</a>
