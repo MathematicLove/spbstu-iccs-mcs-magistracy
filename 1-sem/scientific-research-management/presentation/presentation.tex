@@ -1,20 +1,29 @@
-\documentclass[aspectratio=169]{beamer}
+\documentclass[aspectratio=169,xcolor=table]{beamer}
 
 % - Кодировка и язык -
 \usepackage[T2A]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[russian]{babel}
 
-% - Формулы -
+% - Формулы, таблицы, рисунки -
 \usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\graphicspath{{../report/img/}}
 
 % - Тема -
 \usetheme{Madrid}
 \setbeamertemplate{navigation symbols}{}
 \setbeamertemplate{bibliography item}[text]
+\setbeamertemplate{caption}{\raggedright\insertcaption\par}
+
+% выделение в таблицах: зеленый - лучший результат, красный - худший
+\newcommand{\best}[1]{\cellcolor{green!25}#1}
+\newcommand{\worst}[1]{\cellcolor{red!25}#1}
+\newcommand{\ours}{\textbf{SegFormer-B0 + WKLA}}
 
 % - Титульная информация -
-\title[Линеаризация внимания в ViT-сегментаторах]{Линеаризация механизма внимания в ViT-сегментаторах для построения динамических зон интереса}
+\title[Линеаризация внимания в ViT-сегментаторах]{Линеаризация механизма внимания в ViT-сегментаторах}
 \author[Салимли, Лобанов, Черепнов]{Салимли~А.~М., Лобанов~П.~М., Черепнов~М.~М.}
 \institute[СПбПУ]{
   Санкт-Петербургский политехнический университет Петра Великого\\[2pt]
@@ -46,11 +55,221 @@
   \end{itemize}
 \end{frame}
 
-% - Список источников -
-\begin{frame}{Список источников}
+% - Проблемы современных ViT -
+\begin{frame}{Проблемы современных ViT}
   \small
-  \begin{thebibliography}{9}
+  \begin{itemize}
+    \item Самовнимание: $\mathrm{softmax}\left(QK^{\top} / \sqrt{d}\right) V$, время $O(N^2 d)$, память $O(N^2)$
+    \item При шаге 4 и кадре $1024 \times 1024$: $N = 65536$, матрица весов $4.3 \cdot 10^{9}$ элементов, около 17 ГБ
+    \item SegFormer сжимает ключи окнами $R \times R$: $M = N / R^2$, сложность $O(N^2 d / R^2)$, порядок остается квадратичным
+    \item Удвоение стороны кадра увеличивает стоимость внимания в 16 раз
+    \item SegFormer-B0: 6.8 мс при 256 px и 133.7 мс при 1024 px (7.5 кадров/с)
+    \item Линейное внимание~\cite{katharopoulos,flatten} снижает сложность до $O(N d^2)$, но веса внимания становятся размытыми, и модель хуже выделяет мелкие детали и границы объектов
+    \item Известные модели с линейным вниманием обучаются с нуля, веса уже обученного SegFormer в них перенести нельзя
+  \end{itemize}
+\end{frame}
+
+% - Постановка задачи -
+\begin{frame}{Постановка задачи}
+  \small
+  \begin{itemize}
+    \item Заменить механизм внимания ESA в каждом блоке энкодера SegFormer-B0 на внимание с линейной сложностью, остальную сеть не менять
+    \item Время работы нового внимания растет линейно с числом токенов $N$
+    \item Новое внимание использует те же матрицы весов, что и ESA, поэтому веса обученной модели переносятся без изменений, новых параметров не более 1\%
+    \item mIoU снижается не более чем на $\varepsilon = 0.005$
+    \item Задержка на изображениях высокого разрешения уменьшается минимум в 2 раза
+  \end{itemize}
+  $$
+  \hat{A}^{*} = \arg\min_{\hat{A}} T_{S}\left(f_{\hat{A}}\right) \quad \text{при} \quad \mathrm{mIoU}\left(f_{\hat{A}}\right) \geq \mathrm{mIoU}\left(f_{A}\right) - \varepsilon
+  $$
+  \begin{itemize}
+    \item $A$ - исходное внимание ESA, $\hat{A}$ - новое внимание, $f_A$ и $f_{\hat{A}}$ - модели с ними, $T_S$ - задержка на кадре со стороной $S$ px
+    \item Тестовая задача: Oxford-IIIT Pet, 3 класса - фон, животное, граница
+    \item Класс границы - тонкое кольцо вдоль контура, по геометрии близок к рельсам
+  \end{itemize}
+\end{frame}
+
+% - Метод: ядровая линеаризация -
+\begin{frame}{Метод: ядровая линеаризация по оконным ключам}
+  \small
+  \begin{itemize}
+    \item Замена softmax на положительную ядровую функцию: $\mathrm{sim}(q, k) = \varphi(q)^{\top} \varphi(k)$
+  \end{itemize}
+  $$
+  \mathrm{out}_i = \frac{\varphi(q_i)^{\top} S}{\varphi(q_i)^{\top} z}, \qquad S = \varphi(K)^{\top} V \in \mathbb{R}^{d_h \times d_h}, \qquad z = \sum_{j=1}^{M} \varphi(k_j)
+  $$
+  \begin{itemize}
+    \item $S$ и $z$ считаются один раз по $M$ оконным токенам и применяются ко всем $N$ запросам
+    \item Фокусированная ядровая функция, $p$ обучаемый, $p \in [1, 8]$:
+  \end{itemize}
+  $$
+  \varphi_p(x) = \left\| x^{+} \right\| \left(\frac{x^{+}}{\left\| x^{+} \right\|}\right)^{p}, \qquad x^{+} = \mathrm{ReLU}(x) + \epsilon
+  $$
+  \begin{itemize}
+    \item Локальная оконная ветвь $5 \times 5$ восстанавливает ранг и детали внутри окна:
+  \end{itemize}
+  $$
+  \mathrm{WKLA}(X) = \left(\frac{\varphi_p(Q)\, S}{\varphi_p(Q)\, z} + \mathrm{DWConv}_{5 \times 5}\left(X W_V\right)\right) W_O
+  $$
+\end{frame}
+
+% - Схема блока -
+\begin{frame}{Схема блока WKLA}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.62\textwidth]{fig_scheme.png}
+  \end{figure}
+  \small
+  \begin{itemize}
+    \item Два окна: глобальное ядровое внимание по токенам окон $R \times R$ и локальная свертка $5 \times 5$, +0.7\% параметров
+    \item Веса $W_Q, W_K, W_V, W_O$ и свертка окон копируются из обученного SegFormer-B0
+    \item Перенос внимания: 3 эпохи блоки WKLA учатся повторять выход ESA, корреляция с ESA растет с 0.74 до 0.93
+  \end{itemize}
+\end{frame}
+
+% - Эксперимент -
+\begin{frame}{Эксперимент}
+  \small
+  \begin{itemize}
+    \item Oxford-IIIT Pet~\cite{pets}: 3312 изображений для обучения, 3669 тестовых, размер $256 \times 256$
+    \item Аугментации: отражение, случайное кадрирование 0.7-1.0, яркость и контраст
+    \item Единый рецепт для всех вариантов SegFormer: AdamW, шаг $3 \cdot 10^{-4}$ (энкодер $\times 0.1$), батч 16, 20 эпох, зерно 1337
+    \item Варианты: ESA, \ours, WKLA только на стадиях 1-2
+    \item Абляции: без переноса внимания, без наследования весов, ядро $\mathrm{elu} + 1$
+    \item Внешние ориентиры: DeepLabV3+ (ResNet101)~\cite{deeplab}, U-Net~\cite{unet}
+    \item Метрики: IoU по классам, mIoU, mDice, $\mathrm{mAP}_{50:95}$
+    \item Скорость: Apple Silicon, PyTorch MPS, batch 1, 8 прогревов и 25 замеров
+  \end{itemize}
+\end{frame}
+
+% - Абляция -
+\begin{frame}{Абляция компонентов WKLA}
+  \footnotesize
+  \begin{table}
+    \centering
+    \begin{tabular}{lcccccc}
+      \toprule
+      Вариант & IoU фон & IoU животное & IoU граница & mIoU & mDice & Точность \\
+      \midrule
+      Ядро $\mathrm{elu} + 1$, 10 эпох & 0.9292 & 0.8663 & 0.5591 & 0.7849 & 0.8696 & 0.9239 \\
+      WKLA без наследования весов & \worst{0.8784} & \worst{0.7851} & \worst{0.4460} & \worst{0.7032} & \worst{0.8106} & \worst{0.8820} \\
+      WKLA без переноса внимания & 0.9388 & 0.8844 & 0.5955 & 0.8062 & 0.8845 & 0.9332 \\
+      WKLA, стадии 1-2 & 0.9411 & 0.8862 & \best{0.6006} & 0.8093 & 0.8866 & 0.9345 \\
+      SegFormer-B0 (ESA) & \best{0.9412} & \best{0.8869} & 0.6004 & \best{0.8095} & \best{0.8867} & \best{0.9347} \\
+      \ours & 0.9386 & 0.8846 & 0.5917 & 0.8050 & 0.8835 & 0.9331 \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+  \small
+  \begin{itemize}
+    \item WKLA уступает ESA 0.0045 mIoU при допуске 0.005, больше всего на границе (0.5917 против 0.6004)
+    \item Наследование весов: +0.1018 mIoU, на границе 0.5917 против 0.4460
+    \item Фокусированное ядро и локальная ветвь: +0.0201 mIoU относительно $\mathrm{elu} + 1$
+    \item Перенос внимания ускоряет сходимость, на итоговое качество почти не влияет
+  \end{itemize}
+\end{frame}
+
+% - Скорость -
+\begin{frame}{Скорость инференса}
+  \begin{columns}[T]
+    \begin{column}{0.6\textwidth}
+      \includegraphics[width=\textwidth]{fig_latency.png}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \small
+      \begin{itemize}
+        \item 256 px: ESA быстрее (6.79 против 8.28 мс)
+        \item Пересечение около 512 px
+        \item 768 px: 55.27 против 33.43 мс
+        \item 1024 px: 133.73 против 57.79 мс, в 2.31 раза быстрее
+        \item Реальное время: до 640 px у ESA, до 768 px у WKLA
+        \item В 3.5 раза быстрее DeepLabV3+ и в 7.8 раза быстрее U-Net при 1024 px
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% - Примеры сегментации -
+\begin{frame}{Примеры сегментации}
+  \begin{figure}
+    \centering
+    \includegraphics[height=0.74\textheight]{fig_examples.png}
+  \end{figure}
+\end{frame}
+
+% - Точность и скорость -
+\begin{frame}{Точность и скорость}
+  \begin{columns}[T]
+    \begin{column}{0.6\textwidth}
+      \includegraphics[width=\textwidth]{fig_pareto.png}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \small
+      \begin{itemize}
+        \item \ours\ самая быстрая, уступает лучшей по mIoU менее 0.005
+        \item Точнее обеих сверточных моделей
+        \item 3.74 млн параметров против 45.7 млн у DeepLabV3+ и 31.0 млн у U-Net
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% - Сводная таблица -
+\begin{frame}{Сводное сравнение моделей}
+  \scriptsize
+  \begin{table}
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lcccccccc}
+      \toprule
+      Модель & \begin{tabular}[c]{@{}c@{}}Параметры,\\ млн\end{tabular} & mIoU & mDice & \begin{tabular}[c]{@{}c@{}}IoU\\ граница\end{tabular} & $\mathrm{mAP}_{50:95}$ & \begin{tabular}[c]{@{}c@{}}Задержка\\ 768 px, мс\end{tabular} & \begin{tabular}[c]{@{}c@{}}Кадров/с\\ 1024 px\end{tabular} & \begin{tabular}[c]{@{}c@{}}GFLOPs\\ 1024 px\end{tabular} \\
+      \midrule
+      U-Net & 31.04 & \worst{0.7629} & \worst{0.8543} & \worst{0.5287} & \worst{0.7318} & \worst{255.36} & \worst{2.2} & \worst{1541.6} \\
+      DeepLabV3+ (ResNet101) & 45.67 & 0.8002 & 0.8803 & 0.5843 & 0.7964 & 118.59 & 4.9 & 447.7 \\
+      SegFormer-B0 (ESA) & 3.71 & \best{0.8095} & \best{0.8867} & 0.6004 & \best{0.8198} & 55.27 & 7.5 & 87.1 \\
+      SegFormer-B0 + WKLA, стадии 1-2 & 3.72 & 0.8093 & 0.8866 & \best{0.6006} & 0.8190 & 36.53 & 14.1 & 62.6 \\
+      \ours & 3.74 & 0.8050 & 0.8835 & 0.5917 & 0.8084 & \best{33.43} & \best{17.3} & \best{55.8} \\
+      \bottomrule
+    \end{tabular}}
+  \end{table}
+\end{frame}
+
+% - Выводы -
+\begin{frame}{Выводы}
+  \small
+  \begin{itemize}
+    \item Предложено оконное ядровое линейное внимание WKLA для уже обученного SegFormer-B0 без повторного предобучения
+    \item Качество в пределах допуска: mIoU 0.8050 против 0.8095 (потеря 0.0045), IoU границы 0.5917 против 0.6004, +0.7\% параметров
+    \item Стоимость внимания при 1024 px ниже в 16.9 раза, задержка модели в 2.31 раза, 7.5 $\to$ 17.3 кадров/с
+    \item Граница реального времени сдвинута с 640 до 768 px
+    \item Главный вклад в качество дает наследование весов, затем фокусированное ядро с локальной ветвью; перенос внимания ускоряет сходимость
+    \item Ограничения: на разрешении до 512 px модель медленнее ESA, один набор данных и одна платформа
+    \item Перенос на SegFormer B3 и B5, дорожные и железнодорожные сцены, слитое ядро линейного внимания, динамическая зона интереса трамвайных путей~\cite{myarticle}
+  \end{itemize}
+\end{frame}
+
+% - Список источников -
+\begin{frame}[allowframebreaks]{Список источников}
+  \tiny
+  \begin{thebibliography}{99}
     \bibitem{myarticle} Салимли~А.~М., Востров~А.~В. Построение зоны интереса на основе сегментации // Неделя науки ИКНК. - 2026. - С.~386.
+    \bibitem{segformer} Xie~E., Wang~W., Yu~Z., Anandkumar~A., Alvarez~J.~M., Luo~P. SegFormer: Simple and efficient design for semantic segmentation with transformers // Advances in Neural Information Processing Systems. - 2021. - Vol.~34. - P.~12077-12090.
+    \bibitem{vaswani} Vaswani~A., Shazeer~N., Parmar~N. et al. Attention is all you need // Advances in Neural Information Processing Systems. - 2017. - Vol.~30. - P.~5998-6008.
+    \bibitem{vit} Dosovitskiy~A., Beyer~L., Kolesnikov~A. et al. An image is worth 16x16 words: Transformers for image recognition at scale // International Conference on Learning Representations. - 2021.
+    \bibitem{pvt} Wang~W., Xie~E., Li~X. et al. Pyramid vision transformer: A versatile backbone for dense prediction without convolutions // Proceedings of the IEEE/CVF International Conference on Computer Vision. - 2021. - P.~568-578.
+    \bibitem{swin} Liu~Z., Lin~Y., Cao~Y. et al. Swin Transformer: Hierarchical vision transformer using shifted windows // Proceedings of the IEEE/CVF International Conference on Computer Vision. - 2021. - P.~10012-10022.
+    \bibitem{linformer} Wang~S., Li~B.~Z., Khabsa~M., Fang~H., Ma~H. Linformer: Self-attention with linear complexity // arXiv preprint arXiv:2006.04768. - 2020.
+    \bibitem{performer} Choromanski~K., Likhosherstov~V., Dohan~D. et al. Rethinking attention with Performers // International Conference on Learning Representations. - 2021.
+    \bibitem{katharopoulos} Katharopoulos~A., Vyas~A., Pappas~N., Fleuret~F. Transformers are RNNs: Fast autoregressive transformers with linear attention // International Conference on Machine Learning. - 2020. - P.~5156-5165.
+    \bibitem{cosformer} Qin~Z., Sun~W., Deng~H. et al. cosFormer: Rethinking softmax in attention // International Conference on Learning Representations. - 2022.
+    \bibitem{flatten} Han~D., Pan~X., Han~Y., Song~S., Huang~G. FLatten Transformer: Vision transformer using focused linear attention // Proceedings of the IEEE/CVF International Conference on Computer Vision. - 2023. - P.~5961-5971.
+    \bibitem{efficientvit} Cai~H., Li~J., Hu~M., Gan~C., Han~S. EfficientViT: Lightweight multi-scale attention for high-resolution dense prediction // Proceedings of the IEEE/CVF International Conference on Computer Vision. - 2023. - P.~17302-17313.
+    \bibitem{lolcats} Zhang~M., Arora~S., Chalamala~R. et al. LoLCATs: On low-rank linearizing of large language models // arXiv preprint arXiv:2410.10254. - 2024.
+    \bibitem{pets} Parkhi~O.~M., Vedaldi~A., Zisserman~A., Jawahar~C.~V. Cats and dogs // Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. - 2012. - P.~3498-3505.
+    \bibitem{adamw} Loshchilov~I., Hutter~F. Decoupled weight decay regularization // International Conference on Learning Representations. - 2019.
+    \bibitem{deeplab} Chen~L.-C., Zhu~Y., Papandreou~G., Schroff~F., Adam~H. Encoder-decoder with atrous separable convolution for semantic image segmentation // Proceedings of the European Conference on Computer Vision. - 2018. - P.~801-818.
+    \bibitem{resnet} He~K., Zhang~X., Ren~S., Sun~J. Deep residual learning for image recognition // Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. - 2016. - P.~770-778.
+    \bibitem{unet} Ronneberger~O., Fischer~P., Brox~T. U-Net: Convolutional networks for biomedical image segmentation // Medical Image Computing and Computer-Assisted Intervention. - 2015. - P.~234-241.
   \end{thebibliography}
 \end{frame}
 
