@@ -73,13 +73,13 @@
   \small
   \begin{tabularx}{\textwidth}{l*{9}{Y}}
     \toprule
-    \(l_i\) & 3.2 & 3.3 & 3.4 & 3.5 & 3.6 & 3.7 & 3.8 & 3.9 & 4.0 \\
-    \(\nu_i\) & 1 & 1 & 1 & 3 & 2 & 6 & 4 & 10 & 4 \\
-    \(\nu_i/(nh)\) & 0.2 & 0.2 & 0.2 & 0.6 & 0.4 & 1.2 & 0.8 & 2.0 & 0.8 \\
+    \(l_i\): левая граница & 3.2 & 3.3 & 3.4 & 3.5 & 3.6 & 3.7 & 3.8 & 3.9 & 4.0 \\
+    \(\nu_i\): частота & 1 & 1 & 1 & 3 & 2 & 6 & 4 & 10 & 4 \\
+    \(\nu_i/(nh)\): высота столбца & 0.2 & 0.2 & 0.2 & 0.6 & 0.4 & 1.2 & 0.8 & 2.0 & 0.8 \\
     \midrule
-    \(l_i\) & 4.1 & 4.2 & 4.3 & 4.4 & 4.5 & 4.6 & 4.7 & 4.8 & \\
-    \(\nu_i\) & 4 & 6 & 5 & 1 & 1 & 0 & 0 & 1 & \\
-    \(\nu_i/(nh)\) & 0.8 & 1.2 & 1.0 & 0.2 & 0.2 & 0 & 0 & 0.2 & \\
+    \(l_i\): левая граница & 4.1 & 4.2 & 4.3 & 4.4 & 4.5 & 4.6 & 4.7 & 4.8 & \\
+    \(\nu_i\): частота & 4 & 6 & 5 & 1 & 1 & 0 & 0 & 1 & \\
+    \(\nu_i/(nh)\): высота столбца & 0.8 & 1.2 & 1.0 & 0.2 & 0.2 & 0 & 0 & 0.2 & \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -197,7 +197,8 @@
   \quad\Rightarrow\quad
   T = \frac{\sqrt{n - 1}\left(\bar{X} - a\right)}{s} \sim t_{n - 1}.
 \end{displaymath}
-\noindent\(^{*}\ \chi^2_{\text{степ. свободы};\ \text{ур. квантиля}}\)
+\noindent\(^{*}\ K_{\text{степ. свободы}}\) - функция распределения \(\chi^2_{\text{степ. свободы}}\),
+квантиль \(K^{-1}_{\text{степ. свободы}}(\text{ур. квантиля})\)
 
 \textbf{Интервал для \(a\)} (\(\sigma\) неизвестна, поэтому точный интервал строится по распределению Стьюдента):
 \begin{gather*}
@@ -210,10 +211,10 @@
 
 \textbf{Интервал для \(\sigma^2\):}
 \begin{gather*}
-  \Prob\left(\chi^2_{n - 1;\,\alpha/2} \le \frac{ns^2}{\sigma^2} \le \chi^2_{n - 1;\,1 - \alpha/2}\right) = 1 - \alpha
+  \Prob\left(K^{-1}_{n - 1}(\alpha/2) \le \frac{ns^2}{\sigma^2} \le K^{-1}_{n - 1}(1 - \alpha/2)\right) = 1 - \alpha
   \;\Rightarrow\;
-  \sigma^2 \in \left[\frac{ns^2}{\chi^2_{n - 1;\,1 - \alpha/2}};\ \frac{ns^2}{\chi^2_{n - 1;\,\alpha/2}}\right],\\
-  ns^2 = 4.66376,\quad \chi^2_{49;\,0.025} = 31.5549,\quad \chi^2_{49;\,0.975} = 70.2224,\\
+  \sigma^2 \in \left[\frac{ns^2}{K^{-1}_{n - 1}(1 - \alpha/2)};\ \frac{ns^2}{K^{-1}_{n - 1}(\alpha/2)}\right],\\
+  ns^2 = 4.66376,\quad K^{-1}_{49}(0.025) = 31.5549,\quad K^{-1}_{49}(0.975) = 70.2224,\\
   \sigma^2 \in \left[\frac{4.66376}{70.2224};\ \frac{4.66376}{31.5549}\right] = [0.066414;\ 0.147798],
   \qquad \sigma \in [0.2577;\ 0.3844].
 \end{gather*}
@@ -239,24 +240,27 @@
   \Prob\left(\sqrt{n}D_n \le x\right) \xrightarrow[n\to\infty]{} K(x) = \sum_{j=-\infty}^{+\infty}(-1)^{j}e^{-2j^2x^2},\quad x > 0.
 \end{displaymath}
 Критерий:
-\begin{displaymath}
+\begin{gather*}
   \varphi(X) =
   \begin{cases}
-    1, & \sqrt{n}D_n > x_\alpha\ \ (H_0\ \text{отвергается}),\\
-    0, & \sqrt{n}D_n \le x_\alpha,
-  \end{cases}
-  \qquad \Prob_{H_0}\left(\sqrt{n}D_n \le x_\alpha\right) = 1 - \alpha.
-\end{displaymath}
-По точному распределению \(D_n\) при \(n = 50\): \(x_\alpha = 1.3322\) (по предельному \(K^{-1}(0.95) = 1.3581\)).
+    1, & \sqrt{n}D_n > 1.3322\ \ (H_0\ \text{отвергается}),\\
+    0, & \sqrt{n}D_n \le 1.3322,
+  \end{cases}\\
+  x_\alpha = 1.3322:\qquad \Prob_{H_0}\left(\sqrt{n}D_n \le x_\alpha\right) = 1 - \alpha = 0.95.
+\end{gather*}
+Граница \(x_\alpha\) найдена по точному распределению \(D_n\) при \(n = 50\) (по предельному \(K^{-1}(0.95) = 1.3581\)).
 
 \begin{table}[H]
   \caption{Фрагмент таблицы для \(D_n\): первые строки и строки около максимума (\(i = 28\))}
   \centering
   \small
+  \setlength{\tabcolsep}{2pt}
   \begin{tabularx}{\textwidth}{c*{7}{Y}}
     \toprule
-    \(i\) & \(x_{(i)}\) & \(\frac{i - 1}{n}\) & \(\frac{i}{n}\) & \(F_0(x_{(i)})\)
-    & \(\left|\frac{i - 1}{n} - F_0\right|\) & \(\left|\frac{i}{n} - F_0\right|\) & max \\
+    \(i\) & \(x_{(i)}\):\newline наблюдение & \(\frac{i - 1}{n}\):\newline \(F_n\) до скачка
+    & \(\frac{i}{n}\):\newline \(F_n\) после скачка & \(F_0(x_{(i)})\):\newline по \(H_0\)
+    & \(\left|\frac{i - 1}{n} - F_0\right|\):\newline отклонение слева
+    & \(\left|\frac{i}{n} - F_0\right|\):\newline отклонение справа & max:\newline наибольшее \\
     \midrule
     1 & 3.289 & 0.00 & 0.02 & 0.00889 & 0.00889 & 0.01111 & 0.01111 \\
     2 & 3.382 & 0.02 & 0.04 & 0.01970 & 0.00030 & 0.02030 & 0.02030 \\
@@ -295,9 +299,12 @@
   \caption{Критерий \(\chi^2\) для простой гипотезы}
   \centering
   \small
+  \setlength{\tabcolsep}{2pt}
   \begin{tabularx}{\textwidth}{c*{7}{Y}}
     \toprule
-    \(i\) & \(l_i\) & \(u_i\) & \(\nu_i\) & \(p_i\) & \(np_i\) & \(\frac{\nu_i - np_i}{\sqrt{np_i}}\) & \(\frac{(\nu_i - np_i)^2}{np_i}\) \\
+    \(i\) & \(l_i\):\newline нижняя граница & \(u_i\):\newline верхняя граница & \(\nu_i\):\newline наблюдаемые
+    & \(p_i\):\newline вероятности & \(np_i\):\newline ожидаемые
+    & \(\frac{\nu_i - np_i}{\sqrt{np_i}}\):\newline остатки & \(\frac{(\nu_i - np_i)^2}{np_i}\):\newline вклад в \(X^2\) \\
     \midrule
     1 & \(-\infty\) & 3.7 & 8 & 0.1587 & 7.933 & 0.0239 & 0.0006 \\
     2 & 3.7 & 3.9 & 10 & 0.2108 & 10.539 & -0.1661 & 0.0276 \\
@@ -311,16 +318,16 @@
   \end{tabularx}
 \end{table}
 
-Критерий (\(r - 1 = 5\) степеней свободы):
+Критерий (\(r - 1 = 5\) степеней свободы, граница 11.0705 - квантиль уровня 0.95 распределения \(\chi^2_5\)):
 \begin{gather*}
   \varphi(X) =
   \begin{cases}
-    1, & X^2 > x_\alpha,\\
-    0, & X^2 \le x_\alpha,
-  \end{cases}
-  \qquad x_\alpha = \chi^2_{r - 1;\,1 - \alpha} = \chi^2_{5;\,0.95} = 11.0705,\\
+    1, & X^2 > 11.0705,\\
+    0, & X^2 \le 11.0705,
+  \end{cases}\\
   X^2 = 2.8820 \le 11.0705 \;\Rightarrow\; \varphi(X) = 0,\qquad
-  p\text{-value} = \Prob\left(\chi^2_5 > 2.8820\right) = 0.7182.
+  p\text{-value} = \Prob\left(\chi^2_5 > 2.8820\right) = 0.7182,\\
+  x_\alpha = 11.0705.
 \end{gather*}
 \noindent\textbf{Вывод:} принимается \(H_0:\ X \sim \mathcal{N}(4.00,\ 0.30^2)\) на уровне \(\alpha = 0.05\), \(\alpha_{\max} = 0.7182\).
 
@@ -369,9 +376,12 @@
   \caption{Критерий \(\chi^2\) для сложной гипотезы при \(\theta^* = (3.99361,\ 0.29261)\)}
   \centering
   \small
+  \setlength{\tabcolsep}{2pt}
   \begin{tabularx}{\textwidth}{c*{7}{Y}}
     \toprule
-    \(i\) & \(l_i\) & \(u_i\) & \(\nu_i\) & \(p_i(\theta^*)\) & \(np_i(\theta^*)\) & \(\frac{\nu_i - np_i}{\sqrt{np_i}}\) & \(\frac{(\nu_i - np_i)^2}{np_i}\) \\
+    \(i\) & \(l_i\):\newline нижняя граница & \(u_i\):\newline верхняя граница & \(\nu_i\):\newline наблюдаемые
+    & \(p_i(\theta^*)\):\newline вероятности & \(np_i(\theta^*)\):\newline ожидаемые
+    & \(\frac{\nu_i - np_i}{\sqrt{np_i}}\):\newline остатки & \(\frac{(\nu_i - np_i)^2}{np_i}\):\newline вклад в \(X^2\) \\
     \midrule
     1 & \(-\infty\) & 3.7 & 8 & 0.1578 & 7.891 & 0.0386 & 0.0015 \\
     2 & 3.7 & 3.9 & 10 & 0.2167 & 10.835 & -0.2535 & 0.0643 \\
@@ -385,15 +395,16 @@
   \end{tabularx}
 \end{table}
 
+Критерий (\(df = 3\), граница 7.8147 - квантиль уровня 0.95 распределения \(\chi^2_3\)):
 \begin{gather*}
   \varphi(X) =
   \begin{cases}
-    1, & \hat{X}^2 > x_\alpha,\\
-    0, & \hat{X}^2 \le x_\alpha,
-  \end{cases}
-  \qquad x_\alpha = \chi^2_{3;\,0.95} = 7.8147,\\
+    1, & \hat{X}^2 > 7.8147,\\
+    0, & \hat{X}^2 \le 7.8147,
+  \end{cases}\\
   \hat{X}^2 = 2.8210 \le 7.8147 \;\Rightarrow\; \varphi(X) = 0,\qquad
-  p\text{-value} = \Prob\left(\chi^2_3 > 2.8210\right) = 0.4201.
+  p\text{-value} = \Prob\left(\chi^2_3 > 2.8210\right) = 0.4201,\\
+  x_\alpha = 7.8147.
 \end{gather*}
 Для контроля тем же способом найдена ОМП по сгруппированным данным:
 \begin{gather*}
@@ -418,7 +429,7 @@
   \varphi(x) =
   \begin{cases}
     1, & L_1(x) > \lambda L_0(x),\\
-    \varepsilon, & L_1(x) = \lambda L_0(x),\\
+    p, & L_1(x) = \lambda L_0(x),\\
     0, & L_1(x) < \lambda L_0(x),
   \end{cases}
   \qquad \E_{H_0}\varphi(X) = \alpha,
@@ -438,12 +449,12 @@
   \bar{x} < C = \frac{a_0 + a_1}{2} - \frac{\sigma^2\ln\lambda}{n(a_0 - a_1)}.
 \end{gather*}
 При \(H_0\) \(\bar{X} \sim \mathcal{N}\left(a_0, \sigma_0^2/n\right)\) непрерывна, \(\Prob_{H_0}(\bar{X} = C) = 0\),
-поэтому рандомизация не нужна (значение \(\varepsilon\) не важно). Граница из условия на уровень
-(\(u_{1 - \alpha} = \Phi^{-1}(0.95) = 1.6449\) - квантиль \(\mathcal{N}(0, 1)\)):
+поэтому рандомизация не нужна (значение \(p\) не важно). Граница из условия на уровень
+(\(\Phi^{-1}(0.95) = 1.6449\) - квантиль \(\mathcal{N}(0, 1)\)):
 \begin{gather*}
   \alpha = \Prob_{H_0}\left(\bar{X} \le C\right) = \Phi\left(\frac{(C - a_0)\sqrt{n}}{\sigma_0}\right)
   \;\Rightarrow\\
-  C = a_0 - u_{1 - \alpha}\frac{\sigma_0}{\sqrt{n}} = 4 - 1.6449\cdot\frac{0.3}{\sqrt{50}} = 3.93021,\\
+  C = a_0 - \Phi^{-1}(1 - \alpha)\frac{\sigma_0}{\sqrt{n}} = 4 - 1.6449\cdot\frac{0.3}{\sqrt{50}} = 3.93021,\\
   \varphi(X) =
   \begin{cases}
     1, & \bar{X} \le 3.93021\ \left(\sum X_i \le 196.511\right),\ H_0\ \text{отвергается},\\
@@ -461,7 +472,7 @@
 \textbf{Мощность} \(b(\varphi) = \E_{H_1}\varphi(X)\):
 \begin{gather*}
   b(\varphi) = \Prob_{H_1}\left(\bar{X} \le C\right) = \Phi\left(\frac{(C - a_1)\sqrt{n}}{\sigma_1}\right)
-  = \Phi\left(\frac{\sqrt{n}(a_0 - a_1)}{\sigma} - u_{1 - \alpha}\right) =\\
+  = \Phi\left(\frac{\sqrt{n}(a_0 - a_1)}{\sigma} - \Phi^{-1}(1 - \alpha)\right) =\\
   = \Phi(9.4281 - 1.6449) = \Phi(7.7832) = 1 - 3.5\cdot 10^{-15}.
 \end{gather*}
 Вероятность ошибки второго рода \(1 - b(\varphi) = 3.5\cdot 10^{-15}\). Мощность практически равна 1:
@@ -473,18 +484,21 @@
 \begin{displaymath}
   H_0':\ (a, \sigma^2) = (3.60,\ 0.09);\qquad H_1':\ (a, \sigma^2) = (4.00,\ 0.09).
 \end{displaymath}
-Теперь отношение \(L_0(x)/L_1(x) = \exp\left(\frac{a_0 - a_1}{\sigma^2}\sum x_i - \ldots\right)\) возрастает по \(\bar{x}\),
-поэтому критическая область \(\{\bar{X} \ge C'\}\):
+Теперь отношение правдоподобия
+\begin{displaymath}
+  \frac{L_0(x)}{L_1(x)} = \exp\left(\frac{a_0 - a_1}{\sigma^2}\sum_{i=1}^{n}x_i - \frac{n\left(a_0^2 - a_1^2\right)}{2\sigma^2}\right)
+\end{displaymath}
+возрастает по \(\bar{x}\) (так как \(a_0 - a_1 > 0\)), поэтому критическая область \(\{\bar{X} \ge C'\}\):
 \begin{gather*}
   \alpha = \Prob_{H_0'}\left(\bar{X} \ge C'\right) = 1 - \Phi\left(\frac{(C' - a_1)\sqrt{n}}{\sigma_1}\right)
   \;\Rightarrow\\
-  C' = a_1 + u_{1 - \alpha}\frac{\sigma_1}{\sqrt{n}} = 3.6 + 0.06979 = 3.66979,\\
+  C' = a_1 + \Phi^{-1}(1 - \alpha)\frac{\sigma_1}{\sqrt{n}} = 3.6 + 0.06979 = 3.66979,\\
   \varphi'(X) =
   \begin{cases}
     1, & \bar{X} \ge 3.66979\ \left(\sum X_i \ge 183.489\right),\ H_0'\ \text{отвергается},\\
     0, & \bar{X} < 3.66979,
   \end{cases}\\
-  b(\varphi') = \Prob_{H_1'}\left(\bar{X} \ge C'\right) = \Phi\left(\frac{\sqrt{n}(a_0 - a_1)}{\sigma} - u_{1 - \alpha}\right)
+  b(\varphi') = \Prob_{H_1'}\left(\bar{X} \ge C'\right) = \Phi\left(\frac{\sqrt{n}(a_0 - a_1)}{\sigma} - \Phi^{-1}(1 - \alpha)\right)
   = \Phi(7.7832) = 1 - 3.5\cdot 10^{-15}.
 \end{gather*}
 \(\bar{X} = 3.99092 \ge C' = 3.66979 \Rightarrow \varphi'(X) = 1\), гипотеза \(H_0'\) отвергается,
