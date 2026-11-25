@@ -219,8 +219,95 @@ pv <- pchisq(S.csq, df, lower.tail=F)
 
 # # Chi^2 (theta) = \sum{i=1}^{r} \frac{(v_i - np_i (theta))^2}{np_i (theta)} \Rightarrow Chi^2_{r-1}
 
-# Нельзя оценивать параметр theta! 
+# Нельзя оценивать параметр theta!  
 
 # Либо сделать \hat{X} = min (Chi^2 (theta)) либо \wave{X} = \Chi^2 (\wave(theta)) (тета с волной это ОМП по группам ) и написать в виде функции + написать функцию и после минимизировать ее по параметру
 
 # Задача 8 +- теоретическая и выписать ее со всеми условиями границ.
+
+# ------- 7 H_0: X~N(a, sig^2); a, sig^2 - in R
+
+lb<-length(brk)
+brk[1] <- -Inf
+brk[1b] <- Inf
+
+pr <-function(x) {
+    pnorm(brk[2:lb], x[1], x[2]) - pnorm(brk[1:(lb-1)], x[1], x[2])
+}
+
+# Проверка:
+# m <- mean(x)
+# s2 <- mean(x^2) - m^2
+# s1 <- sqrt(s2)
+# pr(c(m,s1))
+# pr(c(2,4))
+nu <- h$counts
+
+X2 <- function(x) {
+    p <- pr(x)
+    np <- n(p)
+    sum((nu - np)^2 / np)
+}
+
+q <- nlm(X2, p=c(m, s1))
+cat(q)
+
+xal <- qchisq(1 - al, lb - 4)
+
+StatX2 <- q$minimum
+
+pval <- pchisq(StatX2, (lb - 4), lower.tail=False)
+print(StatX2 > xal)
+print(pv)
+print(xal)
+# Оценка параметра
+thetahat <- q$estimate 
+# Если поменяли границы группировки то выводим таблицу: (я не менял)
+print(thetahat)
+
+# ------- 8
+
+# X1, ..., Xn - выборка из бернули Bi(1, p)
+# P_theta (X_1 = 1) =  1 -  P_theta(X_1 = 0) = p, theta = p
+
+# Если что это пример!
+# В постановке задачи должны быть ЧИСЛА !!! не символы
+
+# H_0: p = p0 = 0.1
+# H_a: p = p1 = 0.2
+
+
+# phi(x) = {1, if LR(X) > x_alpha; p if LR(X) = x_alhpa; 0 if LR(X < x_alpha)
+
+# L(X, theta) = \prod_{i=1}^{n} p^x_i (1-p)^1-x_i 
+
+# => LR(X, p) = L(x, p1) / L(x, p0) = p1^sum{x_i} (1-p_1)^n-sum{x_i} / p_0^sum{x_i} (1-p_0)^n-sum{x_i} = (p1(1-p0)/p0(1-p1))^sum{x_I} (1-p1/1-p0)^n
+# = 0.2 * 0.9 / 0.1 * 0.8 =  0.09/0.04 ~ 9/4 > 1
+
+# => LR(x) > x_alpha <=> sum_{x_i} > x^*_alpha
+
+# => phi(x) = {1, if sum{x_i} > x*_alpha, p, if sum{x_i} = x^*_alpha, 0, if sum{x_i} < x^*_alpha
+
+# => sum{x_i} = \xi ~ Bi(n, p)
+
+# => P_{p=0.1} (sum{x_i} >= x^*_alpha) <= alpha
+# => P_{p=0.1} (sum{x_i} > x^*_alpha) >= alpha
+
+p0 <- 0.1
+n <- 100
+qbinom(al, n, p0, lower.tail=False)
+
+# x1 Это граница 
+xal <- x1
+
+# phi(x) = {1, sum_xi > x1; p, sum_xi = x1, 0 sum_xi < x1}
+# P_theta = (\sum(xi) > 15) = q P_{0.1} (\sum x_i = 15) = alpha 
+# q = alpha - P_{0.1} (sum{x_i} > 15) / P_{0.1} (sum{x_i} = 15)
+
+# Проверка
+# 1 - pbinom(x1-1, n, p0)
+q <- (al - pbinom(x1, n, p0, lower.tail=False)) / dbinom(x1,n,p0)
+# Наиболее мощный критерий
+q
+
+# + решение (что делаем с гипотезой)
