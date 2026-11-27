@@ -428,42 +428,53 @@
 \begin{displaymath}
   \varphi(x) =
   \begin{cases}
-    1, & L_1(x) > \lambda L_0(x),\\
-    p, & L_1(x) = \lambda L_0(x),\\
-    0, & L_1(x) < \lambda L_0(x),
+    1, & \text{при}\ LR(x) > c;\\
+    p, & \text{при}\ LR(x) = c;\\
+    0, & \text{при}\ LR(x) < c,
   \end{cases}
   \qquad \E_{H_0}\varphi(X) = \alpha,
 \end{displaymath}
-где \(L_j(x) = \prod_{i=1}^{n}\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(x_i - a_j)^2}{2\sigma^2}}\), \(j = 0, 1\).
-Отношение правдоподобия (квадратичные члены сокращаются, так как \(\sigma_0 = \sigma_1\)):
+где \(LR(x) = \frac{L_1(x)}{L_0(x)}\) - отношение правдоподобия, \(c\) - порог,
+\(L_j(x) = \prod_{i=1}^{n}\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(x_i - a_j)^2}{2\sigma^2}}\) - правдоподобие выборки
+при \(H_j\), \(j = 0, 1\). Квадратичные члены сокращаются, так как \(\sigma_0 = \sigma_1\):
 \begin{gather*}
-  \frac{L_1(x)}{L_0(x)} = \exp\left(-\frac{1}{2\sigma^2}\sum_{i=1}^{n}\left[(x_i - a_1)^2 - (x_i - a_0)^2\right]\right) =\\
-  = \exp\left(\frac{a_1 - a_0}{\sigma^2}\sum_{i=1}^{n}x_i - \frac{n\left(a_1^2 - a_0^2\right)}{2\sigma^2}\right).
+  LR(x) = \frac{L_1(x)}{L_0(x)} = \exp\left(-\frac{1}{2\sigma^2}\sum_{i=1}^{n}\left[(x_i - a_1)^2 - (x_i - a_0)^2\right]\right) =\\
+  = \exp\left(\frac{a_1 - a_0}{\sigma^2}\sum_{i=1}^{n}x_i - \frac{n\left(a_1^2 - a_0^2\right)}{2\sigma^2}\right)
+  = \exp\left(\frac{n(a_1 - a_0)}{\sigma^2}\left(\bar{x} - \frac{a_0 + a_1}{2}\right)\right) =\\
+  = \exp\left(-222.22\,(\bar{x} - 3.8)\right).
 \end{gather*}
-Так как \(a_1 - a_0 = -0.4 < 0\), отношение строго убывает по \(\sum x_i\), и
+Так как \(a_1 - a_0 = -0.4 < 0\), \(LR(x)\) строго убывает по \(\sum x_i\), и
 \begin{gather*}
-  \frac{L_1}{L_0} > \lambda
+  LR(x) > c
   \;\Longleftrightarrow\;
-  -\frac{n(a_0 - a_1)}{\sigma^2}\bar{x} > \ln\lambda - \frac{n(a_0 - a_1)(a_0 + a_1)}{2\sigma^2}
+  -\frac{n(a_0 - a_1)}{\sigma^2}\bar{x} > \ln c - \frac{n(a_0 - a_1)(a_0 + a_1)}{2\sigma^2}
   \;\Longleftrightarrow\\
-  \bar{x} < C = \frac{a_0 + a_1}{2} - \frac{\sigma^2\ln\lambda}{n(a_0 - a_1)}.
+  \bar{x} < x_\alpha = \frac{a_0 + a_1}{2} - \frac{\sigma^2\ln c}{n(a_0 - a_1)}.
 \end{gather*}
-При \(H_0\) \(\bar{X} \sim \mathcal{N}\left(a_0, \sigma_0^2/n\right)\) непрерывна, \(\Prob_{H_0}(\bar{X} = C) = 0\),
-поэтому рандомизация не нужна (значение \(p\) не важно). Граница из условия на уровень
-(\(\Phi^{-1}(0.95) = 1.6449\) - квантиль \(\mathcal{N}(0, 1)\)):
+При \(H_0\) \(\bar{X} \sim \mathcal{N}\left(a_0, \sigma_0^2/n\right)\) непрерывна, \(\Prob_{H_0}(\bar{X} = x_\alpha) = 0\),
+поэтому рандомизация не нужна (значение \(p\) не важно).
+
+Границу \(x_\alpha\) для \(\bar{X}\) выбираем так, чтобы критерий имел уровень \(\alpha\): вероятность отвергнуть \(H_0\), когда она верна
+(ошибка первого рода), должна равняться \(\alpha = 0.05\). Квантиль уровня 0.95 распределения \(\mathcal{N}(0, 1)\):
+\(\Phi^{-1}(0.95) = 1.6449\).
 \begin{gather*}
-  \alpha = \Prob_{H_0}\left(\bar{X} \le C\right) = \Phi\left(\frac{(C - a_0)\sqrt{n}}{\sigma_0}\right)
+  \alpha = \Prob_{H_0}\left(\bar{X} \le x_\alpha\right) = \Phi\left(\frac{(x_\alpha - a_0)\sqrt{n}}{\sigma_0}\right)
+  \;\Rightarrow\;
+  \frac{(x_\alpha - a_0)\sqrt{n}}{\sigma_0} = \Phi^{-1}(\alpha) = -\Phi^{-1}(1 - \alpha)
   \;\Rightarrow\\
-  C = a_0 - \Phi^{-1}(1 - \alpha)\frac{\sigma_0}{\sqrt{n}} = 4 - 1.6449\cdot\frac{0.3}{\sqrt{50}} = 3.93021,\\
+  x_\alpha = a_0 - \Phi^{-1}(1 - \alpha)\frac{\sigma_0}{\sqrt{n}} = 4 - 1.6449\cdot\frac{0.3}{\sqrt{50}} = 3.93021.
+\end{gather*}
+Итоговый критерий:
+\begin{displaymath}
   \varphi(X) =
   \begin{cases}
     1, & \bar{X} \le 3.93021\ \left(\sum X_i \le 196.511\right),\ H_0\ \text{отвергается},\\
     0, & \bar{X} > 3.93021.
   \end{cases}
-\end{gather*}
+\end{displaymath}
 Критерий не зависит от конкретного \(a_1 < a_0\), поэтому он равномерно наиболее мощный против \(a < a_0\).
 
-\textbf{Проверка:} \(\bar{X} = 3.99092 > C = 3.93021 \Rightarrow \varphi(X) = 0\), гипотеза \(H_0\) не отвергается.
+\textbf{Проверка:} \(\bar{X} = 3.99092 > x_\alpha = 3.93021 \Rightarrow \varphi(X) = 0\), гипотеза \(H_0\) не отвергается.
 \begin{displaymath}
   p\text{-value} = \Prob_{H_0}\left(\bar{X} \le 3.99092\right) = \Phi\left(\frac{(3.99092 - 4)\sqrt{50}}{0.3}\right)
   = \Phi(-0.2140) = 0.4153 = \alpha_{\max}.
@@ -471,7 +482,7 @@
 
 \textbf{Мощность} \(b(\varphi) = \E_{H_1}\varphi(X)\):
 \begin{gather*}
-  b(\varphi) = \Prob_{H_1}\left(\bar{X} \le C\right) = \Phi\left(\frac{(C - a_1)\sqrt{n}}{\sigma_1}\right)
+  b(\varphi) = \Prob_{H_1}\left(\bar{X} \le x_\alpha\right) = \Phi\left(\frac{(x_\alpha - a_1)\sqrt{n}}{\sigma_1}\right)
   = \Phi\left(\frac{\sqrt{n}(a_0 - a_1)}{\sigma} - \Phi^{-1}(1 - \alpha)\right) =\\
   = \Phi(9.4281 - 1.6449) = \Phi(7.7832) = 1 - 3.5\cdot 10^{-15}.
 \end{gather*}
@@ -484,24 +495,25 @@
 \begin{displaymath}
   H_0':\ (a, \sigma^2) = (3.60,\ 0.09);\qquad H_1':\ (a, \sigma^2) = (4.00,\ 0.09).
 \end{displaymath}
-Теперь отношение правдоподобия
+Теперь отношение правдоподобия новой альтернативы к новой основной гипотезе
 \begin{displaymath}
-  \frac{L_0(x)}{L_1(x)} = \exp\left(\frac{a_0 - a_1}{\sigma^2}\sum_{i=1}^{n}x_i - \frac{n\left(a_0^2 - a_1^2\right)}{2\sigma^2}\right)
+  LR'(x) = \frac{L_0(x)}{L_1(x)} = \exp\left(\frac{a_0 - a_1}{\sigma^2}\sum_{i=1}^{n}x_i - \frac{n\left(a_0^2 - a_1^2\right)}{2\sigma^2}\right)
+  = \exp\left(222.22\,(\bar{x} - 3.8)\right)
 \end{displaymath}
-возрастает по \(\bar{x}\) (так как \(a_0 - a_1 > 0\)), поэтому критическая область \(\{\bar{X} \ge C'\}\):
+возрастает по \(\bar{x}\) (так как \(a_0 - a_1 > 0\)), поэтому критическая область \(\{\bar{X} \ge x'_\alpha\}\):
 \begin{gather*}
-  \alpha = \Prob_{H_0'}\left(\bar{X} \ge C'\right) = 1 - \Phi\left(\frac{(C' - a_1)\sqrt{n}}{\sigma_1}\right)
+  \alpha = \Prob_{H_0'}\left(\bar{X} \ge x'_\alpha\right) = 1 - \Phi\left(\frac{(x'_\alpha - a_1)\sqrt{n}}{\sigma_1}\right)
   \;\Rightarrow\\
-  C' = a_1 + \Phi^{-1}(1 - \alpha)\frac{\sigma_1}{\sqrt{n}} = 3.6 + 0.06979 = 3.66979,\\
+  x'_\alpha = a_1 + \Phi^{-1}(1 - \alpha)\frac{\sigma_1}{\sqrt{n}} = 3.6 + 0.06979 = 3.66979,\\
   \varphi'(X) =
   \begin{cases}
     1, & \bar{X} \ge 3.66979\ \left(\sum X_i \ge 183.489\right),\ H_0'\ \text{отвергается},\\
     0, & \bar{X} < 3.66979,
   \end{cases}\\
-  b(\varphi') = \Prob_{H_1'}\left(\bar{X} \ge C'\right) = \Phi\left(\frac{\sqrt{n}(a_0 - a_1)}{\sigma} - \Phi^{-1}(1 - \alpha)\right)
+  b(\varphi') = \Prob_{H_1'}\left(\bar{X} \ge x'_\alpha\right) = \Phi\left(\frac{\sqrt{n}(a_0 - a_1)}{\sigma} - \Phi^{-1}(1 - \alpha)\right)
   = \Phi(7.7832) = 1 - 3.5\cdot 10^{-15}.
 \end{gather*}
-\(\bar{X} = 3.99092 \ge C' = 3.66979 \Rightarrow \varphi'(X) = 1\), гипотеза \(H_0'\) отвергается,
+\(\bar{X} = 3.99092 \ge x'_\alpha = 3.66979 \Rightarrow \varphi'(X) = 1\), гипотеза \(H_0'\) отвергается,
 \(p\text{-value} = 1 - \Phi\left(\frac{(3.99092 - 3.6)\sqrt{50}}{0.3}\right) = 1 - \Phi(9.2141) \approx 1.6\cdot 10^{-20}\).
 Мощность та же, что и раньше, из-за симметрии (\(\sigma_0 = \sigma_1\)).
 
